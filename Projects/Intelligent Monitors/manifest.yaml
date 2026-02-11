@@ -1,0 +1,150 @@
+# Intelligent Monitors Project Manifest
+# Last updated: 2026-01-27
+
+project:
+  name: "Intelligent Monitors"
+  description: "Evolving BRAIN monitors to be more intelligent with extensible contracts and AI-driven configuration"
+  status: "active"
+  created: "2025-11-01"
+  updated: "2026-01-27"
+
+# OKRs and Goals
+okrs:
+  - objective: "Define and ship intelligent monitor contract for H1 2026"
+    key_results:
+      - description: "Contract specification finalized"
+        target: "Approved spec document"
+        status: "in-progress"
+      - description: "Prototype implementation"
+        target: "Working demo"
+        status: "in-progress"
+      - description: "Customer validation"
+        target: "3+ service teams validated"
+        status: "not-started"
+
+# Azure DevOps Work Items
+ado:
+  organization: "msazure"
+  project: "One"
+  area_path: "Azure Edge and Platform\\Health and Standards\\AIOps"
+  
+  # Tag used to query work items for this project
+  tag: "UIM"
+  
+  # Auto-populated by running: node sync-ado.js
+  # Last synced: 2026-01-27
+  epics:
+    - id: 34640109
+      title: "Service level Brain monitors (multiple signals, easy configuration)"
+      state: "New"
+      assigned_to: "Matthew Hetrick"
+  
+  features:
+    - id: 34839765
+      title: "Intelligent monitors support scope selection for OPM pilot services"
+      state: "New"
+      assigned_to: "Matthew Hetrick"
+    - id: 35524641
+      title: "[Platform] Brain team can edit the detection configuration for intelligent monitors via config as code"
+      state: "Active"
+      assigned_to: "Yueli Lu"
+    - id: 36173777
+      title: "[Experience] Services can add a new intelligent monitor"
+      state: "New"
+      assigned_to: "Jeffrey Sun"
+    - id: 25513617
+      title: "[Experience] Customers can easily know when to enable outage mode & label detections in the intelligent monitor config"
+      state: "New"
+      assigned_to: "Jeffrey Sun"
+    - id: 34839550
+      title: "Intelligent Brain monitor experiences for OPM pilot services [E2E]"
+      state: "New"
+      assigned_to: "Jeffrey Sun"
+    - id: 36546022
+      title: "[Model] OPM model honors intelligent monitor settings set by users"
+      state: "New"
+      assigned_to: "Meng Jin"
+    - id: 36559481
+      title: "[Experience] Implement the details view of intelligent monitor"
+      state: "New"
+      assigned_to: "Kevin Wilkinson"
+    - id: 36559532
+      title: "[Experience] Show unified intelligent monitor in the monitor list page"
+      state: "New"
+      assigned_to: "Kevin Wilkinson"
+    - id: 36559773
+      title: "[Model] OPM model exposes insights on SLIs and recommend SLIs to be selected"
+      state: "New"
+      assigned_to: "Youjiang Wu"
+  
+  backlog_items: []
+  tasks: []
+
+# GitHub Repositories
+github:
+  repos:
+    - name: "brain-gen2-monitor"
+      url: "https://github.com/mhetrick29/brain-gen2-monitor"
+      description: "Prototype for intelligent monitor configuration UI"
+      branch: "main"
+      local_path: "../brain-gen2-monitor"  # Also synced locally in OneDrive
+
+# External Links
+external_links:
+  sharepoint: []
+    # - name: "Team Design Docs"
+    #   url: "https://microsoft.sharepoint.com/..."
+  
+  teams_channels: []
+    # - name: "Intelligent Monitors Discussion"
+    #   url: "https://teams.microsoft.com/..."
+  
+  other: []
+
+# Recordings (references to central Recordings folder)
+recordings:
+  - filename: "Matt  Jeffrey walk through March vision for intelligent monitors-20260113_140111-Meeting Recording.mp4"
+    date: "2026-01-13"
+    description: "Vision walkthrough for intelligent monitors with Jeffrey"
+    topics: ["vision", "intelligent-monitors", "H1-planning"]
+
+  - filename: "Follow up on intelligent monitors-20251105_090758-Meeting Recording.mp4"
+    date: "2025-11-05"
+    description: "Follow-up discussion on intelligent monitors approach"
+    topics: ["intelligent-monitors"]
+
+  - filename: "Discuss expectations for intelligent monitor contract in H1-20251105_130922-Meeting Recording.mp4"
+    date: "2025-11-05"
+    description: "H1 expectations alignment for contract"
+    topics: ["intelligent-monitors", "contract", "H1-planning"]
+
+  - filename: "Follow-up Intelligent monitor contract alignment-20251111_153855-Meeting Recording.mp4"
+    date: "2025-11-11"
+    description: "Contract alignment follow-up"
+    topics: ["intelligent-monitors", "contract"]
+
+  - filename: "Monitor schema review- what is needed for functioning config UX-20251202_160738-Meeting Recording.mp4"
+    date: "2025-12-02"
+    description: "Schema review for config UX"
+    topics: ["intelligent-monitors", "schema", "config-ux"]
+
+# Local Documents (in this project folder)
+documents:
+  specs:
+    - "docs/Proposal for extensible monitors.docx"
+  presentations:
+    - "presentations/Intelligent Monitors.pptx"
+    - "presentations/Intelligent Monitors_Product Talks Deck.pptx"
+  notes: []
+
+# Tags for cross-project search
+tags:
+  - "intelligent-monitors"
+  - "H1-2026"
+  - "brain"
+  - "automation"
+
+# Related Projects
+related_projects: []
+  # - name: "Self-Serve Configuration"
+  #   relationship: "related-to"

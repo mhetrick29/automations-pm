@@ -1,0 +1,47 @@
+{
+  "name": "brain-agents-pack",
+  "version": "0.2.0",
+  "description": "Three-agent pack: User Research, Spec Writer, Prototyping.",
+  "agents": [
+    {
+      "id": "user-research-agent",
+      "name": "User Research Agent",
+      "visibility": "private",
+      "metadata": "agents/user-research/user-research-agent.md",
+      "entrypoint": {
+        "type": "system_prompt",
+        "path": "agents/user-research/user-research-agent.system.md"
+      }
+    },
+    {
+      "id": "spec-writer-agent",
+      "name": "Spec Writer Agent",
+      "visibility": "private",
+      "metadata": "agents/spec-writer/spec-writer-agent.md",
+      "entrypoint": {
+        "type": "system_prompt",
+        "path": "agents/spec-writer/spec-writer-agent.system.md"
+      }
+    },
+    {
+      "id": "prototyping-agent",
+      "name": "Prototyping Agent",
+      "visibility": "private",
+      "metadata": "agents/prototyping-agent/prototyping-agent.md",
+      "entrypoint": {
+        "type": "system_prompt",
+        "path": "agents/prototyping-agent/prototyping-agent.system.md"
+      }
+    },
+    {
+      "id": "get-action-items",
+      "name": "Action Items",
+      "visibility": "private",
+      "metadata": "agents/action-items/action-items-agent.md",
+      "entrypoint": {
+        "type": "system_prompt",
+        "path": "agents/action-items/action-items-agent.system.md"
+      }
+    }
+  ]
+}

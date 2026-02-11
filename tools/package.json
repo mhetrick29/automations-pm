@@ -1,0 +1,10 @@
+{
+  "name": "spec-writer-tools",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Tools for the spec-writer agent",
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "xml2js": "^0.6.2"
+  }
+}

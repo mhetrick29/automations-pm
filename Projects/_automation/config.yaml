@@ -1,0 +1,76 @@
+# Automation Configuration
+# Controls how the document classifier and message extractor work
+
+paths:
+  # Root folder for projects
+  projects_root: "C:/Users/mhetrick/OneDrive - Microsoft/Projects"
+  
+  # Folders to scan for new documents (add more as needed)
+  scan_folders:
+    - "C:/Users/mhetrick/OneDrive - Microsoft"  # Root OneDrive (top-level only)
+    - "C:/Users/mhetrick/OneDrive - Microsoft/Documents"
+    - "C:/Users/mhetrick/OneDrive - Microsoft/Desktop"
+  
+  # Recordings folder for reference
+  recordings_folder: "C:/Users/mhetrick/OneDrive - Microsoft/Recordings"
+  
+  # Needs sorting folder
+  needs_sorting: "C:/Users/mhetrick/OneDrive - Microsoft/Projects/_needs-sorting"
+  
+  # Folders to exclude from scanning
+  exclude_folders:
+    - "Projects"  # Don't re-sort already sorted items
+    - "_automation"
+    - "_templates"
+    - "Apps"
+    - "AppData"
+    - ".git"
+    - "node_modules"
+
+# Document types to process
+document_extensions:
+  - ".docx"
+  - ".pptx"
+  - ".xlsx"
+  - ".pdf"
+  - ".md"
+  - ".txt"
+
+# Minimum confidence score (0-1) to auto-sort
+# Below this, goes to needs-sorting
+min_confidence: 0.3
+
+# How many days back to scan for modified files
+scan_days_back: 1
+
+# Microsoft Graph API settings (for email/Teams)
+# You'll need to register an app in Azure AD and get these values
+graph_api:
+  # Set to true once you've configured the app registration
+  enabled: false
+  tenant_id: ""  # Your Azure AD tenant ID
+  client_id: ""  # App registration client ID
+  # For auth, we'll use device code flow (interactive) or certificate
+
+# Email extraction settings
+email:
+  # How many days of email to scan
+  days_back: 1
+  # Folders to scan
+  folders:
+    - "Inbox"
+    - "Sent Items"
+  # Minimum importance to extract (Low, Normal, High)
+  min_importance: "Normal"
+  # Keywords that trigger extraction (in addition to project matching)
+  trigger_keywords:
+    - "action item"
+    - "decision"
+    - "follow up"
+    - "TODO"
+
+# Teams message extraction settings
+teams:
+  days_back: 1
+  # Only extract from these chats/channels (leave empty for all)
+  filter_chats: []

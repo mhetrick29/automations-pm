@@ -1,0 +1,21 @@
+# agents/spec-writer/.gitignore
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Local caches & logs
+*.log
+.cache/
+.tmp/
+
+# Local knowledge artifacts (keep only curated examples)
+research-recordings/
+raw-evidence/
+screenshots/
+
+# Build outputs
+out/
+dist/

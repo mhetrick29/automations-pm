@@ -1,0 +1,117 @@
+###########################################################
+# Copilot Agent Development — .gitignore Template
+# For: /agents/* (Copilot CLI agents, agent.system.md, etc.)
+###########################################################
+
+# ----------------------------------------
+# OS / Editor clutter
+# ----------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.vscode-test/
+*.swp
+*.swo
+
+# ----------------------------------------
+# Node, Python, and tool environment files
+# (relevant because MCP servers or CLI runners
+# often live next to agents) 
+# ----------------------------------------
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+venv/
+
+# Pipenv / Poetry
+Pipfile.lock
+poetry.lock
+
+# ----------------------------------------
+# Copilot / Agent build artifacts
+# ----------------------------------------
+# Agent packaging / build output
+dist/
+build/
+out/
+.cache/
+.temp/
+tmp/
+
+# Generated embeddings, indexes, local vector DBs
+*.index
+*.faiss
+*.bin
+*.sqlite3
+indexes/
+vector_store/
+
+# Knowledge ingestion caches
+.kb-cache/
+knowledge-cache/
+sharepoint-sync/
+.oneDrive-cache/
+
+# ----------------------------------------
+# Sensitive local data
+# ----------------------------------------
+*.key
+*.pem
+*.crt
+*.p12
+id_*
+*.token
+*.credentials
+secrets.json
+local.settings.json
+
+# Avoid committing raw research data
+research-recordings/
+research-transcripts/
+screenshots/
+observations/
+raw-evidence/
+
+# ----------------------------------------
+# Logs
+# ----------------------------------------
+*.log
+logs/
+agent-logs/
+debug.log
+
+# ----------------------------------------
+# Temporary agent files created by CLI / MCP
+# ----------------------------------------
+*.tmp
+*.bak
+.session/
+.sessions/
+workspace/
+sandbox/
+mcp-cache/
+mcp-temp/
+
+# ----------------------------------------
+# Ignore any copied/compiled docs
+# ----------------------------------------
+*.pdf
+*.docx
+*.pptx
+
+# ----------------------------------------
+# Ignore local OneDrive/SharePoint sync artifacts
+# ----------------------------------------
+~$*
+*.tmp.spsync
