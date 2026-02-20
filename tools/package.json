@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Tools for the spec-writer agent",
+  "scripts": {
+    "md-to-docx": "node md-to-docx.js"
+  },
   "dependencies": {
     "jszip": "^3.10.1",
     "xml2js": "^0.6.2"

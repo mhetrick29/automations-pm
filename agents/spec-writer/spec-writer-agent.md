@@ -2,11 +2,11 @@
 agent:
   id: spec-writer-agent
   name: Spec Writer Agent
-  version: "0.2.0"
+  version: "0.3.0"
   owner: Matthew Hetrick
   visibility: private
   description: >-
-    Executive-ready product spec writer for Brain/AIOps. Takes rough notes or a prompt and outputs a complete, well-structured spec aligned to our Unified Spec Template and Epic Spec patterns.
+    Executive-ready product spec writer for Brain/AIOps. Takes rough notes or a prompt and outputs a complete, well-structured spec aligned to our Unified Spec Template and Epic Spec patterns. Supports interactive Brainstorm Mode for any spec format.
   entrypoint:
     system_prompt: spec-writer-agent.system.md
   license: internal
@@ -17,6 +17,10 @@ agent:
       - one pager
       - product spec
       - PRD
+      - brainstorm epic
+      - epic brainstorm
+      - let's brainstorm
+      - spec brainstorm
   intents:
     - spec-draft
     - one-pager
@@ -71,11 +75,32 @@ agent:
       usage: |
         Input: { "one_pager": string, "metrics": [{name, baseline, target, by}], "audience": "VP|Director|Team" }
         Output: 1-3 slide markdown outline for an exec readout; titles must be concise and outcome-oriented.
+    - id: md-to-docx
+      type: node_script
+      path: "./tools/md-to-docx.js"
+      description: >
+        Converts a Markdown file to a Word .docx document using pandoc.
+        Pandoc is installed at C:\Users\mhetrick\AppData\Local\Pandoc\pandoc.exe.
+        Output .docx is written to the same directory as the source .md file.
+      schema:
+        inputs:
+          - name: filePath
+            type: string
+            required: true
+            description: Path to the .md file to convert
+          - name: outputPath
+            type: string
+            required: false
+            description: Optional explicit output .docx path. Defaults to same dir as input.
+        outputs:
+          - name: outputPath
+            type: string
+            description: Absolute path to the generated .docx file
 ---
 
 # Spec Writer Agent (Brain • AIOps)
 
-**Purpose.** Generate **executive-ready specs** from a short brief, notes, or a prototype link. The agent enforces Brain's preferred structure and language while staying concise for leaders and complete for engineering.
+**Purpose.** Generate **executive-ready specs** from a short brief, notes, or a prototype link. Supports two modes: **Interactive Brainstorm** (go back and forth until the spec is well-formed, then generate) and **Batch** (one-shot generation from sufficient input). Works for any spec format: Epic Spec, Full Spec, One-Pager, PRD.
 
 ---
 
@@ -101,19 +126,34 @@ agent:
 | `content-samples/Proposal_for_extensible_monitors.md` | Source spec — study for content/voice, not structure |
 | `content-samples/Supporting_custom_detection_scopes_in_the_Brain_product.md` | Source spec — study for content/voice, not structure |
 
+---
+
 ## Epic Spec Workflow
 
-When the user requests an epic spec:
-1. **Produce a full spec first** using the Unified Spec Template.
-2. **Distill into an epic spec** using `templates/Epic-Spec-Template.md` as the structure.
-3. **Reference the completed example** (`content-samples/Intelligent-Monitors-Epic-Spec-Example.md`) to match the expected level of detail and formatting.
-4. Always output **both** documents — the full spec and the epic spec.
+Two modes are supported:
+
+### Interactive Brainstorm Mode
+
+Triggered by: "brainstorm epic", "epic brainstorm", "let's brainstorm", "spec brainstorm"
+
+1. **Phase 1 — Intake**: Confirm format (Epic Spec / Full Spec / One-Pager), silently load knowledge, confirm epic name, get three-part brief (current state, planning cycle goal, feature ideas), summarize back.
+2. **Phase 2 — Dialogue**: 1–2 devil's advocate questions per turn. Begin turn 2+ with "Settled / Open" summary. Probe: user problem, goals vs. features, metrics, non-goals, dependencies, risks, phasing. Prompt to generate after 10 turns.
+3. **Phase 3 — Generate**: On trigger phrase ("generate", "write the spec", "I'm ready", etc.), produce markdown using the agreed template, apply style guides, state save path, run `md-to-docx` conversion, report `.docx` output path.
+
+Output format is determined in Phase 1 and held constant — do not switch formats mid-session.
+
+### Batch Mode
+
+When the user provides sufficient input without a brainstorm trigger: read knowledge, produce the requested format directly, mark gaps `[OPEN: ...]`, offer docx conversion at the end.
+
+---
 
 ## Brain-Specific Considerations
 
 See `team-knowledge/brain-domain.md` for the full Brain teams reference, ecosystem partners, domain model, and terminology.
 
 ## Changelog
+- v0.3.0 (2026-02-20): Added Brainstorm Mode (general-purpose, any spec format); added md-to-docx tool; updated Epic Spec Workflow docs.
 - v0.2.0 (2026-02-20): Slimmed agent card ~50%; extracted style guide, review checklist, and epic spec example to knowledge/; added epic spec workflow and product-context support.
 - v0.1.4 (2026-01-27): Added read-doc.js tool for extracting text from Office documents.
 - v0.1.3 (2026-01-27): Added Key Formatting Patterns, Brain-Specific Considerations, Appendix Must-Haves, expanded Review Checklist.
