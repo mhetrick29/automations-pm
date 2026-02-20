@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:docs.factory.ai)",
+      "Bash(pandoc:*)",
+      "Bash(node tools/md-to-docx.js:*)"
+    ]
+  }
+}
