@@ -8,7 +8,7 @@ A **PM automation toolkit** built around 4 specialized Copilot agents for the Br
 
 ## Architecture
 
-### Three Layers
+### Four Layers
 
 1. **Agents** (`agents/`) — 4 Copilot agents registered via `copilot.json`:
    - **Spec Writer** (`spec-writer/`) — Generates executive-ready one-pagers and full product specs from notes or prompts. Uses knowledge files (templates, style guide, examples) grounded in Brain/AIOps context.
@@ -16,9 +16,11 @@ A **PM automation toolkit** built around 4 specialized Copilot agents for the Br
    - **Prototyping** (`prototyping-agent/`) — Converts product specs into deployable Next.js (TypeScript) prototypes targeting Vercel.
    - **Action Items** (`action-items/`) — Extracts action items from Teams/Email via Work IQ MCP tools. Persists to `Projects/_automation/action-items.md`.
 
-2. **Tools & Knowledge** (`tools/`, `agents/*/knowledge/`) — Shared utilities and agent-specific reference material.
+2. **Shared Knowledge** (`team-knowledge/`) — Product context, Brain domain reference, writing style guide, and personal style overrides. All agents read from here.
 
-3. **Project System** (`Projects/`) — Manifest-driven project tracking with ADO integration. Each project has a `manifest.yaml` with ADO tag, OKRs, document tracking, and team info.
+3. **Tools & Agent-Specific Knowledge** (`tools/`, `agents/*/knowledge/`) — Shared utilities and agent-specific reference material (templates, content samples, checklists).
+
+4. **Project System** (`Projects/`) — Manifest-driven project tracking with ADO integration. Each project has a `manifest.yaml` with ADO tag, OKRs, document tracking, and team info.
 
 ### Agent File Convention
 
@@ -54,10 +56,12 @@ node Projects/_automation/sync-ado.js             # Update manifests from ADO
 
 ## Key Conventions
 
-- **Spec Writer knowledge** lives in `agents/spec-writer/knowledge/` — templates, style guide, review checklist, content samples, and user-maintained `product-context/` docs. The system prompt instructs the agent to read these before generating.
-- **Content samples** (`content-samples/`) are references for writing voice and technical depth — their structure predates current templates and should NOT be used as structural models.
-- **Product context** (`knowledge/product-context/`) contains vision and priorities docs maintained by the user. The agent asks if these need updating before starting.
-- **Brain teams** referenced across specs: AI Models, AI Platform, AI Monitoring-Pipeline, AI Monitoring-Actions, Auto-Diagnosis, AI Experiences. External partners: SLO/SLI Platform, ARG, IcM.
+- **Shared knowledge** lives in `team-knowledge/` — product context, Brain domain reference, writing style guide, and personal style overrides. All agents read from here at startup.
+- **Agent-specific knowledge** lives in `agents/*/knowledge/` — templates, content samples, checklists, and other material unique to each agent.
+- **Content samples** (`agents/spec-writer/knowledge/content-samples/`) are references for writing voice and technical depth — their structure predates current templates and should NOT be used as structural models.
+- **Product context** (`team-knowledge/product-context/`) contains vision and priorities docs maintained by the user. Agents ask if these need updating before starting. Will migrate to SharePoint fetch when URL is available.
+- **Brain teams** are documented in `team-knowledge/brain-domain.md`: AI Models, AI Platform, AI Monitoring-Pipeline, AI Monitoring-Actions, Auto-Diagnosis, AI Experiences. External partners: SLO/SLI Platform, ARG, IcM.
+- **Writing style** follows a layered model: `team-knowledge/writing-style-guide.md` (team default) + optional `team-knowledge/writing-styles/[name]-style.md` (personal overrides).
 
 ## Git
 

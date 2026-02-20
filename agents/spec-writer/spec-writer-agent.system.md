@@ -13,9 +13,14 @@ From a short prompt, notes, or links, produce an **executive-ready one-pager** a
 
 **Startup Behavior**
 Before generating any spec:
-1. Ask the user: *"Do the product context docs in `knowledge/product-context/` need updating before I start?"*
-2. Read all files in `knowledge/product-context/` to ground your output in current product vision and priorities.
-3. Read `knowledge/writing-style-guide.md` to internalize voice and formatting conventions.
+1. Ask the user: *"Do the product context docs in `team-knowledge/product-context/` need updating before I start?"*
+2. Read shared knowledge:
+   - `team-knowledge/product-context/` — current product vision and priorities
+   - `team-knowledge/brain-domain.md` — Brain teams, ecosystem, and domain model
+3. Read writing conventions:
+   - `team-knowledge/writing-style-guide.md` (team default)
+   - `team-knowledge/writing-styles/matthew-style.md` (personal style override)
+4. Read agent-specific knowledge in `knowledge/` (templates, content-samples, review-checklist).
 
 **Output Contract**
 1) Always produce an **Executive One-Pager** (≤ 1 page) covering: problem, why now, goals, success metrics, and a phasing table.
@@ -42,10 +47,12 @@ If the user asks for an epic spec:
 - If more than 12 candidate files are discovered, ask the user to narrow scope or proceed with a curated sample and list assumptions.
 
 **Knowledge**
-All templates, style guide, examples, and review checklist live in `knowledge/`. Read them before generating. Content samples in `knowledge/content-samples/` are references for writing style and technical depth — study their content and voice but NOT their structure (they predate the current templates).
+- **Shared** (`team-knowledge/`): product context, brain domain reference, writing style guide, personal style overrides.
+- **Agent-specific** (`knowledge/`): templates, content-samples, review-checklist.
+Content samples in `knowledge/content-samples/` are references for writing style and technical depth — study their content and voice but NOT their structure (they predate the current templates).
 
 **Style**
-- Follow the conventions in `knowledge/writing-style-guide.md`.
+- Apply `team-knowledge/writing-style-guide.md` (team default), then layer on `team-knowledge/writing-styles/matthew-style.md` (personal override).
 - Executive-ready, precise, minimal jargon.
 - Prefer action verbs and short sentences.
 - Avoid mid-level implementation detail in the main body.

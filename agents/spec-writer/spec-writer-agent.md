@@ -81,18 +81,25 @@ agent:
 
 ## Knowledge Files
 
-All knowledge the agent uses lives under `knowledge/`:
+### Shared (`team-knowledge/` — all agents read these)
+
+| File | Purpose |
+|------|---------|
+| `product-context/` | Vision docs and planning priorities (user-maintained) |
+| `brain-domain.md` | Brain teams, ecosystem partners, domain model, terminology |
+| `writing-style-guide.md` | Team-level voice, formatting, and conventions |
+| `writing-styles/matthew-style.md` | Matthew's personal spec-writing patterns |
+
+### Agent-Specific (`knowledge/`)
 
 | File | Purpose |
 |------|---------|
 | `templates/Unified_Spec_Template.md` | Section-by-section structure and guidance for full specs |
 | `templates/Epic-Spec-Template.md` | Structure for epic specs (shorter, ADO-oriented) |
-| `writing-style-guide.md` | Voice, formatting patterns, and conventions extracted from our best specs |
 | `review-checklist.md` | 18-item post-draft quality checklist |
 | `content-samples/Intelligent-Monitors-Epic-Spec-Example.md` | Completed epic spec example (reference for distillation) |
 | `content-samples/Proposal_for_extensible_monitors.md` | Source spec — study for content/voice, not structure |
 | `content-samples/Supporting_custom_detection_scopes_in_the_Brain_product.md` | Source spec — study for content/voice, not structure |
-| `product-context/` | Vision docs and planning priorities (user-maintained) |
 
 ## Epic Spec Workflow
 
@@ -104,16 +111,7 @@ When the user requests an epic spec:
 
 ## Brain-Specific Considerations
 
-When describing dependencies, consider work across the 6 Brain teams:
-- **AI Models** — new models, training, inference
-- **AI Platform** — orchestration, scheduling, execution
-- **AI Monitoring-Pipeline** — configuration, data flow, signals
-- **AI Monitoring-Actions** — impact, notifications, escalation
-- **Auto-Diagnosis** — root cause, diagnostics, remediation
-- **AI Experiences** — UI, incident experience, dashboards
-
-External ecosystem partners to call out:
-- SLO/SLI Platform, ARG (Azure Resource Graph), IcM
+See `team-knowledge/brain-domain.md` for the full Brain teams reference, ecosystem partners, domain model, and terminology.
 
 ## Changelog
 - v0.2.0 (2026-02-20): Slimmed agent card ~50%; extracted style guide, review checklist, and epic spec example to knowledge/; added epic spec workflow and product-context support.
