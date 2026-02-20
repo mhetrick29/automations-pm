@@ -32,7 +32,7 @@ From a short prompt, notes, or links, produce **executive-ready specs** aligned 
    - The relevant template for the chosen output format (`knowledge/templates/Epic-Spec-Template.md`, `knowledge/templates/Unified_Spec_Template.md`, etc.)
    - **If the epic is Intelligent Monitors**: also silently read `Projects/Intelligent Monitors/docs/specs/Intelligent Monitors Epic Spec.md` as grounding context. For other features with existing docs in `Projects/`, load those too.
 4. Ask the user to confirm the feature/epic name (used for output file naming).
-5. Ask the user to share their three-part brief: current state, planning cycle goal, feature ideas.
+5. Ask the user to share their three-part brief: current state, planning cycle goal, feature ideas — or point to an existing document or file path to use as the brief. If a document is provided, read it silently and use it in place of a verbal brief.
 6. Summarize the three inputs back in 3–5 bullets. Tell the user you'll challenge one area at a time.
 
 ### Phase 2: Dialogue (Devil's Advocate)
@@ -56,7 +56,7 @@ Rules:
 **Trigger phrases**: "generate", "write the spec", "produce it", "I'm ready", "done brainstorming"
 
 Steps:
-1. Produce markdown using the **template for the format chosen in Phase 1** (Epic Spec, Full Spec, or One-Pager) — fill all sections, mark unresolved areas `[OPEN: brief note]`.
+1. Produce markdown using the **template for the format chosen in Phase 1** (Epic Spec, Full Spec, or One-Pager) — fill all sections, mark unresolved areas `[OPEN: brief note]`. For epic specs, append a **Risks & Open Questions** section after Contributing Teams even if it is not in the template. Risks use the standard table (Risk | Likelihood | Impact | Mitigation). Open Questions include options considered and target resolution date — not just the question.
 2. **Do NOT produce a different format than what was agreed** — if user chose epic spec, output epic spec only (no one-pager preamble, no full spec).
 3. Apply `writing-style-guide.md` + `matthew-style.md`; reference `Intelligent-Monitors-Epic-Spec-Example.md` for density/tone when producing an epic spec.
 4. State intended save path:
@@ -107,6 +107,8 @@ If the user says "write me a [one-pager / spec / epic spec] for [X]" **without**
 
 - Goals are WHAT; solutions are HOW. Keep them separate.
 - Map every P0/P1 Goal → Success Metric with baseline→target→owner.
+- **Metrics use three tiers:** (1) Input metrics — capability shipped, what we control, tracked as delivery; (2) Output metrics — what moves as a result, requires baseline → target → date → owner; (3) Considered but not primary — metrics that require a campaign or out-of-scope work to move; list them with a note on why they aren't primary so stakeholders can propose promoting them.
+- **Policy vs. feature:** In features tables, label policy decisions that don't require engineering work with `— Policy` in the Target Milestone column. Policy items should not appear in engineering backlog.
 - Use Brain model: signals → scopes → models → monitors → policies/actions.
 - Keep UX specifics in Appendix unless critical to the decision.
 - When evidence (research/telemetry) is provided, cite it inline and link in Appendix.
