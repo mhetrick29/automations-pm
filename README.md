@@ -1,6 +1,6 @@
 # PM Automation Toolkit — Brain/AIOps
 
-4 specialized Copilot agents + a shared knowledge layer for product management work on the Brain/AIOps platform at Microsoft.
+5 specialized Copilot agents + a shared knowledge layer for product management work on the Brain/AIOps platform at Microsoft.
 
 ---
 
@@ -10,7 +10,7 @@ Four layers:
 
 | Layer | Path | Purpose |
 |-------|------|---------|
-| **Agents** | `agents/` | 4 Copilot agents, each with a two-file definition (card + system prompt) |
+| **Agents** | `agents/` | 5 Copilot agents, each with a two-file definition (card + system prompt) |
 | **Shared Knowledge** | `team-knowledge/` | Product context, Brain domain model, writing style — loaded by all agents |
 | **Tools** | `tools/` | Shared utilities (doc extraction, outline generation) |
 | **Projects** | `Projects/` | Manifest-driven project tracking with ADO integration |
@@ -35,6 +35,7 @@ Splitting into specialized agents means:
 | **User Research** | `research plan`, `discussion guide`, `interview guide`, `synthesis`, `insights` | Plans studies, creates discussion guides, synthesizes findings with severity/confidence scoring |
 | **Prototyping** | `create prototype`, `make prototype`, `deployable prototype`, `wireframe` | Converts a product spec into a deployable Next.js (TypeScript) prototype targeting Vercel |
 | **Action Items** | `/get-action-items` | Extracts action items from Teams/Email via Work IQ MCP tools; persists to `Projects/_automation/action-items.md` |
+| **Brain Dump** | `brain dump`, `turn this into a doc`, `structure my thoughts`, `clean this up` | Turns unstructured stream-of-consciousness notes into a polished strategic narrative (problems, gaps, pillars, phases, metrics) |
 
 ---
 
@@ -62,6 +63,9 @@ agents/
     action-items-agent.md
     action-items-agent.system.md
     get-action-items.md             # Work IQ prompts
+  brain-dump/
+    brain-dump-agent.md
+    brain-dump-agent.system.md
 
 team-knowledge/                     # SHARED — all agents read this
   brain-domain.md                   # Brain teams, ecosystem, terminology
@@ -121,6 +125,9 @@ copilot agents run -f agents/prototyping-agent/prototyping-agent.md "Create a de
 
 # Action Items
 # In Copilot Chat: /get-action-items
+
+# Brain Dump
+copilot agents run -f agents/brain-dump/brain-dump-agent.md "Structure my thoughts: <paste notes or provide file path>"
 ```
 
 ---
