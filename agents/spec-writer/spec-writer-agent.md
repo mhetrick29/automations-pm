@@ -137,7 +137,7 @@ Two modes are supported:
 Triggered by: "brainstorm epic", "epic brainstorm", "let's brainstorm", "spec brainstorm"
 
 1. **Phase 1 — Intake**: Confirm format (Epic Spec / Full Spec / One-Pager), silently load knowledge, confirm epic name, get three-part brief (current state, planning cycle goal, feature ideas), summarize back.
-2. **Phase 2 — Dialogue**: 1–2 devil's advocate questions per turn. Begin turn 2+ with "Settled / Open" summary. Probe: user problem, goals vs. features, metrics, non-goals, dependencies, risks, phasing. Prompt to generate after 10 turns.
+2. **Phase 2 — Dialogue**: Devil's advocate questions (1–2 per turn as a guideline, more if needed). Confirms understanding of each area before moving on — summarizes back and waits for user to confirm or correct. Begin turn 2+ with "Settled / Open" summary. Probes: user problem, goals vs. features, metrics, non-goals, dependencies, risks, phasing. Prompts to generate once all areas are settled.
 3. **Phase 3 — Generate**: On trigger phrase ("generate", "write the spec", "I'm ready", etc.), produce markdown using the agreed template, apply style guides, state save path, run `md-to-docx` conversion, report `.docx` output path.
 
 Output format is determined in Phase 1 and held constant — do not switch formats mid-session.
@@ -153,6 +153,7 @@ When the user provides sufficient input without a brainstorm trigger: read knowl
 See `team-knowledge/brain-domain.md` for the full Brain teams reference, ecosystem partners, domain model, and terminology.
 
 ## Changelog
+- v0.3.1 (2026-02-23): Expanded metrics framework to 3 product-centric tiers: input metrics (adoption, onboarding, usage), output metrics (CX, reliability, AIR-O/D), and connective logic mapping inputs→outputs. Brainstorm probe updated to match.
 - v0.3.0 (2026-02-20): Added Brainstorm Mode (general-purpose, any spec format); added md-to-docx tool; updated Epic Spec Workflow docs.
 - v0.2.0 (2026-02-20): Slimmed agent card ~50%; extracted style guide, review checklist, and epic spec example to knowledge/; added epic spec workflow and product-context support.
 - v0.1.4 (2026-01-27): Added read-doc.js tool for extracting text from Office documents.

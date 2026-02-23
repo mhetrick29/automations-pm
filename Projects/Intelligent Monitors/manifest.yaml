@@ -131,9 +131,10 @@ recordings:
 # Local Documents (in this project folder)
 documents:
   specs:
-    - "docs/Proposal for extensible monitors.docx"
+    - "docs/Intelligent Monitors Epic Spec.md"
+    - "docs/Intelligent Monitors Post-March Epic Spec.md"
+    - "docs/Brain Skills Spec.md"
   presentations:
-    - "presentations/Intelligent Monitors.pptx"
     - "presentations/Intelligent Monitors_Product Talks Deck.pptx"
   notes: []
 
@@ -145,6 +146,6 @@ tags:
   - "automation"
 
 # Related Projects
-related_projects: []
-  # - name: "Self-Serve Configuration"
-  #   relationship: "related-to"
+related_projects:
+  - name: "Custom Scopes"
+    relationship: "related-to"
