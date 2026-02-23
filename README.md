@@ -6,7 +6,7 @@
 
 ## Architecture
 
-Four layers:
+Three layers:
 
 | Layer | Path | Purpose |
 |-------|------|---------|
