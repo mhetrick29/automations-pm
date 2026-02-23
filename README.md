@@ -146,6 +146,37 @@ All agents are registered in `copilot.json` and available in **VS Code Copilot C
 
 ---
 
+## Common Workflow: Brain Dump → Epic Spec
+
+The **Brain Dump** and **Spec Writer** agents work together as a planning pipeline. Here's a typical flow:
+
+### 1. Capture raw thoughts
+Walk the dog, hop in the car, or sit at your desk — brain dump ideas however works for you:
+- Record a Teams meeting with yourself and talk through your thoughts
+- Send yourself a Teams message with rough notes
+- Type a stream-of-consciousness directly into the CLI
+
+> Audio file input is planned but not yet supported.
+
+### 2. Structure with Brain Dump agent
+Paste or reference your raw notes and let the agent organize them:
+```
+@brain-dump-agent Structure these thoughts: <paste notes>
+```
+It outputs structured markdown and Word docs covering: where we are today, the gaps, potential solutions, and a phased approach. Go back and forth with the agent until it reads right.
+
+### 3. Brainstorm the Epic Spec
+Take the structured output and feed it into the Spec Writer:
+```
+@spec-writer Let's brainstorm the epic spec for {epic} using #file:brain-dump-output.md
+```
+The agent enters **brainstorm mode** — walking through each section, challenging your assumptions, and sharpening the spec through dialogue. It uses a **grader skill** informed by spec review best practices and common engineering feedback to keep the bar high.
+
+### 4. Output and polish
+After brainstorming, the agent generates a full epic spec. With light formatting and revision, you have a ready-to-share spec.
+
+---
+
 ## Adding a New Agent
 
 1. Create `agents/<name>/` with two files:
