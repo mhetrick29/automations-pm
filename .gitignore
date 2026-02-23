@@ -1,0 +1,19 @@
+# Projects live in a separate repo at ~/OneDrive - Microsoft/Projects/
+Projects/
+
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Editor
+.idea/
+*.swp
+*.swo
