@@ -20,7 +20,7 @@ Three layers:
 
 Splitting into specialized agents means:
 
-- **Focused system prompts.** A single prompt covering specs, research, prototyping, and action items would be diluted and worse at every task.
+- **Focused system prompts.** A single prompt covering specs, research, prototyping, and action items would be diluted and worse at every task. We are building a toolkit for PMs, not a full development team. Long-term, each agent becomes a skill that a PM "team leader" agent can spawn as needed during the software development lifecycle.
 - **Unambiguous routing.** Copilot routes by trigger phrase. Focused triggers ("write spec", "research plan") are unambiguous; a generalist agent needs broad triggers and internal routing Copilot can't natively handle.
 - **Low regression risk.** Adding a new PM capability = new agent following the two-file pattern. Existing agents are untouched.
 
