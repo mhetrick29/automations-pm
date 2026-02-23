@@ -62,6 +62,11 @@ Set `PROJECTS_DIR` environment variable to override.
 ## Key Conventions
 
 - **Shared knowledge** lives in `team-knowledge/` — product context, Brain domain reference, writing style guide, and personal style overrides. All agents read from here at startup.
+- **Knowledge sources** (configured in `team-knowledge/config.yaml`):
+  1. **Local files** — always available, the primary cache
+  2. **SharePoint** — team-curated docs, synced via `tools/fetch-knowledge.js`
+  3. **ADO docs repo** — engineering hub markdown organized by area (detection, health, etc.) — *not yet enabled*
+  4. **askBrain MCP** — real-time Q&A against Brain knowledge base — *not yet enabled*
 - **Agent-specific knowledge** lives in `agents/*/knowledge/` — templates, content samples, checklists, and other material unique to each agent.
 - **Content samples** (`agents/spec-writer/knowledge/content-samples/`) are references for writing voice and technical depth — their structure predates current templates and should NOT be used as structural models.
 - **Product context** (`team-knowledge/product-context/`) contains vision and priorities docs. Local files serve as a cache; agents check for SharePoint updates at startup via `node tools/fetch-knowledge.js --status`. See `team-knowledge/config.yaml` for file mappings.

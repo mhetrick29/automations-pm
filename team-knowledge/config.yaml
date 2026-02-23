@@ -60,3 +60,36 @@ conversion:
   auto_convert: true
   # Tool used for conversion (relative to tools/)
   converter: "read-doc.js"
+
+# --- Future Knowledge Sources ---
+
+# ADO docs repo: engineering hub documentation in markdown format.
+# Contains area-specific deep docs (detection, health, monitoring, etc.)
+# These will be pulled into team-knowledge/area-knowledge/ when enabled.
+ado_repo:
+  enabled: false
+  # TODO: Fill in project and repo name once ready to connect
+  project: "One"
+  repository: ""  # e.g., "brain-docs" or the actual repo name
+  branch: "main"
+  # Folders in the repo that map to knowledge areas
+  areas:
+    - name: "detection"
+      path: "detection/"
+      description: "Detection models, anomaly detection, alerting logic"
+    - name: "health"
+      path: "health/"
+      description: "Health models, SLI/SLO, service health scoring"
+    # Add more areas as the repo structure is confirmed
+  # Local destination for synced area docs
+  local_root: "area-knowledge/"
+
+# askBrain MCP: future MCP tool for real-time Q&A against Brain knowledge base.
+# When enabled, agents can query this as a live knowledge source during sessions.
+mcp:
+  enabled: false
+  # TODO: Fill in when askBrain MCP is available
+  tool_name: "askBrain"
+  description: "Real-time Q&A against Brain engineering knowledge base"
+  # endpoint: ""
+  # auth: ""

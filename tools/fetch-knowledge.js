@@ -125,9 +125,22 @@ function showStatus() {
   console.log('╔══════════════════════════════════════════════════════════╗');
   console.log('║           📚 Team Knowledge Sync Status                ║');
   console.log('╠══════════════════════════════════════════════════════════╣');
-  console.log(`║  SharePoint: ${config.sharepoint?.site || 'not configured'}`);
-  console.log(`║  Folder:     ${config.sharepoint?.folder || 'not configured'}`);
   console.log(`║  Local:      ${TEAM_KNOWLEDGE_DIR}`);
+  console.log(`║  SharePoint: ${config.sharepoint?.site || 'not configured'}`);
+  console.log(`║    Folder:   ${config.sharepoint?.folder || 'not configured'}`);
+  const adoRepo = config.ado_repo;
+  if (adoRepo) {
+    const adoStatus = adoRepo.enabled ? '✅ enabled' : '⏸️  not yet enabled';
+    console.log(`║  ADO Repo:   ${adoStatus}${adoRepo.repository ? ` (${adoRepo.repository})` : ''}`);
+    if (adoRepo.areas?.length) {
+      console.log(`║    Areas:    ${adoRepo.areas.map(a => a.name).join(', ')}`);
+    }
+  }
+  const mcp = config.mcp;
+  if (mcp) {
+    const mcpStatus = mcp.enabled ? '✅ enabled' : '⏸️  not yet enabled';
+    console.log(`║  MCP:        ${mcpStatus}${mcp.tool_name ? ` (${mcp.tool_name})` : ''}`);
+  }
   console.log('╚══════════════════════════════════════════════════════════╝');
   console.log();
 
