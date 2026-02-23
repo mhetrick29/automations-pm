@@ -6,13 +6,14 @@
 
 ## Architecture
 
-Three layers:
+Four layers:
 
 | Layer | Path | Purpose |
 |-------|------|---------|
 | **Agents** | `agents/` | 5 Copilot agents, each with a two-file definition (card + system prompt) |
+| **Skills** | `skills/` | Reusable skill files any agent can invoke (interview analysis, PDF conversion) |
 | **Shared Knowledge** | `team-knowledge/` | Product context, Brain domain model, writing style — loaded by all agents. Syncs from SharePoint via `tools/fetch-knowledge.js`. |
-| **Tools** | `tools/` | Shared utilities (doc extraction, action items, ADO sync, end-of-day, doc classification, knowledge sync) |
+| **Tools** | `tools/` | Shared utilities (doc extraction, knowledge sync, action items, ADO sync, end-of-day, doc classification) |
 
 ### Why specialized agents, not one PM agent
 
@@ -67,21 +68,21 @@ agents/
     brain-dump-agent.system.md
 
 team-knowledge/                     # SHARED — all agents read this
-  brain-domain.md                   # Brain teams, ecosystem, terminology
+  brain-domain.md                   # Brain teams, capabilities, ecosystem, terminology
+  config.yaml                       # Knowledge source registry (local, SharePoint, ADO repo, MCP)
   writing-style-guide.md            # Team-level writing conventions
   writing-styles/
-    matthew-style.md                # Personal spec-writing patterns
+    matthew-style.md                # Personal writing patterns (auto-updated per conversation)
   product-context/                  # Vision & priorities docs (user-maintained)
 
 tools/
   read-doc.js                       # Extract text from .docx/.pptx/.xlsx
+  fetch-knowledge.js                # Team knowledge sync (--status, --pull, --snapshot, --convert)
   action-items.js                   # Extract action items via Work IQ
   sync-ado.js                       # Update project manifests from ADO
   classify-docs.js                  # Classify today's edited docs into projects
   end-of-day.js                     # Daily summaries per project via Work IQ
   md-to-docx.js                     # Convert markdown to Word
-  outline-generator.md
-  slide-writer.md
 
 skills/                             # SHARED — reusable skills any agent can invoke
   interview-analysis.skill.md       # Multi-transcript analysis with AI guardrails
@@ -120,6 +121,8 @@ All agents are registered in `copilot.json` and available in **VS Code Copilot C
 
 ```
 @user-research-agent Create a discussion guide for <topic>
+@user-research-agent Analyze these interview transcripts: <attach files>
+@user-research-agent Create a JTBD canvas for <persona> doing <task>
 @user-research-agent Synthesize findings from these interview notes
 ```
 
@@ -188,3 +191,9 @@ After brainstorming, the agent generates a full epic spec. With light formatting
    - `<name>-agent.system.md` — YAML frontmatter + system prompt (mission, output contract, authoring rules, style)
 2. Register the agent in `copilot.json`.
 3. Add shared context to `team-knowledge/` or agent-specific reference material to `agents/<name>/knowledge/`.
+
+## Adding a New Skill
+
+1. Create `skills/<name>.skill.md` with: triggers, workflow steps, and guardrails.
+2. Reference the skill from any agent's system prompt (e.g., `Read and follow skills/<name>.skill.md`).
+3. Skills are atomic and reusable — they define *what* to do, not *who* does it.
