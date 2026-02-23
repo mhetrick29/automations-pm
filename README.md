@@ -102,33 +102,49 @@ cd tools && npm install
 
 ---
 
-## Invocation Examples
+## Usage
 
-```bash
-# Spec Writer — one-pager + full spec
-copilot agents run -f agents/spec-writer/spec-writer-agent.md "Draft a one-pager + full spec for <capability>"
+All agents are registered in `copilot.json` and available in **VS Code Copilot Chat** via `@agent-id`. Open the Chat panel and type:
 
-# Spec Writer — brainstorm mode
-copilot agents run -f agents/spec-writer/spec-writer-agent.md "Let's brainstorm an epic for <topic>"
+### Spec Writer
 
-# Spec Writer — system prompt directly
-copilot chat -s agents/spec-writer/spec-writer-agent.system.md -p "Turn these notes into a one-pager and full spec: <paste notes>"
-
-# User Research — discussion guide
-copilot agents run -f agents/user-research/user-research-agent.md "Create a discussion guide for <topic>" --files <folder>
-
-# User Research — synthesis
-copilot agents run -f agents/user-research/user-research-agent.md "Synthesize findings from these interview notes" --files <folder>
-
-# Prototyping
-copilot agents run -f agents/prototyping-agent/prototyping-agent.md "Create a deployable prototype for project <folder>. Use <spec-file> as the spec. Target Vercel." --files <folder>
-
-# Action Items
-# In Copilot Chat: /get-action-items
-
-# Brain Dump
-copilot agents run -f agents/brain-dump/brain-dump-agent.md "Structure my thoughts: <paste notes or provide file path>"
 ```
+@spec-writer-agent Draft a one-pager + full spec for <capability>
+@spec-writer-agent Let's brainstorm an epic for <topic>
+@spec-writer-agent Turn these notes into a one-pager and full spec: <paste notes>
+```
+
+### User Research
+
+```
+@user-research-agent Create a discussion guide for <topic>
+@user-research-agent Synthesize findings from these interview notes
+```
+
+### Prototyping
+
+```
+@prototyping-agent Create a deployable prototype from <spec-file>. Target Vercel.
+```
+
+### Action Items
+
+```
+@get-action-items Extract action items from my recent Teams messages
+```
+
+### Brain Dump
+
+```
+@brain-dump-agent Structure my thoughts: <paste notes or provide file path>
+@brain-dump-agent Turn this into a doc: <paste stream-of-consciousness>
+```
+
+### Tips
+
+- **Attach files** — drag files into the chat or use `#file:path` to give agents additional context (specs, notes, interview transcripts).
+- **Project context** — agents automatically load shared knowledge from `team-knowledge/`. No need to re-explain Brain/AIOps context.
+- **Brainstorm mode** — the Spec Writer supports interactive back-and-forth; just start with "Let's brainstorm" and keep the conversation going.
 
 ---
 
