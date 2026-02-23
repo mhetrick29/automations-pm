@@ -54,7 +54,7 @@ This ensures searches are scoped to the user's configured team area and return r
 
 ## Project System
 
-My projects are organized in `~/Projects/` with YAML manifests. When I ask about a project (e.g., "tell me about intelligent monitors", "what's the status of X project", "give me an overview of Y"):
+My projects are organized in `~/OneDrive - Microsoft/Projects/` (separate repo) with YAML manifests. When I ask about a project (e.g., "tell me about intelligent monitors", "what's the status of X project", "give me an overview of Y"):
 
 ### CRITICAL: No Approval Required
 
@@ -71,8 +71,8 @@ Before generating any overview or answering questions about a project, you MUST 
 
 1. **Read the manifest.yaml** - Get project structure, OKRs, ADO tag, recordings list, GitHub repos, tags
 2. **Query ADO live** - Search for work items using the project's `ado.tag` to get current states
-3. **Read all documents** - Use `read-doc.js` to extract text from every document in the project folder:
-   - **Search subfolders** - Documents may be in `docs/`, `presentations/`, `specs/`, or other subfolders
+3. **Read all documents** - Use `node tools/read-doc.js` to extract text from every document in the project folder:
+   - **Search subfolders** - Documents may be in `docs/`, `presentations/`, or other subfolders
    - Use `file_search` with patterns like `**/*.docx`, `**/*.pptx` to find all documents
    - Specs (`.docx` files)
    - Presentations (`.pptx`, `.pptm` files)
@@ -85,13 +85,13 @@ Before generating any overview or answering questions about a project, you MUST 
 ```
 User: "tell me about intelligent monitors"
 
-1. Read Projects/Intelligent Monitors/manifest.yaml
+1. Read ~/OneDrive - Microsoft/Projects/Intelligent Monitors/manifest.yaml
 2. Extract ado.tag → "UIM"
 3. Search ADO: "UIM AreaPath:..." (NO APPROVAL NEEDED)
-4. Use file_search to find all docs: Projects/Intelligent Monitors/**/*.docx, **/*.pptx
+4. Find all docs in the project folder: **/*.docx, **/*.pptx
 5. For each document found:
-   - node read-doc.js "path/to/docs/spec.docx" (NO APPROVAL NEEDED)
-   - node read-doc.js "path/to/presentations/deck.pptx"
+   - node tools/read-doc.js "path/to/docs/spec.docx" (NO APPROVAL NEEDED)
+   - node tools/read-doc.js "path/to/presentations/deck.pptx"
 6. Search GitHub repo for components/README
 7. Synthesize into comprehensive overview with sources listed
 ```

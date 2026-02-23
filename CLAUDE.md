@@ -14,13 +14,13 @@ A **PM automation toolkit** built around 4 specialized Copilot agents for the Br
    - **Spec Writer** (`spec-writer/`) — Generates executive-ready one-pagers and full product specs from notes or prompts. Uses knowledge files (templates, style guide, examples) grounded in Brain/AIOps context.
    - **User Research** (`user-research/`) — Plans studies, creates research scripts, synthesizes findings with severity/confidence scoring. Operates in 5 modes (Discovery, Evaluation, Iteration, Spec Partner, Repository).
    - **Prototyping** (`prototyping-agent/`) — Converts product specs into deployable Next.js (TypeScript) prototypes targeting Vercel.
-   - **Action Items** (`action-items/`) — Extracts action items from Teams/Email via Work IQ MCP tools. Persists to `Projects/_automation/action-items.md`.
+   - **Action Items** (`action-items/`) — Extracts action items from Teams/Email via Work IQ MCP tools. Uses `tools/action-items.js`.
 
 2. **Shared Knowledge** (`team-knowledge/`) — Product context, Brain domain reference, writing style guide, and personal style overrides. All agents read from here.
 
-3. **Tools & Agent-Specific Knowledge** (`tools/`, `agents/*/knowledge/`) — Shared utilities and agent-specific reference material (templates, content samples, checklists).
+3. **Tools & Agent-Specific Knowledge** (`tools/`, `agents/*/knowledge/`) — Shared utilities (doc extraction, action items, ADO sync, end-of-day, doc classification) and agent-specific reference material (templates, content samples, checklists).
 
-4. **Project System** (`Projects/`) — Manifest-driven project tracking with ADO integration. Each project has a `manifest.yaml` with ADO tag, OKRs, document tracking, and team info.
+**Note:** Projects live in a separate repo at `~/OneDrive - Microsoft/Projects/`. Tools that interact with projects use the `PROJECTS_DIR` environment variable (defaults to that path).
 
 ### Agent File Convention
 
@@ -48,11 +48,16 @@ copilot agents run -f agents/spec-writer/spec-writer-agent.md "Draft a one-pager
 copilot chat -s agents/spec-writer/spec-writer-agent.system.md -p "<prompt>"
 ```
 
-### Project automation (Python)
+### Project automation
 ```bash
-python Projects/_automation/run_daily.py          # Daily doc classification + sync
-node Projects/_automation/sync-ado.js             # Update manifests from ADO
+node tools/end-of-day.js                          # Daily summaries per project
+node tools/sync-ado.js                             # Update manifests from ADO
+node tools/classify-docs.js                        # Classify today's edited docs
+node tools/action-items.js                         # Extract action items via Work IQ
 ```
+
+Note: These scripts default to `~/OneDrive - Microsoft/Projects/` for the projects folder.
+Set `PROJECTS_DIR` environment variable to override.
 
 ## Key Conventions
 

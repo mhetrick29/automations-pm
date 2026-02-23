@@ -11,24 +11,24 @@ When the user asks for action items, run the automation script that connects to 
 
 Run this command in the terminal:
 ```
-cd "c:\Users\mhetrick\OneDrive - Microsoft\Automations\Projects\_automation" && node action-items.js
+cd "c:\Users\mhetrick\OneDrive - Microsoft\Automations\tools" && node action-items.js
 ```
 
 For the last 7 days:
 ```
-cd "c:\Users\mhetrick\OneDrive - Microsoft\Automations\Projects\_automation" && node action-items.js --days 7
+cd "c:\Users\mhetrick\OneDrive - Microsoft\Automations\tools" && node action-items.js --days 7
 ```
 
 For a specific date:
 ```
-cd "c:\Users\mhetrick\OneDrive - Microsoft\Automations\Projects\_automation" && node action-items.js 2026-01-29
+cd "c:\Users\mhetrick\OneDrive - Microsoft\Automations\tools" && node action-items.js 2026-01-29
 ```
 
 ## After Running
 
 1. Parse the terminal output to extract the action items found
 2. Present them in a clean table format
-3. Let the user know the tracker file has been updated at `Projects/_automation/action-items.md`
+3. Let the user know the tracker file has been updated (path shown in script output)
 4. Offer to help prioritize or discuss any specific items
 
 ## Response Format

@@ -30,7 +30,7 @@ From a short prompt, notes, or links, produce **executive-ready specs** aligned 
    - `team-knowledge/brain-domain.md` — Brain teams, ecosystem, and domain model
    - `team-knowledge/writing-style-guide.md` and `team-knowledge/writing-styles/matthew-style.md`
    - The relevant template for the chosen output format (`knowledge/templates/Epic-Spec-Template.md`, `knowledge/templates/Unified_Spec_Template.md`, etc.)
-   - **If the epic is Intelligent Monitors**: also silently read `Projects/Intelligent Monitors/docs/Intelligent Monitors Epic Spec.md` as grounding context. For other features with existing docs in `Projects/`, load those too.
+   - **If the user provides existing spec documents** (e.g., file paths, pasted content): silently read them as grounding context. Ask the user if they have existing docs to ground the brainstorm.
 4. Ask the user to confirm the feature/epic name (used for output file naming).
 5. Ask the user to share their three-part brief: current state, planning cycle goal, feature ideas — or point to an existing document or file path to use as the brief. If a document is provided, read it silently and use it in place of a verbal brief.
 6. Summarize the three inputs back in 3–5 bullets. Tell the user you'll challenge one area at a time.
@@ -60,13 +60,12 @@ Steps:
 1. Produce markdown using the **template for the format chosen in Phase 1** (Epic Spec, Full Spec, or One-Pager) — fill all sections, mark unresolved areas `[OPEN: brief note]`. For epic specs, append a **Risks & Open Questions** section after Contributing Teams even if it is not in the template. Risks use the standard table (Risk | Likelihood | Impact | Mitigation). Open Questions include options considered and target resolution date — not just the question.
 2. **Do NOT produce a different format than what was agreed** — if user chose epic spec, output epic spec only (no one-pager preamble, no full spec).
 3. Apply `writing-style-guide.md` + `matthew-style.md`; reference `Intelligent-Monitors-Epic-Spec-Example.md` for density/tone when producing an epic spec.
-4. State intended save path:
-   `Projects/[Feature Name]/docs/[Feature Name] [Format].md`
-   (e.g., `Projects/Intelligent Monitors/docs/Intelligent Monitors Epic Spec.md`)
-   - If folder doesn't exist: tell user to create it first (or create if write capability is available).
-   - If updating an existing epic (e.g., IM): confirm before overwriting.
-5. Run docx conversion. Tell user: `"Running: node tools/md-to-docx.js \"Projects/[Epic]/docs/[Epic] Epic Spec.md\""`
-6. Report output: `Projects/[Epic Name]/docs/[Epic Name] Epic Spec.docx`
+4. Determine output location:
+   - Default: user's Downloads folder (`~/Downloads/[Feature Name] [Format].md`)
+   - Ask: *"I'll save the output to your Downloads folder. Want me to use a different folder instead?"*
+   - If user specifies a path, use that for this session.
+5. Run docx conversion. Tell user: `"Running: node tools/md-to-docx.js \"<output-path>\""`
+6. Report output path.
 
 ---
 

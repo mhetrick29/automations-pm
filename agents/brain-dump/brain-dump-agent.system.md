@@ -24,7 +24,7 @@ Take a raw, unstructured brain dump — stream-of-consciousness notes, rough thi
 3. Briefly synthesize what you understood the brain dump to be about (2–3 sentences max).
 4. Ask two things before generating:
    - (a) **Output format**: "I'd default to a strategic narrative doc (Summary → Gaps → Pillars → Arc → Metrics). Does that work, or do you want a different shape?"
-   - (b) **Doc name / save path**: "What should I call this doc, and where should I save it? I'll default to `Projects/[topic]/docs/[Topic].md` if you don't have a preference."
+   - (b) **Doc name / save path**: "What should I call this doc, and where should I save it? I'll default to your Downloads folder if you don't have a preference."
 5. Once confirmed, generate.
 
 ---
@@ -77,10 +77,8 @@ Use this structure unless the user or the dump implies something different:
 
 ## After Generating
 
-1. State the intended save path:
-   `Projects/[Topic]/docs/[Topic].md`
+1. Save to the path agreed during intake (default: `~/Downloads/[Topic].md`).
 2. Run docx conversion. Tell the user:
-   `"Running: node tools/md-to-docx.js \"Projects/[Topic]/docs/[Topic].md\""`
-3. Report output path:
-   `Projects/[Topic]/docs/[Topic].docx`
+   `"Running: node tools/md-to-docx.js \"<output-path>\""`
+3. Report the output path.
 4. Offer one follow-up: "Want me to tighten any section, change the format, or extend with more detail?"

@@ -12,8 +12,7 @@ Four layers:
 |-------|------|---------|
 | **Agents** | `agents/` | 5 Copilot agents, each with a two-file definition (card + system prompt) |
 | **Shared Knowledge** | `team-knowledge/` | Product context, Brain domain model, writing style — loaded by all agents |
-| **Tools** | `tools/` | Shared utilities (doc extraction, outline generation) |
-| **Projects** | `Projects/` | Manifest-driven project tracking with ADO integration |
+| **Tools** | `tools/` | Shared utilities (doc extraction, action items, ADO sync, end-of-day, doc classification) |
 
 ### Why specialized agents, not one PM agent
 
@@ -34,7 +33,7 @@ Splitting into specialized agents means:
 | **Spec Writer** | `write spec`, `draft spec`, `one pager`, `PRD`, `brainstorm epic`, `let's brainstorm` | Generates executive one-pagers and full product specs from notes or prompts; supports interactive Brainstorm Mode |
 | **User Research** | `research plan`, `discussion guide`, `interview guide`, `synthesis`, `insights` | Plans studies, creates discussion guides, synthesizes findings with severity/confidence scoring |
 | **Prototyping** | `create prototype`, `make prototype`, `deployable prototype`, `wireframe` | Converts a product spec into a deployable Next.js (TypeScript) prototype targeting Vercel |
-| **Action Items** | `/get-action-items` | Extracts action items from Teams/Email via Work IQ MCP tools; persists to `Projects/_automation/action-items.md` |
+| **Action Items** | `/get-action-items` | Extracts action items from Teams/Email via Work IQ MCP tools; uses `tools/action-items.js` |
 | **Brain Dump** | `brain dump`, `turn this into a doc`, `structure my thoughts`, `clean this up` | Turns unstructured stream-of-consciousness notes into a polished strategic narrative (problems, gaps, pillars, phases, metrics) |
 
 ---
@@ -76,19 +75,18 @@ team-knowledge/                     # SHARED — all agents read this
 
 tools/
   read-doc.js                       # Extract text from .docx/.pptx/.xlsx
+  action-items.js                   # Extract action items via Work IQ
+  sync-ado.js                       # Update project manifests from ADO
+  classify-docs.js                  # Classify today's edited docs into projects
+  end-of-day.js                     # Daily summaries per project via Work IQ
+  md-to-docx.js                     # Convert markdown to Word
   outline-generator.md
   slide-writer.md
 
-Projects/
-  _automation/
-    action-items.md                 # Persistent action items tracker
-    run_daily.py
-    sync-ado.js
-  [project-name]/
-    manifest.yaml                   # ADO tag, OKRs, doc tracking, team info
-
 copilot.json                        # Agent registry
 ```
+
+**Note:** Projects live in a separate repo at `~/OneDrive - Microsoft/Projects/`. Tools that interact with projects use the `PROJECTS_DIR` environment variable (defaults to that path).
 
 ---
 

@@ -5,7 +5,7 @@ Run the document classification script to sort today's edited documents into pro
 Execute this command now:
 
 ```powershell
-node "$env:USERPROFILE\OneDrive - Microsoft\Projects\_automation\classify-docs.js"
+node "$env:USERPROFILE\OneDrive - Microsoft\Automations\tools\classify-docs.js"
 ```
 
 After running, report:
