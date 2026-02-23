@@ -2,6 +2,33 @@
 
 Personal style patterns applied on top of the team writing style guide. These reflect Matthew's preferred formatting for specs and product documents.
 
+*Last updated: 2026-02-23 — auto-updated from conversation insights*
+
+## Voice & Tone
+
+- **Direct and terse for tasks**: "commit and push", "merge this branch to main", "is workiq running?" — no filler, no pleasantries when giving instructions.
+- **Flowing and connective for vision**: When explaining a concept or goal, uses long em-dash-heavy sentences that chain ideas together. Thinks out loud in a stream: *"how input metrics like adoption, onboarding, usage, etc. evolve over time, how they connect to the output metrics such as customer experience, reliability, AIR-O/D, and how we'll set the right inputs during planning."*
+- **Product-centric framing**: Defaults to "would a user choose this?" as the quality bar. *"If this were a product people had to choose to use, how would we know they love it, tolerate it, or are frustrated by it?"*
+- **Values clarity of purpose**: Frequently closes a thought with why it matters: *"so we all understand what we're driving toward and why it matters."*
+
+## Thinking Patterns
+
+- **Systems thinker**: Sees connections between things, not just the things. Asks "how does X connect to Y?" not just "what is X?" — e.g., input metrics → output metrics → planning decisions.
+- **Layered frameworks**: Naturally organizes into tiers, axes, and phases (3-tier metrics, two-axis readiness, V1/V2/V3).
+- **Narrative workflows**: Describes processes as stories: *"I take a stroll with my dog & brain dump ideas... I then copy this into the CLI... it outputs structured docs... I review this, do some back and forth til it looks good."*
+- **Iteration-first**: Assumes everything gets refined. *"do some back and forth with the agent til it looks good"*, *"a little formatting and revision"*.
+
+## Vocabulary
+
+- Uses **"uplevel"** to mean promote/elevate in hierarchy
+- Uses **"crisp"** to mean well-defined and precise (*"gets the spec super crisp"*)
+- Uses **"brain dump"** as both noun and verb
+- Uses **"back and forth"** for iterative dialogue
+- Uses **"the bar"** for quality standards (*"the bar we're aiming for is product-centric"*)
+- Uses **"drives"** and **"driving toward"** for goals and metrics
+- Uses **"churn"** for ambiguity/rework (*"where the most churn has been felt"*)
+- Prefers **"& "** over "and" in casual/conversational context
+
 ## Table Formats
 
 | Table Type | Columns |
