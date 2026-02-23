@@ -42,6 +42,16 @@
         "type": "system_prompt",
         "path": "agents/action-items/action-items-agent.system.md"
       }
+    },
+    {
+      "id": "brain-dump-agent",
+      "name": "Brain Dump",
+      "visibility": "private",
+      "metadata": "agents/brain-dump/brain-dump-agent.md",
+      "entrypoint": {
+        "type": "system_prompt",
+        "path": "agents/brain-dump/brain-dump-agent.system.md"
+      }
     }
   ]
 }

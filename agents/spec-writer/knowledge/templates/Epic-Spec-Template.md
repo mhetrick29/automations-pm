@@ -47,7 +47,16 @@ Add a hypothesis statement in this format:
 
 ### Features
 
-*Guidance:* High-level features written as user capabilities. Priority: **P1 = Must Have**, **P2 = Should Have**, **P3 = Nice to Have**.
+*Guidance:* Summary of the milestone customer experience (what does the customer get) and high-level features written as user capabilities. Priority: **P1 = Must Have**, **P2 = Should Have**, **P3 = Nice to Have**.
+
+**Milestone 1 summary**: 
+
+`<Text>`
+
+**Milestone 2 summary**: 
+
+`<Text>`
+
 
 | No. | Feature | Target Milestone | Priority |
 |-----|---------|------------------|----------|
