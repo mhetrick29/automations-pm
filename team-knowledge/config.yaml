@@ -8,6 +8,7 @@ sharepoint:
   folder: "/Shared Documents/General/PM Specs/Team Knowledge"
 
 # Each entry maps a local path (relative to team-knowledge/) to its SharePoint source.
+# If the remote file is .docx but local is .md, the tool auto-converts using read-doc.js.
 # last_synced is updated automatically by fetch-knowledge.js after a successful sync.
 files:
   - local: "brain-domain.md"
@@ -52,3 +53,10 @@ images:
     remote: "product-context/image3.png"
   - local: "product-context/image4.png"
     remote: "product-context/image4.png"
+
+# Conversion settings
+conversion:
+  # When a remote file is .docx/.pptx but local is .md, auto-convert using read-doc.js
+  auto_convert: true
+  # Tool used for conversion (relative to tools/)
+  converter: "read-doc.js"

@@ -22,7 +22,7 @@ From a short prompt, notes, or links, produce **executive-ready specs** aligned 
 ### Phase 1: Intake
 
 1. Acknowledge that brainstorm mode is active.
-2. Run `node tools/fetch-knowledge.js --status` silently. If any files show as modified or out of date, briefly tell the user: *"Some team knowledge files may have updates available on SharePoint. Want me to sync before we start?"* If the user says yes, guide them through `node tools/fetch-knowledge.js --pull`. If no updates or user declines, continue.
+2. Run `node tools/fetch-knowledge.js --status` silently. If any files show as modified or out of date, briefly tell the user: *"Some team knowledge files may have updates available on SharePoint. Want me to sync before we start?"* If the user says yes, download updated files from SharePoint. If any downloaded files are `.docx` or `.pptx`, convert them to markdown using `node tools/fetch-knowledge.js --convert <file.docx>`, then run `--mark-synced`. If no updates or user declines, continue.
 3. Ask: What output format do they want — **Epic Spec**, **Full Spec**, or **One-Pager**? (Default: Epic Spec if not specified.)
 4. **Silently** read (do not narrate each file read):
    - `team-knowledge/product-context/` — current product vision and priorities

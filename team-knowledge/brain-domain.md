@@ -37,6 +37,8 @@ signals → scopes → models → monitors → policies/actions
 |-------------|------|
 | IM | Intelligent Monitors |
 | OPM | Outage Prediction Model |
-| EB | Experience Bridge |
+| EB | Error Budget Anomaly detection model |
 | SLI | Service Level Indicator |
-| SIA | Signal Intelligence & Analytics |
+| SIA | Standard Impact Assessment |
+| TV | Traffic Volume anomaly detection model |
+| SC | Status code anomaly detection model
