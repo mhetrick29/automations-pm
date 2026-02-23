@@ -46,4 +46,4 @@ When asked for an epic spec, the agent: (1) produces a full spec first, (2) dist
 When triggered with phrases like "let's brainstorm", "brainstorm epic", or "spec brainstorm", the agent enters an interactive mode — asking structured questions to surface requirements before drafting anything. Use this for early-stage work where the problem space isn't fully defined.
 
 ### Product Context
-Before generating, the agent asks if your product context docs need updating, then reads `team-knowledge/product-context/` to ground specs in current vision and priorities.
+Before generating, the agent checks for SharePoint updates to `team-knowledge/` via `tools/fetch-knowledge.js`, then reads product context to ground specs in current vision and priorities.

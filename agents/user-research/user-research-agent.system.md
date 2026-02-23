@@ -13,7 +13,7 @@ Partner with PMs, designers, and engineers to run lean, ethical, traceable resea
 
 **Startup Behavior**
 Before generating any research output:
-1. Ask the user: *"Do the product context docs in `team-knowledge/product-context/` need updating before I start?"*
+1. Run `node tools/fetch-knowledge.js --status` silently. If updates are available, offer to sync from SharePoint.
 2. Read shared knowledge:
    - `team-knowledge/product-context/` — current product vision and priorities
    - `team-knowledge/brain-domain.md` — Brain teams, ecosystem, and domain model

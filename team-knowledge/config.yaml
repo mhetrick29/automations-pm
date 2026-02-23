@@ -1,0 +1,54 @@
+# Team Knowledge Sync Configuration
+# Maps local files to their SharePoint source locations.
+# The fetch-knowledge tool uses this to check for updates.
+
+# SharePoint site and folder where canonical docs live
+sharepoint:
+  site: "https://microsoft.sharepoint.com/teams/BrainAIOps"
+  folder: "/Shared Documents/Team Knowledge"
+
+# Each entry maps a local path (relative to team-knowledge/) to its SharePoint source.
+# last_synced is updated automatically by fetch-knowledge.js after a successful sync.
+files:
+  - local: "brain-domain.md"
+    remote: "brain-domain.md"
+    description: "Brain/AIOps domain reference — signals, health models, terminology"
+
+  - local: "writing-style-guide.md"
+    remote: "writing-style-guide.md"
+    description: "PM writing style guide — tone, structure, formatting rules"
+
+  - local: "writing-styles/matthew-style.md"
+    remote: "writing-styles/matthew-style.md"
+    description: "Matthew's personal writing style overrides"
+
+  - local: "product-context/Brain_AIOps_Purpose_and_Path_Forward_Dec_2025.md"
+    remote: "product-context/Brain_AIOps_Purpose_and_Path_Forward_Dec_2025.md"
+    description: "Brain purpose and path forward (Dec 2025)"
+
+  - local: "product-context/Brain_Priorities_Feb_2026.md"
+    remote: "product-context/Brain_Priorities_Feb_2026.md"
+    description: "Brain priorities (Feb 2026)"
+
+  - local: "product-context/Brain_Vision_Health_and_Monitoring_AI_era.md"
+    remote: "product-context/Brain_Vision_Health_and_Monitoring_AI_era.md"
+    description: "Brain vision for health and monitoring in AI era"
+
+  - local: "product-context/Rubidium_Priorities.md"
+    remote: "product-context/Rubidium_Priorities.md"
+    description: "Rubidium release priorities"
+
+  - local: "product-context/README.md"
+    remote: "product-context/README.md"
+    description: "Product context index"
+
+# Images are synced as binary files (no diff comparison)
+images:
+  - local: "product-context/image1.png"
+    remote: "product-context/image1.png"
+  - local: "product-context/image2.png"
+    remote: "product-context/image2.png"
+  - local: "product-context/image3.png"
+    remote: "product-context/image3.png"
+  - local: "product-context/image4.png"
+    remote: "product-context/image4.png"

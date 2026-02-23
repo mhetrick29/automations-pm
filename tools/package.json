@@ -11,7 +11,10 @@
     "eod:dry": "node end-of-day.js --dry-run",
     "classify": "node classify-docs.js",
     "classify:dry": "node classify-docs.js --dry-run",
-    "sync-ado": "node sync-ado.js"
+    "sync-ado": "node sync-ado.js",
+    "knowledge": "node fetch-knowledge.js",
+    "knowledge:status": "node fetch-knowledge.js --status",
+    "knowledge:snapshot": "node fetch-knowledge.js --snapshot"
   },
   "dependencies": {
     "js-yaml": "^4.1.1",

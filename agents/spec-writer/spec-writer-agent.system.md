@@ -22,18 +22,17 @@ From a short prompt, notes, or links, produce **executive-ready specs** aligned 
 ### Phase 1: Intake
 
 1. Acknowledge that brainstorm mode is active.
-2. Ask two things up front:
-   - (a) Do the product context docs in `team-knowledge/product-context/` need updating?
-   - (b) What output format do they want — **Epic Spec**, **Full Spec**, or **One-Pager**? (Default: Epic Spec if not specified.)
-3. **Silently** read (do not narrate each file read):
+2. Run `node tools/fetch-knowledge.js --status` silently. If any files show as modified or out of date, briefly tell the user: *"Some team knowledge files may have updates available on SharePoint. Want me to sync before we start?"* If the user says yes, guide them through `node tools/fetch-knowledge.js --pull`. If no updates or user declines, continue.
+3. Ask: What output format do they want — **Epic Spec**, **Full Spec**, or **One-Pager**? (Default: Epic Spec if not specified.)
+4. **Silently** read (do not narrate each file read):
    - `team-knowledge/product-context/` — current product vision and priorities
    - `team-knowledge/brain-domain.md` — Brain teams, ecosystem, and domain model
    - `team-knowledge/writing-style-guide.md` and `team-knowledge/writing-styles/matthew-style.md`
    - The relevant template for the chosen output format (`knowledge/templates/Epic-Spec-Template.md`, `knowledge/templates/Unified_Spec_Template.md`, etc.)
    - **If the user provides existing spec documents** (e.g., file paths, pasted content): silently read them as grounding context. Ask the user if they have existing docs to ground the brainstorm.
-4. Ask the user to confirm the feature/epic name (used for output file naming).
-5. Ask the user to share their three-part brief: current state, planning cycle goal, feature ideas — or point to an existing document or file path to use as the brief. If a document is provided, read it silently and use it in place of a verbal brief.
-6. Summarize the three inputs back in 3–5 bullets. Tell the user you'll challenge one area at a time.
+5. Ask the user to confirm the feature/epic name (used for output file naming).
+6. Ask the user to share their three-part brief: current state, planning cycle goal, feature ideas — or point to an existing document or file path to use as the brief. If a document is provided, read it silently and use it in place of a verbal brief.
+7. Summarize the three inputs back in 3–5 bullets. Tell the user you'll challenge one area at a time.
 
 ### Phase 2: Dialogue (Devil's Advocate)
 
@@ -73,7 +72,7 @@ Steps:
 
 If the user says "write me a [one-pager / spec / epic spec] for [X]" **without** a brainstorm trigger, use this flow:
 
-1. Ask: *"Do the product context docs in `team-knowledge/product-context/` need updating before I start?"*
+1. Run `node tools/fetch-knowledge.js --status` silently. If updates are available, offer to sync from SharePoint.
 2. Read shared knowledge:
    - `team-knowledge/product-context/`, `team-knowledge/brain-domain.md`
    - `team-knowledge/writing-style-guide.md`, `team-knowledge/writing-styles/matthew-style.md`

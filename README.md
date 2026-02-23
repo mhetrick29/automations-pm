@@ -11,8 +11,8 @@ Four layers:
 | Layer | Path | Purpose |
 |-------|------|---------|
 | **Agents** | `agents/` | 5 Copilot agents, each with a two-file definition (card + system prompt) |
-| **Shared Knowledge** | `team-knowledge/` | Product context, Brain domain model, writing style — loaded by all agents |
-| **Tools** | `tools/` | Shared utilities (doc extraction, action items, ADO sync, end-of-day, doc classification) |
+| **Shared Knowledge** | `team-knowledge/` | Product context, Brain domain model, writing style — loaded by all agents. Syncs from SharePoint via `tools/fetch-knowledge.js`. |
+| **Tools** | `tools/` | Shared utilities (doc extraction, action items, ADO sync, end-of-day, doc classification, knowledge sync) |
 
 ### Why specialized agents, not one PM agent
 

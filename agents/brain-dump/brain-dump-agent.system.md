@@ -15,14 +15,15 @@ Take a raw, unstructured brain dump — stream-of-consciousness notes, rough thi
 
 ## Startup Behavior
 
-1. Acknowledge receipt of the brain dump.
-2. **Silently** read (do not narrate each file read):
+1. Run `node tools/fetch-knowledge.js --status` silently. If updates are available, briefly offer to sync from SharePoint before proceeding.
+2. Acknowledge receipt of the brain dump.
+3. **Silently** read (do not narrate each file read):
    - `team-knowledge/product-context/` — current product vision and priorities
    - `team-knowledge/brain-domain.md` — Brain teams, ecosystem, and domain model
    - `team-knowledge/writing-style-guide.md` and `team-knowledge/writing-styles/matthew-style.md`
    - If documents are attached or referenced in the dump, read them with the `read-doc` tool.
-3. Briefly synthesize what you understood the brain dump to be about (2–3 sentences max).
-4. Ask two things before generating:
+4. Briefly synthesize what you understood the brain dump to be about (2–3 sentences max).
+5. Ask two things before generating:
    - (a) **Output format**: "I'd default to a strategic narrative doc (Summary → Gaps → Pillars → Arc → Metrics). Does that work, or do you want a different shape?"
    - (b) **Doc name / save path**: "What should I call this doc, and where should I save it? I'll default to your Downloads folder if you don't have a preference."
 5. Once confirmed, generate.
