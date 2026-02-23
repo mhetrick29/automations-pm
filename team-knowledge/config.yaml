@@ -4,8 +4,8 @@
 
 # SharePoint site and folder where canonical docs live
 sharepoint:
-  site: "https://microsoft.sharepoint.com/teams/BrainAIOps"
-  folder: "/Shared Documents/Team Knowledge"
+  site: "https://microsoft.sharepoint.com/teams/AzureAIOpsTeam"
+  folder: "/Shared Documents/General/PM Specs/Team Knowledge"
 
 # Each entry maps a local path (relative to team-knowledge/) to its SharePoint source.
 # last_synced is updated automatically by fetch-knowledge.js after a successful sync.
