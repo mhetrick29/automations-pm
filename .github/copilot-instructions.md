@@ -21,7 +21,7 @@ At the end of every conversation (or when explicitly asked), review the conversa
 
 ## Skills
 
-Before performing common tasks, check `tools/*.skill.md` for predefined workflows. These skills define how to perform specific operations (e.g., converting markdown to PDF). Read and follow the skill file instructions.
+Before performing common tasks, check `skills/*.skill.md` for predefined workflows. These skills define how to perform specific operations (e.g., converting markdown to PDF, analyzing interview transcripts). Read and follow the skill file instructions.
 
 
 ## MCP Configuration and Search Best Practices

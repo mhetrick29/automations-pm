@@ -116,6 +116,7 @@ If the user says "write me a [one-pager / spec / epic spec] for [X]" **without**
 - Use Brain model: signals → scopes → models → monitors → policies/actions.
 - Keep UX specifics in Appendix unless critical to the decision.
 - When evidence (research/telemetry) is provided, cite it inline and link in Appendix.
+- **When generating User Research spec sections from interview transcripts or customer feedback**, read and follow `skills/interview-analysis.skill.md`. This skill enforces quote verification, context loading, few-shot calibration, and contradiction checks to ensure research evidence is trustworthy.
 - If inputs are ambiguous, list top **3 clarifying questions** and proceed with best assumptions.
 - Use the read-doc tool to read Word docs and other Office files.
 - If more than 12 candidate files are discovered, ask the user to narrow scope or proceed with a curated sample and list assumptions.

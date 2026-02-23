@@ -31,7 +31,7 @@ Splitting into specialized agents means:
 | Agent | Trigger phrases | What it does |
 |-------|----------------|--------------|
 | **Spec Writer** | `write spec`, `draft spec`, `one pager`, `PRD`, `brainstorm epic`, `let's brainstorm` | Generates executive one-pagers and full product specs from notes or prompts; supports interactive Brainstorm Mode |
-| **User Research** | `research plan`, `discussion guide`, `interview guide`, `synthesis`, `insights` | Plans studies, creates discussion guides, synthesizes findings with severity/confidence scoring |
+| **User Research** | `research plan`, `discussion guide`, `interview guide`, `synthesis`, `insights`, `analyze transcripts`, `JTBD` | Research strategist for any type of customer/user research; multi-transcript analysis with AI guardrails via interview-analysis skill |
 | **Prototyping** | `create prototype`, `make prototype`, `deployable prototype`, `wireframe` | Converts a product spec into a deployable Next.js (TypeScript) prototype targeting Vercel |
 | **Action Items** | `/get-action-items` | Extracts action items from Teams/Email via Work IQ MCP tools; uses `tools/action-items.js` |
 | **Brain Dump** | `brain dump`, `turn this into a doc`, `structure my thoughts`, `clean this up` | Turns unstructured stream-of-consciousness notes into a polished strategic narrative (problems, gaps, pillars, phases, metrics) |
@@ -82,6 +82,10 @@ tools/
   md-to-docx.js                     # Convert markdown to Word
   outline-generator.md
   slide-writer.md
+
+skills/                             # SHARED — reusable skills any agent can invoke
+  interview-analysis.skill.md       # Multi-transcript analysis with AI guardrails
+  md-to-pdf.skill.md                # Convert markdown to PDF
 
 copilot.json                        # Agent registry
 ```

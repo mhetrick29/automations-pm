@@ -16,22 +16,22 @@ When user asks for a PDF on a topic (not an existing file):
 1. **Generate the markdown file**
    - Create a well-structured `.md` file
    - Use proper headings, tables, lists for good PDF rendering
-   - Save to: `C:\Users\mhetrick\OneDrive - Microsoft\Automations\Projects\_needs-sorting\<topic-slug>.md`
+   - Save to the user's Downloads folder: `$HOME\Downloads\<topic-slug>.md`
 
 2. **Convert to PDF**
    ```powershell
-   md-to-pdf "<path-to-md>"
+   md-to-pdf "$HOME\Downloads\<topic-slug>.md"
    ```
-   Output PDF is created in the same directory as the source file.
+   Output PDF is created in the same directory (Downloads).
 
 3. **Report the output path** to the user
 
 ### Example Flow
 User: "Make me a PDF about intelligent monitors"
 
-→ Create: `Projects\_needs-sorting\intelligent-monitors.md`
-→ Run: `md-to-pdf "...\intelligent-monitors.md"`
-→ Tell user: "Created intelligent-monitors.pdf at ..."
+→ Create: `~/Downloads/intelligent-monitors.md`
+→ Run: `md-to-pdf "$HOME\Downloads\intelligent-monitors.md"`
+→ Tell user: "Created intelligent-monitors.pdf in your Downloads folder"
 
 ## Prerequisites
 - **Node.js** must be installed
