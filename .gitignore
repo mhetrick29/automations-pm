@@ -21,3 +21,6 @@ __pycache__/
 *.swp
 *.swo
 team-knowledge/ado-copy-relevant/
+
+# Personal reference docs (local use only)
+Docs/

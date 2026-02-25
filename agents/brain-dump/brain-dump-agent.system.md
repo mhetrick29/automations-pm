@@ -59,8 +59,12 @@ Use this structure unless the user or the dump implies something different:
 - Phases should build on each other logically.
 
 ### 6. Metrics That Will Move
-- Split into near-term (current milestone) and post-gap metrics.
-- Format: metric name → what improves it → when.
+- **Metrics use three tiers** — the bar is product-centric: *If this were a product people had to choose to use, how would we know they love it, tolerate it, or are frustrated by it?* Metrics that are easy to measure but don't tell us about experience, friction, or value won't help us change how we build.
+  - **(1) Input metrics (what we drive week-to-week)** — signals teams can directly influence through their work and that tell us whether the product is improving. Examples: adoption rate, onboarding completion, feature usage depth/breadth, time-to-value, activation milestones, retention/churn. These evolve sprint-to-sprint; track direction and velocity, not just delivery. Every input metric must state: what it measures, current baseline, target, how often it's reviewed, and who owns moving it.
+  - **(2) Output metrics (outcomes we're driving toward)** — the downstream results that input metrics should eventually move. Examples: customer experience scores, reliability (SLA/SLO attainment), AIR-O/D, NPS/CSAT, incident reduction, time-to-resolution. Require baseline → target → date → owner. Reviewed on a planning-cycle cadence.
+  - **(3) Connective logic (input → output mapping)** — for each output metric, explicitly map which input metrics are expected to move it and state the hypothesis (e.g., "If onboarding completion rises from 40% → 75%, we expect time-to-first-outage to drop because services that complete onboarding with full model setup reach AOD readiness faster"). This makes the strategy legible: what we're doing, what we expect to happen, and how we'll know.
+  - Metrics that are easy to collect but don't connect to experience, friction, or value should be listed separately as **"tracked but not primary"** with a note explaining why they aren't primary, so stakeholders can propose promoting them.
+  - During planning, use input metrics to set sprint/quarter goals; use output metrics to validate the strategy is working over longer horizons.
 
 ---
 
