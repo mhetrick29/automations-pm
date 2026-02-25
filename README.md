@@ -11,7 +11,7 @@ Four layers:
 | Layer | Path | Purpose |
 |-------|------|---------|
 | **Agents** | `agents/` | 5 Copilot agents, each with a two-file definition (card + system prompt) |
-| **Skills** | `skills/` | Reusable skill files any agent can invoke (interview analysis, PDF conversion) |
+| **Skills** | `skills/` | Reusable skill files any agent can invoke (interview analysis, document handling) |
 | **Shared Knowledge** | `team-knowledge/` | Product context, Brain domain model, writing style — loaded by all agents. Syncs from SharePoint via `tools/fetch-knowledge.js`. |
 | **Tools** | `tools/` | Shared utilities (doc extraction, knowledge sync, action items, ADO sync, end-of-day, doc classification) |
 
@@ -86,7 +86,7 @@ tools/
 
 skills/                             # SHARED — reusable skills any agent can invoke
   interview-analysis.skill.md       # Multi-transcript analysis with AI guardrails
-  md-to-pdf.skill.md                # Convert markdown to PDF
+  doc-handling.skill.md             # Read Office docs, convert markdown → Word or PDF
 
 copilot.json                        # Agent registry
 ```
