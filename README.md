@@ -14,6 +14,7 @@ Four layers:
 | **Skills** | `skills/` | Reusable skill files any agent can invoke (interview analysis, document handling) |
 | **Shared Knowledge** | `team-knowledge/` | Product context, Brain domain model, writing style — loaded by all agents. Syncs from SharePoint via `tools/fetch-knowledge.js`. |
 | **Tools** | `tools/` | Shared utilities (doc extraction, knowledge sync, action items, ADO sync, end-of-day, doc classification) |
+| **MCP Servers** | `mcp.json` | Three MCP servers wired to agents: Azure DevOps, Work IQ, GitHub |
 
 ### Why specialized agents, not one PM agent
 
@@ -102,6 +103,20 @@ One-time tool install:
 ```bash
 cd tools && npm install
 ```
+
+---
+
+## MCP Servers
+
+Three MCP servers are configured in `mcp.json` and used by agents and workflows:
+
+| Server | Package | Used by |
+|--------|---------|---------|
+| **Azure DevOps** (`ado`) | `@azure-devops/mcp` | All agents — browsing work items, PRs, iterations, repos. Scoped to project `One`, area `Azure Edge and Platform\Health and Standards\AIOps`. Uses interactive auth (no stored credentials). |
+| **Work IQ** (`workiq`) | `@microsoft/workiq` | Action Items agent, end-of-day workflow — extracts action items and summaries from Teams chats, meetings, and Outlook. |
+| **GitHub** (`github`) | `github:mcp-server` (plugin) | Project overviews — reading repos, commits, PRs when exploring linked GitHub repositories. |
+
+`mcp.json` is safe to commit — no credentials are stored. ADO uses interactive auth (`--authentication interactive`); Work IQ and GitHub use the host environment's logged-in identity.
 
 ---
 
