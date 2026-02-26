@@ -1,8 +1,18 @@
 {
   "name": "brain-agents-pack",
-  "version": "0.2.0",
-  "description": "Three-agent pack: User Research, Spec Writer, Prototyping.",
+  "version": "0.3.0",
+  "description": "Six-agent pack: PM Lead orchestrator, User Research, Spec Writer, Brain Dump, Action Items, Prototyping.",
   "agents": [
+    {
+      "id": "pm-lead-agent",
+      "name": "PM Lead",
+      "visibility": "private",
+      "metadata": "agents/pm-lead/pm-lead-agent.md",
+      "entrypoint": {
+        "type": "system_prompt",
+        "path": "agents/pm-lead/pm-lead-agent.system.md"
+      }
+    },
     {
       "id": "user-research-agent",
       "name": "User Research Agent",

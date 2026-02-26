@@ -1,6 +1,6 @@
 # PM Automation Toolkit — Brain/AIOps
 
-5 specialized Copilot agents + a shared knowledge layer for product management work on the Brain/AIOps platform at Microsoft.
+6 specialized Copilot agents + a shared knowledge layer for product management work on the Brain/AIOps platform at Microsoft.
 
 ---
 
@@ -10,8 +10,8 @@ Four layers:
 
 | Layer | Path | Purpose |
 |-------|------|---------|
-| **Agents** | `agents/` | 5 Copilot agents, each with a two-file definition (card + system prompt) |
-| **Skills** | `skills/` | Reusable skill files any agent can invoke (interview analysis, document handling) |
+| **Agents** | `agents/` | 6 Copilot agents, each with a two-file definition (card + system prompt). PM Lead orchestrator routes to specialists. |
+| **Skills** | `skills/` | Reusable skill files any agent can invoke (interview analysis, customer requirements analysis, product why-first thinking, document handling) |
 | **Shared Knowledge** | `team-knowledge/` | Product context, Brain domain model, writing style — loaded by all agents. Syncs from SharePoint via `tools/fetch-knowledge.js`. |
 | **Tools** | `tools/` | Shared utilities (doc extraction, knowledge sync, action items, ADO sync, end-of-day, doc classification) |
 | **MCP Servers** | `mcp.json` | Three MCP servers wired to agents: Azure DevOps, Work IQ, GitHub |
@@ -22,8 +22,8 @@ Four layers:
 
 Splitting into specialized agents means:
 
-- **Focused system prompts.** A single prompt covering specs, research, prototyping, and action items would be diluted and worse at every task. We are building a toolkit for PMs, not a full development team. Long-term, each agent becomes a skill that a PM "team leader" agent can spawn as needed during the software development lifecycle.
-- **Unambiguous routing.** Copilot routes by trigger phrase. Focused triggers ("write spec", "research plan") are unambiguous; a generalist agent needs broad triggers and internal routing Copilot can't natively handle.
+- **Focused system prompts.** A single prompt covering specs, research, prototyping, and action items would be diluted and worse at every task. We are building a toolkit for PMs, not a full development team. The PM Lead agent acts as the routing layer — classifying intent and activating the right specialist — so users get a single entry point without sacrificing specialization.
+- **Unambiguous routing.** The PM Lead classifies intent semantically, not just by keyword. Users describe what they need in natural language; the orchestrator loads the right agent. Individual agents can still be invoked directly via `@agent-id` when the user knows which one they want.
 - **Low regression risk.** Adding a new PM capability = new agent following the two-file pattern. Existing agents are untouched.
 
 ---
@@ -32,8 +32,9 @@ Splitting into specialized agents means:
 
 | Agent | Trigger phrases | What it does |
 |-------|----------------|--------------|
+| **PM Lead** | `help me with`, `I need to`, `work on`, or any input | Default entry point. Classifies intent and routes to the right specialist. Manages cross-agent pipelines. |
 | **Spec Writer** | `write spec`, `draft spec`, `one pager`, `PRD`, `brainstorm epic`, `let's brainstorm` | Generates executive one-pagers and full product specs from notes or prompts; supports interactive Brainstorm Mode |
-| **User Research** | `research plan`, `discussion guide`, `interview guide`, `synthesis`, `insights`, `analyze transcripts`, `JTBD` | Research strategist for any type of customer/user research; multi-transcript analysis with AI guardrails via interview-analysis skill |
+| **User Research** | `research plan`, `discussion guide`, `interview guide`, `synthesis`, `insights`, `analyze transcripts`, `customer requirements`, `JTBD` | Research strategist for any type of customer/user research; multi-transcript analysis with AI guardrails via interview-analysis skill; customer requirement doc analysis via customer-requirements-analysis skill |
 | **Prototyping** | `create prototype`, `make prototype`, `deployable prototype`, `wireframe` | Converts a product spec into a deployable Next.js (TypeScript) prototype targeting Vercel |
 | **Action Items** | `/get-action-items` | Extracts action items from Teams/Email via Work IQ MCP tools; uses `tools/action-items.js` |
 | **Brain Dump** | `brain dump`, `turn this into a doc`, `structure my thoughts`, `clean this up` | Turns unstructured stream-of-consciousness notes into a polished strategic narrative (problems, gaps, pillars, phases, metrics) |
@@ -67,6 +68,9 @@ agents/
   brain-dump/
     brain-dump-agent.md
     brain-dump-agent.system.md
+  pm-lead/
+    pm-lead-agent.md
+    pm-lead-agent.system.md
 
 team-knowledge/                     # SHARED — all agents read this
   brain-domain.md                   # Brain teams, capabilities, ecosystem, terminology
@@ -87,6 +91,8 @@ tools/
 
 skills/                             # SHARED — reusable skills any agent can invoke
   interview-analysis.skill.md       # Multi-transcript analysis with AI guardrails
+  customer-requirements-analysis.skill.md  # Customer requirement doc analysis with why-first excavation
+  product-why-first.skill.md        # Five-layer analysis for separating problems from solutions
   doc-handling.skill.md             # Read Office docs, convert markdown → Word or PDF
 
 copilot.json                        # Agent registry
@@ -123,6 +129,16 @@ Three MCP servers are configured in `mcp.json` and used by agents and workflows:
 ## Usage
 
 All agents are registered in `copilot.json` and available in **VS Code Copilot Chat** via `@agent-id`. Open the Chat panel and type:
+
+### PM Lead (recommended default)
+
+```
+@pm-lead-agent Help me analyze these customer feedback docs
+@pm-lead-agent I need to structure my thoughts about intelligent monitors
+@pm-lead-agent Let's turn these customer asks into a spec
+```
+
+The PM Lead classifies your intent and activates the right specialist automatically. You can also invoke agents directly:
 
 ### Spec Writer
 
