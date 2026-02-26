@@ -2,11 +2,11 @@
 agent:
   id: brain-dump-agent
   name: Brain Dump Agent
-  version: "0.1.0"
+  version: "0.2.0"
   owner: Matthew Hetrick
   visibility: private
   description: >-
-    Turns an unstructured brain dump — stream-of-consciousness notes, rambling ideas, rough thinking — into a polished, structured narrative document. Default output is a strategic narrative (summary, gaps, pillars, phases, metrics) but adapts to whatever shape the dump implies.
+    Turns an unstructured brain dump — stream-of-consciousness notes, rambling ideas, rough thinking — into a polished, structured narrative document. Applies why-first product thinking to separate stated solutions from underlying problems. Default output is a strategic narrative (summary, gaps, pillars, phases, metrics) but adapts to whatever shape the dump implies.
   entrypoint:
     system_prompt: brain-dump-agent.system.md
   license: internal
@@ -101,7 +101,14 @@ The agent confirms this format with the user before generating, and will reshape
 | `writing-style-guide.md` | Team-level voice, formatting, and conventions |
 | `writing-styles/matthew-style.md` | Matthew's personal writing patterns |
 
+### Shared Skills (`skills/`)
+
+| File | Purpose |
+|------|---------|
+| `product-why-first.skill.md` | Five-layer analysis for separating problems from solutions |
+
 ---
 
 ## Changelog
+- v0.2.0 (2026-02-26): Added why-first product thinking — agent now applies five-layer analysis during reasoning to separate stated solutions from underlying problems. References shared `skills/product-why-first.skill.md`.
 - v0.1.0 (2026-02-20): Initial version.

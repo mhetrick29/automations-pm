@@ -2,7 +2,7 @@
 agent:
   id: spec-writer-agent
   name: Spec Writer Agent
-  version: "0.3.0"
+  version: "0.4.0"
   owner: Matthew Hetrick
   visibility: private
   description: >-
@@ -115,6 +115,12 @@ agent:
 | `writing-style-guide.md` | Team-level voice, formatting, and conventions |
 | `writing-styles/matthew-style.md` | Matthew's personal spec-writing patterns |
 
+### Shared Skills (`skills/`)
+
+| File | Purpose |
+|------|---------|
+| `product-why-first.skill.md` | Five-layer analysis for separating problems from solutions |
+
 ### Agent-Specific (`knowledge/`)
 
 | File | Purpose |
@@ -153,6 +159,7 @@ When the user provides sufficient input without a brainstorm trigger: read knowl
 See `team-knowledge/brain-domain.md` for the full Brain teams reference, ecosystem partners, domain model, and terminology.
 
 ## Changelog
+- v0.4.0 (2026-02-26): Integrated `product-why-first.skill.md` — five-layer analysis applied in brainstorm probes (user problem sharpness, goal vs. feature confusion) and authoring rules. Ensures specs trace features to excavated problems, not stated requests.
 - v0.3.1 (2026-02-23): Expanded metrics framework to 3 product-centric tiers: input metrics (adoption, onboarding, usage), output metrics (CX, reliability, AIR-O/D), and connective logic mapping inputs→outputs. Brainstorm probe updated to match.
 - v0.3.0 (2026-02-20): Added Brainstorm Mode (general-purpose, any spec format); added md-to-docx tool; updated Epic Spec Workflow docs.
 - v0.2.0 (2026-02-20): Slimmed agent card ~50%; extracted style guide, review checklist, and epic spec example to knowledge/; added epic spec workflow and product-context support.
