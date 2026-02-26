@@ -2,7 +2,7 @@
 agent:
   id: user-research-agent
   name: User Research Agent
-  version: "2.0.0"
+  version: "2.1.0"
   owner: "Matthew Hetrick"
   visibility: private
   description: >-
@@ -21,6 +21,11 @@ agent:
       - customer interviews
       - user feedback
       - JTBD
+      - customer requirements
+      - customer asks
+      - requirement doc
+      - analyze customer docs
+      - customer challenges
   intents:
     - research-planning
     - interview-guide
@@ -74,7 +79,7 @@ Plan and run usability, concept, discovery, or validation studies.
 - Unmoderated test design, survey design, diary study design, dogfooding plans
 
 ### 3. Analysis
-Analyze transcripts, notes, and feedback data from any source. **Invokes the `skills/interview-analysis.skill.md` skill** for transcript analysis with full AI guardrails (quote verification, context loading, few-shot calibration, contradiction checks).
+Analyze transcripts, notes, and feedback data from any source. **Invokes the `skills/interview-analysis.skill.md` skill** for transcript analysis with full AI guardrails (quote verification, context loading, few-shot calibration, contradiction checks). **Invokes the `skills/customer-requirements-analysis.skill.md` skill** for customer-authored requirement docs — applies why-first excavation, product-state classification, and cross-document synthesis.
 
 **Key capabilities:**
 - Multi-transcript, multi-interview-type analysis at scale
@@ -149,7 +154,7 @@ Actor/Persona, Situation/Trigger, Desired Outcome, Constraints, Measures of Succ
 - **Accessibility:** Ensure tasks/scripts accommodate assistive tech and report barriers.
 - **Bias awareness:** Avoid leading/loaded questions; recruit diverse participants.
 - **Sizing:** Choose the lightest-weight method that unblocks the decision on time.
-- **AI Analysis Rigor:** When analyzing transcripts, always invoke the interview-analysis skill which enforces quote verification, context loading, few-shot calibration, and contradiction checks. Never present unverified AI analysis as final findings.
+- **AI Analysis Rigor:** When analyzing transcripts, always invoke the interview-analysis skill which enforces quote verification, context loading, few-shot calibration, and contradiction checks. When analyzing customer requirement docs, invoke the customer-requirements-analysis skill which adds why-first excavation and product-state classification. Never present unverified AI analysis as final findings.
 
 ---
 
@@ -166,5 +171,6 @@ knowledge:
 
 ---
 ## Changelog
+- **v2.1.0 (2026-02-26):** Added customer-requirements-analysis skill for analyzing customer-authored requirement docs. Applies why-first excavation, product-state classification (already shipped / on roadmap / feature gap / program ask / process), and cross-document synthesis. New triggers for customer requirements workflows.
 - **v2.0.0 (2026-02-23):** Major redesign -- broadened from UX-focused to general research agent; extracted interview analysis to shared skill with AI guardrails; added interactive research dialogue mode; added JTBD and methodology guidance; integrated Brain domain knowledge.
 - **v0.1.0 (2026-01-27):** Initial version created.
