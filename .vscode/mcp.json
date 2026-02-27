@@ -16,10 +16,6 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@microsoft/workiq", "mcp"]
-    },
-    "github": {
-      "type": "plugin",
-      "id": "github:mcp-server"
     }
   }
 }
