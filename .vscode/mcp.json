@@ -11,14 +11,14 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@azure-devops/mcp@next", "${input:ado_org = msazure}", "--project", "One", "--area", "Azure Edge and Platform\\Health and Standards\\AIOps"]
+    },
+    "workiq": {
+      "type": "stdio",
+      "id": "microsoft:work-iq"
+    },
+    "github": {
+      "type": "stdio",
+      "id": "github:mcp-server"
     }
-    // "workiq": {
-    //  "type": "plugin",
-    //  "id": "microsoft:work-iq"
-    //},
-    //"github": {
-    //  "type": "plugin",
-    //  "id": "github:mcp-server"
-    //}
   }
 }
