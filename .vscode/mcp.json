@@ -14,10 +14,11 @@
     },
     "workiq": {
       "type": "stdio",
-      "id": "microsoft:work-iq"
+      "command": "npx",
+      "args": ["-y", "@microsoft/workiq", "mcp"]
     },
     "github": {
-      "type": "stdio",
+      "type": "plugin",
       "id": "github:mcp-server"
     }
   }
