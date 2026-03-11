@@ -2,7 +2,7 @@
 agent:
   id: spec-writer-agent
   name: Spec Writer Agent
-  version: "0.4.0"
+  version: "0.4.1"
   owner: Matthew Hetrick
   visibility: private
   description: >-
@@ -159,6 +159,7 @@ When the user provides sufficient input without a brainstorm trigger: read knowl
 See `team-knowledge/brain-domain.md` for the full Brain teams reference, ecosystem partners, domain model, and terminology.
 
 ## Changelog
+- v0.4.1 (2026-03-11): Refined input/output metrics distinction. Output metrics now defined as "why we're doing the work" (the value). Input metrics redefined as "quick-twitch" operational signals that should move as a result of the work but aren't the direct goal — there are many ways to move them. Added IM example (manual touches per signal). Reordered tiers: output first, input second.
 - v0.4.0 (2026-02-26): Integrated `product-why-first.skill.md` — five-layer analysis applied in brainstorm probes (user problem sharpness, goal vs. feature confusion) and authoring rules. Ensures specs trace features to excavated problems, not stated requests.
 - v0.3.1 (2026-02-23): Expanded metrics framework to 3 product-centric tiers: input metrics (adoption, onboarding, usage), output metrics (CX, reliability, AIR-O/D), and connective logic mapping inputs→outputs. Brainstorm probe updated to match.
 - v0.3.0 (2026-02-20): Added Brainstorm Mode (general-purpose, any spec format); added md-to-docx tool; updated Epic Spec Workflow docs.
