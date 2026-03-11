@@ -20,6 +20,11 @@
     "github": {
       "type": "plugin",
       "id": "github:mcp-server"
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
     }
   }
 }

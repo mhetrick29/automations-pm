@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototype 1: New Service → Create Intelligent Monitor</title>
+    <style>
+        /* ── Reset ── */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; color: #323130; overflow: hidden; background: #faf9f8; }
+
+        /* ── Scenario Bar (prototype control, outside Jarvis chrome) ── */
+        .scenario-bar {
+            background: #fff3cd; border-bottom: 2px solid #ffc107; padding: 8px 20px;
+            display: flex; align-items: center; gap: 16px; font-size: 13px; z-index: 1000;
+        }
+        .scenario-bar label { font-weight: 600; color: #664d03; }
+        .scenario-bar button {
+            padding: 4px 12px; border: 1px solid #ffc107; border-radius: 4px;
+            background: #fff; cursor: pointer; font-size: 12px; font-family: inherit;
+            transition: all 0.15s;
+        }
+        .scenario-bar button:hover { background: #ffc107; color: #fff; }
+        .scenario-bar button.active { background: #0078d4; color: #fff; border-color: #0078d4; }
+        .scenario-bar .step-indicator {
+            margin-left: auto; color: #664d03; font-size: 12px;
+        }
+        .scenario-bar .step-indicator span { font-weight: 600; }
+
+        /* ── Jarvis Shell ── */
+        .jarvis-shell { display: flex; flex-direction: column; height: calc(100vh - 38px); }
+
+        /* ── Top Bar ── */
+        .top-bar {
+            background: #fff; height: 40px; display: flex; align-items: center;
+            padding: 0 16px; justify-content: space-between; flex-shrink: 0;
+            border-bottom: 1px solid #e1dfdd;
+        }
+        .top-bar-left { display: flex; align-items: center; gap: 10px; }
+        .top-bar-title { color: #323130; font-size: 15px; font-weight: 600; }
+        .top-bar-right { display: flex; align-items: center; gap: 16px; }
+        .top-bar-right a { color: #605e5c; text-decoration: none; font-size: 13px; }
+        .top-bar-right a:hover { color: #323130; }
+        .top-bar-icon { color: #605e5c; font-size: 16px; cursor: pointer; display: flex; }
+        .top-bar-icon:hover { color: #323130; }
+        .top-bar-avatar {
+            width: 28px; height: 28px; background: #0078d4; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 12px; font-weight: 600;
+        }
+
+        /* ── Main Layout ── */
+        .main-layout { display: flex; flex: 1; overflow: hidden; }
+
+        /* ── Left Nav ── */
+        .left-nav {
+            width: 140px; background: #f3f2f1; display: flex; flex-direction: column;
+            padding-top: 8px; flex-shrink: 0; overflow-y: auto; border-right: 1px solid #e1dfdd;
+        }
+        .left-nav-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+            color: #605e5c; cursor: pointer; font-size: 13px; text-decoration: none;
+            border-left: 3px solid transparent; transition: all 0.15s;
+        }
+        .left-nav-item:hover { background: #e8e6e4; color: #323130; }
+        .left-nav-item.active { background: #e8e6e4; color: #0078d4; border-left-color: #0078d4; font-weight: 600; }
+        .left-nav-item .nav-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; opacity: 0.85; flex-shrink: 0; }
+        .left-nav-item .nav-icon svg { width: 18px; height: 18px; }
+        .left-nav-separator { height: 1px; background: #d2d0ce; margin: 8px 14px; }
+
+        /* ── Inner Left Nav ── */
+        .inner-left-nav {
+            width: 185px; background: #f3f2f1; border-right: 1px solid #e1dfdd;
+            display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto;
+        }
+        .inner-nav-search {
+            padding: 12px; border-bottom: 1px solid #e1dfdd;
+        }
+        .inner-nav-search input {
+            width: 100%; padding: 6px 8px 6px 28px; border: 1px solid #c8c6c4;
+            border-radius: 2px; font-size: 13px; font-family: inherit;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") 8px center no-repeat;
+        }
+        .inner-nav-search input:focus { border-color: #0078d4; outline: none; }
+        .inner-nav-collapse {
+            position: absolute; right: -10px; top: 8px; width: 20px; height: 20px;
+            border-radius: 50%; background: #f3f2f1; border: 1px solid #c8c6c4;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: #666;
+        }
+        .inner-nav-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+            color: #323130; cursor: pointer; font-size: 13px; transition: all 0.15s;
+        }
+        .inner-nav-item:hover { background: #e1dfdd; }
+        .inner-nav-item.active { background: #e1dfdd; font-weight: 600; }
+        .inner-nav-item .inner-icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; color: #605e5c; flex-shrink: 0; }
+        .inner-nav-item .inner-icon svg { width: 16px; height: 16px; }
+
+        /* ── Content Area ── */
+        .content-area {
+            flex: 1; overflow-y: auto; background: #faf9f8;
+        }
+        .content-breadcrumb {
+            padding: 12px 24px 0; font-size: 13px; color: #605e5c;
+        }
+        .content-breadcrumb a { color: #0078d4; text-decoration: none; }
+        .content-breadcrumb a:hover { text-decoration: underline; }
+        .content-title {
+            padding: 8px 24px 16px; font-size: 22px; font-weight: 600; color: #323130;
+        }
+        .content-body { padding: 0 24px 40px; max-width: 860px; }
+
+        /* ── Sections ── */
+        .section {
+            background: #fff; border: 1px solid #e1dfdd; border-radius: 2px;
+            margin-bottom: 16px;
+        }
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 20px; border-bottom: 1px solid #e1dfdd; cursor: pointer;
+        }
+        .section-header h3 { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .section-header .info-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 16px; height: 16px; border-radius: 50%; border: 1px solid #a19f9d;
+            font-size: 10px; color: #605e5c; cursor: help;
+        }
+        .section-header .chevron { color: #0078d4; font-size: 12px; transition: transform 0.2s; }
+        .section-body { padding: 16px 20px; }
+
+        /* ── Form Elements ── */
+        .form-group { margin-bottom: 16px; }
+        .form-label {
+            display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #323130;
+        }
+        .form-label .required { color: #a4262c; }
+        .form-input, .form-textarea, .form-select {
+            width: 100%; max-width: 400px; padding: 6px 10px; border: 1px solid #8a8886;
+            border-radius: 2px; font-size: 14px; font-family: inherit; color: #323130;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            border-color: #0078d4; outline: none;
+        }
+        .form-textarea { min-height: 60px; resize: vertical; }
+        .form-select { appearance: auto; background: #fff; }
+        .form-hint { font-size: 12px; color: #605e5c; margin-top: 2px; }
+
+        /* ── Signal List ── */
+        .signal-list { margin-top: 8px; }
+        .signal-item {
+            display: flex; align-items: flex-start; gap: 10px; padding: 8px 0;
+            border-bottom: 1px solid #f3f2f1;
+        }
+        .signal-item:last-of-type { border-bottom: none; }
+        .signal-checkbox {
+            width: 18px; height: 18px; accent-color: #0078d4; margin-top: 2px; cursor: pointer;
+        }
+        .signal-info { flex: 1; }
+        .signal-name { font-size: 14px; font-weight: 600; color: #323130; }
+        .signal-meta { font-size: 12px; color: #605e5c; margin-top: 2px; }
+        .signal-meta .quality-dot {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 3px;
+            vertical-align: middle;
+        }
+        .quality-dot.high { background: #107c10; }
+        .quality-dot.medium { background: #ca5010; }
+        .quality-dot.low { background: #d13438; }
+        .quality-dot.none { background: #8a8886; }
+        .quality-label.high { color: #107c10; font-weight: 600; }
+        .quality-label.medium { color: #ca5010; font-weight: 600; }
+        .quality-label.low { color: #d13438; font-weight: 600; }
+        .quality-label.none { color: #8a8886; font-weight: 600; }
+        .signal-warning {
+            margin-top: 4px; padding: 6px 10px; border-radius: 2px;
+            font-size: 12px; display: flex; align-items: flex-start; gap: 6px;
+        }
+        .signal-warning.blocking {
+            background: #fde7e9; color: #a4262c; border-left: 3px solid #d13438;
+        }
+        .signal-warning.info {
+            background: #fff4ce; color: #664d03; border-left: 3px solid #ca5010;
+        }
+        .signal-warning.no-data {
+            background: #f3f2f1; color: #605e5c; border-left: 3px solid #8a8886;
+        }
+        .add-signal {
+            display: flex; align-items: center; gap: 6px; padding: 10px 0;
+            color: #0078d4; cursor: pointer; font-size: 13px;
+        }
+        .add-signal:hover { text-decoration: underline; }
+
+        /* ── Radio Groups ── */
+        .radio-group { display: flex; gap: 20px; margin-top: 6px; }
+        .radio-item { display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; }
+        .radio-item input[type="radio"] { accent-color: #0078d4; cursor: pointer; }
+
+        /* ── Toggle Switch ── */
+        .toggle-switch { position: relative; display: inline-block; width: 40px; height: 20px; cursor: pointer; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: #8a8886; border-radius: 20px; transition: 0.2s;
+        }
+        .toggle-slider::before {
+            content: ''; position: absolute; height: 14px; width: 14px;
+            left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.2s;
+        }
+        .toggle-switch input:checked + .toggle-slider { background: #0078d4; }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+        /* ── Buttons ── */
+        .btn {
+            padding: 8px 20px; border-radius: 2px; font-size: 14px; font-family: inherit;
+            cursor: pointer; border: 1px solid transparent; transition: all 0.15s;
+            font-weight: 600;
+        }
+        .btn-primary { background: #0078d4; color: #fff; border-color: #0078d4; }
+        .btn-primary:hover { background: #106ebe; }
+        .btn-secondary { background: #fff; color: #323130; border-color: #8a8886; }
+        .btn-secondary:hover { background: #f3f2f1; }
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center; padding: 60px 40px;
+            background: #fff; border: 1px solid #e1dfdd; border-radius: 2px;
+        }
+        .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+        .empty-state h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .empty-state p { color: #605e5c; margin-bottom: 24px; max-width: 420px; margin-left: auto; margin-right: auto; }
+
+        /* ── Onboarding Progress ── */
+        .onboarding-progress {
+            background: #fff; border: 1px solid #e1dfdd; border-radius: 2px;
+            padding: 32px; max-width: 560px; margin: 40px auto;
+        }
+        .onboarding-progress h3 { font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+        .progress-step {
+            display: flex; align-items: flex-start; gap: 14px; padding: 12px 0;
+            position: relative;
+        }
+        .progress-step:not(:last-child)::after {
+            content: ''; position: absolute; left: 13px; top: 38px; bottom: -2px;
+            width: 2px; background: #e1dfdd;
+        }
+        .progress-step.done:not(:last-child)::after { background: #107c10; }
+        .progress-step.active:not(:last-child)::after { background: #e1dfdd; }
+        .step-circle {
+            width: 28px; height: 28px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 14px;
+            flex-shrink: 0; font-weight: 600;
+        }
+        .progress-step.done .step-circle { background: #107c10; color: #fff; }
+        .progress-step.active .step-circle { background: #0078d4; color: #fff; }
+        .progress-step.pending .step-circle { background: #e1dfdd; color: #605e5c; }
+        .step-content h4 { font-size: 14px; font-weight: 600; }
+        .step-content p { font-size: 12px; color: #605e5c; margin-top: 2px; }
+
+        /* ── Training Progress ── */
+        .training-card {
+            background: #fff; border: 1px solid #e1dfdd; border-radius: 2px;
+            padding: 24px; margin-bottom: 16px;
+        }
+        .training-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+        .training-card .subtitle { font-size: 13px; color: #605e5c; margin-bottom: 16px; }
+        .progress-bar-container {
+            height: 6px; background: #e1dfdd; border-radius: 3px; overflow: hidden; margin: 12px 0;
+        }
+        .progress-bar-fill {
+            height: 100%; border-radius: 3px; transition: width 0.6s ease;
+        }
+        .progress-bar-fill.blue { background: #0078d4; }
+        .progress-bar-fill.green { background: #107c10; }
+        .training-signal {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 0; border-bottom: 1px solid #f3f2f1; font-size: 13px;
+        }
+        .training-signal:last-child { border-bottom: none; }
+        .training-status { display: flex; align-items: center; gap: 6px; }
+        .status-badge {
+            padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;
+        }
+        .status-badge.complete { background: #dff6dd; color: #107c10; }
+        .status-badge.processing { background: #deecf9; color: #0078d4; }
+        .status-badge.error { background: #fde7e9; color: #a4262c; }
+        .status-badge.waiting { background: #f3f2f1; color: #605e5c; }
+        .status-badge.collecting { background: #fff4ce; color: #664d03; }
+
+        /* ── Notification Banner ── */
+        .notification-banner {
+            padding: 16px 20px; border-radius: 2px; margin-bottom: 16px;
+            display: flex; align-items: flex-start; gap: 12px;
+        }
+        .notification-banner.success {
+            background: #dff6dd; border: 1px solid #107c10; color: #0b6a0b;
+        }
+        .notification-banner.warning {
+            background: #fff4ce; border: 1px solid #ca5010; color: #664d03;
+        }
+        .notification-banner.info {
+            background: #deecf9; border: 1px solid #0078d4; color: #004578;
+        }
+        .notification-banner .notif-icon { font-size: 20px; flex-shrink: 0; }
+        .notification-banner h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .notification-banner p { font-size: 13px; }
+
+        /* ── Screens ── */
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        /* ── Toast Notification (for "Saved as Draft") ── */
+        .toast {
+            position: fixed; bottom: 20px; right: 20px; padding: 12px 20px;
+            background: #323130; color: #fff; border-radius: 4px; font-size: 13px;
+            display: none; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .toast.show { display: flex; align-items: center; gap: 8px; }
+
+        /* ── SLI ARM Path Header ── */
+        .arm-path {
+            font-size: 12px; color: #605e5c; font-family: 'Consolas', 'Courier New', monospace;
+            padding: 8px 0 16px; word-break: break-all;
+        }
+
+        /* ── Inline Alert ── */
+        .inline-alert {
+            padding: 10px 14px; border-radius: 2px; font-size: 13px;
+            margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;
+        }
+        .inline-alert.info { background: #deecf9; color: #004578; }
+        .inline-alert.warning { background: #fff4ce; color: #664d03; }
+        .inline-alert.error { background: #fde7e9; color: #a4262c; }
+
+        /* ── Spinner ── */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            display: inline-block; width: 16px; height: 16px; border: 2px solid #deecf9;
+            border-top-color: #0078d4; border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+
+        /* ── Step Navigation Dots ── */
+        .step-nav {
+            display: flex; align-items: center; gap: 8px; padding: 12px 24px;
+            border-bottom: 1px solid #e1dfdd; background: #fff;
+        }
+        .step-dot {
+            display: flex; align-items: center; gap: 6px; font-size: 12px; color: #605e5c;
+        }
+        .step-dot.active { color: #0078d4; font-weight: 600; }
+        .step-dot.done { color: #107c10; }
+        .step-dot .dot {
+            width: 8px; height: 8px; border-radius: 50%; background: #c8c6c4;
+        }
+        .step-dot.active .dot { background: #0078d4; width: 10px; height: 10px; }
+        .step-dot.done .dot { background: #107c10; }
+        .step-connector { width: 24px; height: 1px; background: #c8c6c4; }
+    </style>
+</head>
+<body>
+
+<!-- ══════════ SCENARIO BAR (prototype control) ══════════ -->
+<div class="scenario-bar">
+    <label>Prototype 1 — Scenario:</label>
+    <button class="active" onclick="setScenario('happy')">Happy Path</button>
+    <button onclick="setScenario('mixed')">Mixed SLI Quality</button>
+    <button onclick="setScenario('nodata')">No Historical Data</button>
+    <div class="step-indicator">
+        Screen <span id="currentStep">1</span> / <span id="totalSteps">5</span>
+        &nbsp;|&nbsp;
+        <button class="btn-secondary" style="padding:2px 8px; font-size:11px;" onclick="prevScreen()">◄ Back</button>
+        <button class="btn-secondary" style="padding:2px 8px; font-size:11px;" onclick="nextScreen()">Next ►</button>
+    </div>
+</div>
+
+<!-- ══════════ JARVIS SHELL ══════════ -->
+<div class="jarvis-shell">
+
+    <!-- ── Top Bar ── -->
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3L3 19h18L12 3z" fill="#4CAF50"/><path d="M12 9v5" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="16" r="0.8" fill="#fff"/></svg>
+            <span class="top-bar-title">Jarvis</span>
+        </div>
+        <div class="top-bar-right">
+            <a href="#">Docs</a>
+            <span class="top-bar-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#605e5c" stroke-width="1.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
+            <span class="top-bar-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#605e5c" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            <span class="top-bar-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#605e5c" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+            <div class="top-bar-avatar">MH</div>
+        </div>
+    </div>
+
+    <!-- ── Main Layout ── -->
+    <div class="main-layout">
+
+        <!-- ── Left Nav ── -->
+        <nav class="left-nav">
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg></span> Service health</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="5" width="4" height="16" rx="1"/><rect x="17" y="8" width="4" height="13" rx="1"/></svg></span> Dashboards</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></span> Health</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span> Logs</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span> Trace</a>
+            <div class="left-nav-separator"></div>
+            <a class="left-nav-item active" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span> Service Hub</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Manage</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></span> Account</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> Diagnose</a>
+        </nav>
+
+        <!-- ── Inner Left Nav ── -->
+        <nav class="inner-left-nav">
+            <div class="inner-nav-search">
+                <input type="text" placeholder="Search configuration" />
+            </div>
+            <div class="inner-nav-item"><span class="inner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg></span> Geneva Monitoring</div>
+            <div class="inner-nav-item"><span class="inner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> SLOs and SLI</div>
+            <div class="inner-nav-item active"><span class="inner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Brain Monitors</div>
+            <div class="inner-nav-item"><span class="inner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span> Auto-Diagnosis</div>
+        </nav>
+
+        <!-- ══════════ CONTENT AREA ══════════ -->
+        <div class="content-area">
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 1: Brain Monitors — Empty State      -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen active" id="screen-1">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Brain Monitors</div>
+                <div class="content-body">
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#a19f9d" stroke-width="1"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+                        <h3>No Brain monitors configured</h3>
+                        <p>Get started by creating an Intelligent Monitor. Brain will reason across all your signals to detect and declare outages for your service.</p>
+                        <button class="btn btn-primary" onclick="nextScreen()">Create Intelligent Monitor</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 2: Create IM — Form                  -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen" id="screen-2">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Create Intelligent Monitor</div>
+                <div class="content-body">
+
+                    <!-- Monitor Details -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Monitor details <span class="info-icon">?</span></h3>
+                            <span class="chevron">▲</span>
+                        </div>
+                        <div class="section-body">
+                            <div class="form-group">
+                                <label class="form-label">Title <span class="required">*</span> <span class="info-icon" title="Name your intelligent monitor">?</span></label>
+                                <input class="form-input" type="text" value="Cosmos DB — Intelligent Monitor" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description <span class="info-icon" title="Optional description">?</span></label>
+                                <textarea class="form-textarea" placeholder="Describe what this monitor covers...">Service-level intelligent monitor for Cosmos DB. Monitors all onboarded SLIs and declares outages automatically.</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Signals -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Signals <span class="required">*</span> <span class="info-icon">?</span></h3>
+                            <span class="chevron">▲</span>
+                        </div>
+                        <div class="section-body">
+                            <p class="form-hint" style="margin-bottom: 12px;">Brain has pre-selected the signals it recommends for optimal detection performance and excluded signals that may degrade monitor accuracy.</p>
+
+                            <div class="signal-list" id="signalList">
+                                <!-- Populated by JS based on scenario -->
+                            </div>
+
+                            <div class="add-signal">+ Add signal</div>
+                        </div>
+                    </div>
+
+                    <!-- Actions and Enrichments -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Actions and Enrichments <span class="info-icon">?</span></h3>
+                            <span class="chevron">▲</span>
+                        </div>
+                        <div class="section-body">
+                            <!-- Actions sub-header -->
+                            <p style="font-size: 14px; font-weight: 600; margin-bottom: 2px;">Actions</p>
+                            <p class="form-hint" style="margin-bottom: 16px;">Choose a preset to configure what Brain should do when it detects something is wrong</p>
+
+                            <div class="form-group">
+                                <label class="form-label">IcM team <span class="required">*</span> <span class="info-icon">?</span></label>
+                                <select class="form-select">
+                                    <option>AZURECOSMOSDB\ControlPlaneD3...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Incident severity <span class="required">*</span> <span class="info-icon">?</span></label>
+                                <div class="radio-group">
+                                    <label class="radio-item"><input type="radio" name="severity" checked /> Sev 2</label>
+                                    <label class="radio-item"><input type="radio" name="severity" /> Sev 3</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Outage declaration <span class="required">*</span> <span class="info-icon">?</span></label>
+                                <div class="radio-group">
+                                    <label class="radio-item"><input type="radio" name="outage" /> Don't declare outage</label>
+                                    <label class="radio-item"><input type="radio" name="outage" checked /> Brain decides</label>
+                                    <label class="radio-item"><input type="radio" name="outage" /> Let me tell Brain</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" style="margin-bottom: 6px;">Auto communication</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked id="autoCommToggle" onchange="document.getElementById('commOptions').style.display = this.checked ? 'block' : 'none'" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div id="commOptions">
+                                <div class="form-group">
+                                    <label class="form-label">Choose communication template <span class="info-icon">?</span></label>
+                                    <select class="form-select">
+                                        <option>Generic</option>
+                                        <option>DataPlane template</option>
+                                        <option>ControlPlane template</option>
+                                        <option>Custom template</option>
+                                    </select>
+                                </div>
+
+                                <div style="background: #f3f2f1; border-radius: 2px; padding: 40px 20px; text-align: center; color: #605e5c; font-size: 13px; margin-bottom: 16px;">
+                                    Comms Template
+                                </div>
+                            </div>
+
+                            <!-- Enrichments sub-header -->
+                            <div style="border-top: 1px solid #e1dfdd; padding-top: 16px; margin-top: 8px;">
+                                <p style="font-size: 14px; font-weight: 600; margin-bottom: 2px;">Enrichments <span class="info-icon">?</span></p>
+                                <p class="form-hint" style="margin-bottom: 16px;">Add enrichments to Brain detected issues</p>
+
+                                <div class="form-group">
+                                    <label class="form-label">TSG name <span class="info-icon">?</span></label>
+                                    <input class="form-input" type="text" value="TSG-COSMOS-001: Database Performance" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="prevScreen()">Cancel</button>
+                        <button class="btn btn-primary" onclick="nextScreen()">Save & Start Training</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 3: Training in Progress              -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen" id="screen-3">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›&nbsp; <a href="#">Brain Monitors</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Intelligent Monitor</div>
+                <div class="content-body">
+
+                    <div id="trainingBanner"></div>
+
+                    <div class="training-card">
+                        <h3>Training Progress</h3>
+                        <p class="subtitle" id="trainingSubtitle">Brain is analyzing your signals over the last 90 days to build a detection model.</p>
+
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill blue" id="trainingProgressBar" style="width: 65%"></div>
+                        </div>
+                        <p style="font-size: 12px; color: #605e5c; margin-bottom: 16px;" id="trainingProgressLabel">Estimated time remaining: ~2 hours</p>
+
+                        <div id="trainingSignalList">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="training-card" id="trainingQualityCard" style="display:none;">
+                        <h3 style="color: #a4262c;">Signals Needing Attention</h3>
+                        <p class="subtitle">These signals have quality issues that prevent them from being included in training. Fix the issues and they will be automatically included.</p>
+                        <div id="trainingQualityList"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 4: Training Complete — Notification  -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen" id="screen-4">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›&nbsp; <a href="#">Brain Monitors</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Intelligent Monitor</div>
+                <div class="content-body">
+
+                    <div id="completionBanner"></div>
+
+                    <div class="training-card">
+                        <h3>Training Complete</h3>
+                        <p class="subtitle" id="completionSubtitle"></p>
+
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill green" id="completionProgressBar" style="width: 100%"></div>
+                        </div>
+
+                        <div id="completionSignalList"></div>
+                    </div>
+
+                    <div class="training-card" id="completionQualityCard" style="display:none;">
+                        <h3 style="color: #ca5010;">Signals to Improve</h3>
+                        <p class="subtitle">These signals were excluded from training. Fix the issues below and they'll be included automatically on the next training cycle.</p>
+                        <div id="completionQualityList"></div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="nextScreen()">Review Results & Configure →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 5: Monitor List (post-creation)      -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen" id="screen-5">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Brain Monitors</div>
+                <div class="content-body">
+
+                    <div class="notification-banner info" style="margin-bottom: 20px;">
+                        <span class="notif-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+                        <div>
+                            <h4>Next step: Review detection results</h4>
+                            <p>Your Intelligent Monitor has finished training. Open it to review what Brain would have detected, set your risk tolerance, and enable Auto-Outage Detection.</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="font-size: 16px; font-weight: 600;">Monitors</h3>
+                    </div>
+
+                    <!-- Monitor card -->
+                    <div style="background: #fff; border: 1px solid #e1dfdd; border-radius: 2px; padding: 16px 20px; cursor: pointer;" onclick="alert('→ Opens Prototype 2: Review Backtested Results & Go Live')">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                    <span style="font-size: 16px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0078d4" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+                                    <span style="font-size: 15px; font-weight: 600; color: #0078d4;">Cosmos DB — Intelligent Monitor</span>
+                                    <span class="status-badge" id="monitorStatusBadge" style="margin-left: 4px;">Ready for Review</span>
+                                </div>
+                                <div style="font-size: 12px; color: #605e5c;" id="monitorSummaryLine">
+                                    5 signals &nbsp;·&nbsp; OPM model &nbsp;·&nbsp; Training completed 2 min ago
+                                </div>
+                            </div>
+                            <div style="color: #0078d4; font-size: 18px;">›</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div><!-- /content-area -->
+    </div><!-- /main-layout -->
+</div><!-- /jarvis-shell -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+    // ── State ──
+    let currentScreen = 1;
+    let currentScenario = 'happy';
+    const totalScreens = 5;
+
+    // ── SVG Icon helpers ──
+    const svgIcon = {
+        clock: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+        check: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>',
+        warning: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+        signal: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>',
+        info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    };
+    const scenarios = {
+        happy: {
+            signals: [
+                { name: 'Service Health Check', category: 'SLI – Latency', quality: 'high', checked: true },
+                { name: 'Endpoint Availability', category: 'SLI – Success Rate', quality: 'high', checked: true },
+                { name: 'Overall Error Rate', category: 'SLI – Availability', quality: 'high', checked: true },
+                { name: 'Dependency Health Score', category: 'SLI – Success Rate', quality: 'high', checked: true },
+                { name: 'Request Success Rate', category: 'SLI – Success Rate', quality: 'high', checked: true },
+            ],
+            trainingSignals: [
+                { name: 'Service Health Check', status: 'complete' },
+                { name: 'Endpoint Availability', status: 'complete' },
+                { name: 'Overall Error Rate', status: 'processing' },
+                { name: 'Dependency Health Score', status: 'waiting' },
+                { name: 'Request Success Rate', status: 'waiting' },
+            ],
+            completionSignals: [
+                { name: 'Service Health Check', status: 'complete' },
+                { name: 'Endpoint Availability', status: 'complete' },
+                { name: 'Overall Error Rate', status: 'complete' },
+                { name: 'Dependency Health Score', status: 'complete' },
+                { name: 'Request Success Rate', status: 'complete' },
+            ],
+            trainingBanner: { type: 'info', icon: 'clock', title: 'Training in progress', text: 'Brain is analyzing 90 days of historical data across 5 signals. You\'ll be notified when training is complete.' },
+            completionBanner: { type: 'success', icon: 'check', title: 'Training complete — ready for review', text: 'Brain has finished analyzing your signals. Review the backtested results, set your risk tolerance, and enable AOD.' },
+            completionSubtitle: 'All 5 signals successfully analyzed over 90 days of historical data.',
+            qualityIssues: false,
+            monitorBadgeClass: 'complete',
+            monitorBadgeText: 'Ready for Review',
+            monitorSummary: '5 signals  ·  OPM model  ·  Training completed 2 min ago'
+        },
+        mixed: {
+            signals: [
+                { name: 'Service Health Check', category: 'SLI – Latency', quality: 'high', checked: true },
+                { name: 'Endpoint Availability', category: 'SLI – Success Rate', quality: 'high', checked: true },
+                { name: 'Overall Error Rate', category: 'SLI – Availability', quality: 'medium', checked: true,
+                  warning: { type: 'info', text: 'Medium quality — included in training but detection accuracy may be reduced. Consider reviewing dimension configuration.' } },
+                { name: 'Dependency Health Score', category: 'SLI – Success Rate', quality: 'high', checked: true },
+                { name: 'Request Success Rate', category: 'SLI – Success Rate', quality: 'low', checked: false,
+                  warning: { type: 'blocking', text: 'Excluded — no transitions detected in the last 30 days. This signal may have incorrect dimensions or no traffic. Fix: verify LocationID and CustomerResourceId dimensions in SLI authoring.' } },
+            ],
+            trainingSignals: [
+                { name: 'Service Health Check', status: 'complete' },
+                { name: 'Endpoint Availability', status: 'complete' },
+                { name: 'Overall Error Rate', status: 'processing' },
+                { name: 'Dependency Health Score', status: 'waiting' },
+            ],
+            completionSignals: [
+                { name: 'Service Health Check', status: 'complete' },
+                { name: 'Endpoint Availability', status: 'complete' },
+                { name: 'Overall Error Rate', status: 'complete' },
+                { name: 'Dependency Health Score', status: 'complete' },
+            ],
+            qualityIssues: true,
+            qualityList: [
+                { name: 'Request Success Rate', issue: 'No transitions detected in last 30 days', fix: 'Verify LocationID and CustomerResourceId dimensions in the SLI authoring wizard. Ensure the SLI is receiving traffic in production.', severity: 'blocking' }
+            ],
+            trainingBanner: { type: 'warning', icon: 'warning', title: 'Training in progress — 1 signal excluded', text: 'Brain is training on 4 of 5 signals. 1 signal was excluded due to quality issues. You can fix it and it will be included in the next training cycle.' },
+            completionBanner: { type: 'warning', icon: 'warning', title: 'Training complete — 1 signal needs attention', text: '4 of 5 signals analyzed successfully. 1 signal was excluded due to quality issues. Review the results and fix the flagged signal to improve coverage.' },
+            completionSubtitle: '4 of 5 signals successfully analyzed. 1 signal excluded due to quality issues.',
+            monitorBadgeClass: 'collecting',
+            monitorBadgeText: 'Ready for Review (1 signal excluded)',
+            monitorSummary: '4/5 signals  ·  OPM model  ·  1 signal needs attention'
+        },
+        nodata: {
+            signals: [
+                { name: 'Service Health Check', category: 'SLI – Latency', quality: 'none', checked: true,
+                  warning: { type: 'no-data', text: 'No historical data — SLI was authored recently. Brain will begin collecting data immediately.' } },
+                { name: 'Endpoint Availability', category: 'SLI – Success Rate', quality: 'none', checked: true,
+                  warning: { type: 'no-data', text: 'No historical data — SLI was authored recently. Brain will begin collecting data immediately.' } },
+                { name: 'Overall Error Rate', category: 'SLI – Availability', quality: 'none', checked: true,
+                  warning: { type: 'no-data', text: 'No historical data — SLI was authored recently. Brain will begin collecting data immediately.' } },
+                { name: 'Dependency Health Score', category: 'SLI – Success Rate', quality: 'none', checked: true,
+                  warning: { type: 'no-data', text: 'No historical data — SLI was authored recently. Brain will begin collecting data immediately.' } },
+                { name: 'Request Success Rate', category: 'SLI – Success Rate', quality: 'none', checked: true,
+                  warning: { type: 'no-data', text: 'No historical data — SLI was authored recently. Brain will begin collecting data immediately.' } },
+            ],
+            trainingSignals: [
+                { name: 'Service Health Check', status: 'collecting' },
+                { name: 'Endpoint Availability', status: 'collecting' },
+                { name: 'Overall Error Rate', status: 'collecting' },
+                { name: 'Dependency Health Score', status: 'collecting' },
+                { name: 'Request Success Rate', status: 'collecting' },
+            ],
+            completionSignals: [
+                { name: 'Service Health Check', status: 'collecting' },
+                { name: 'Endpoint Availability', status: 'collecting' },
+                { name: 'Overall Error Rate', status: 'collecting' },
+                { name: 'Dependency Health Score', status: 'collecting' },
+                { name: 'Request Success Rate', status: 'collecting' },
+            ],
+            qualityIssues: false,
+            trainingBanner: { type: 'info', icon: 'signal', title: 'Collecting data', text: 'Your SLIs were recently authored and have no historical data yet. Brain is collecting data now and will notify you when enough data exists to generate a meaningful preview (typically 3–7 days).' },
+            completionBanner: { type: 'info', icon: 'signal', title: 'Data collection in progress', text: 'Brain is collecting data from your signals. A meaningful preview requires at least 3 days of data. You\'ll be notified when the preview is ready. You can enable AOD now at the most conservative setting, or wait for the preview.' },
+            completionSubtitle: 'No historical data available yet. Brain is collecting signal data — preview will be available in approximately 3–7 days.',
+            monitorBadgeClass: 'processing',
+            monitorBadgeText: 'Collecting Data',
+            monitorSummary: '5 signals  ·  OPM model  ·  Collecting data (~3–7 days for preview)'
+        }
+    };
+
+    // ── Render Functions ──
+
+    function renderSignals() {
+        const s = scenarios[currentScenario];
+        const container = document.getElementById('signalList');
+        container.innerHTML = s.signals.map((sig, i) => `
+            <div class="signal-item">
+                <input type="checkbox" class="signal-checkbox" ${sig.checked ? 'checked' : ''} ${sig.quality === 'low' ? 'disabled' : ''} />
+                <div class="signal-info">
+                    <div class="signal-name">${sig.name}</div>
+                    <div class="signal-meta">
+                        <strong>Category:</strong> ${sig.category}
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <strong>Quality:</strong>
+                        <span class="quality-dot ${sig.quality}"></span>
+                        <span class="quality-label ${sig.quality}">${sig.quality === 'none' ? 'No Data' : sig.quality.charAt(0).toUpperCase() + sig.quality.slice(1)}</span>
+                    </div>
+                    ${sig.warning ? `<div class="signal-warning ${sig.warning.type}">${sig.warning.text}</div>` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderTraining() {
+        const s = scenarios[currentScenario];
+
+        // Banner
+        const b = s.trainingBanner;
+        document.getElementById('trainingBanner').innerHTML = `
+            <div class="notification-banner ${b.type}">
+                <span class="notif-icon">${svgIcon[b.icon]}</span>
+                <div><h4>${b.title}</h4><p>${b.text}</p></div>
+            </div>
+        `;
+
+        // Progress
+        if (currentScenario === 'nodata') {
+            document.getElementById('trainingProgressBar').style.width = '15%';
+            document.getElementById('trainingProgressBar').className = 'progress-bar-fill blue';
+            document.getElementById('trainingProgressLabel').textContent = 'Collecting data — preview available in ~3–7 days';
+            document.getElementById('trainingSubtitle').textContent = 'Brain is collecting signal data. A preview will be generated once enough data is available.';
+        } else {
+            document.getElementById('trainingProgressBar').style.width = '65%';
+            document.getElementById('trainingProgressBar').className = 'progress-bar-fill blue';
+            document.getElementById('trainingProgressLabel').textContent = 'Estimated time remaining: ~2 hours';
+            document.getElementById('trainingSubtitle').textContent = 'Brain is analyzing your signals over the last 90 days to build a detection model.';
+        }
+
+        // Signal list
+        document.getElementById('trainingSignalList').innerHTML = s.trainingSignals.map(sig => `
+            <div class="training-signal">
+                <span>${sig.name}</span>
+                <div class="training-status">
+                    ${sig.status === 'processing' ? '<span class="spinner"></span>' : ''}
+                    <span class="status-badge ${sig.status}">${
+                        sig.status === 'complete' ? '✓ Complete' :
+                        sig.status === 'processing' ? 'Processing...' :
+                        sig.status === 'collecting' ? 'Collecting data' :
+                        '○ Waiting'
+                    }</span>
+                </div>
+            </div>
+        `).join('');
+
+        // Quality card
+        if (s.qualityIssues) {
+            document.getElementById('trainingQualityCard').style.display = 'block';
+            document.getElementById('trainingQualityList').innerHTML = s.qualityList.map(q => `
+                <div class="training-signal" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                        <span style="font-weight: 600;">${q.name}</span>
+                        <span class="status-badge error">Excluded</span>
+                    </div>
+                    <div style="font-size: 12px; color: #a4262c;"><strong>Issue:</strong> ${q.issue}</div>
+                    <div style="font-size: 12px; color: #323130;"><strong>Fix:</strong> ${q.fix}</div>
+                </div>
+            `).join('');
+        } else {
+            document.getElementById('trainingQualityCard').style.display = 'none';
+        }
+    }
+
+    function renderCompletion() {
+        const s = scenarios[currentScenario];
+
+        // Banner
+        const b = s.completionBanner;
+        document.getElementById('completionBanner').innerHTML = `
+            <div class="notification-banner ${b.type}">
+                <span class="notif-icon">${svgIcon[b.icon]}</span>
+                <div><h4>${b.title}</h4><p>${b.text}</p></div>
+            </div>
+        `;
+
+        // Subtitle
+        document.getElementById('completionSubtitle').textContent = s.completionSubtitle;
+
+        // Progress bar
+        if (currentScenario === 'nodata') {
+            document.getElementById('completionProgressBar').style.width = '15%';
+            document.getElementById('completionProgressBar').className = 'progress-bar-fill blue';
+        } else {
+            document.getElementById('completionProgressBar').style.width = '100%';
+            document.getElementById('completionProgressBar').className = 'progress-bar-fill green';
+        }
+
+        // Signal list
+        document.getElementById('completionSignalList').innerHTML = s.completionSignals.map(sig => `
+            <div class="training-signal">
+                <span>${sig.name}</span>
+                <div class="training-status">
+                    <span class="status-badge ${sig.status}">${
+                        sig.status === 'complete' ? '✓ Complete' :
+                        sig.status === 'collecting' ? '📡 Collecting data' :
+                        sig.status
+                    }</span>
+                </div>
+            </div>
+        `).join('');
+
+        // Quality card
+        if (s.qualityIssues) {
+            document.getElementById('completionQualityCard').style.display = 'block';
+            document.getElementById('completionQualityList').innerHTML = s.qualityList.map(q => `
+                <div class="training-signal" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                        <span style="font-weight: 600;">${q.name}</span>
+                        <span class="status-badge error">Needs Fix</span>
+                    </div>
+                    <div style="font-size: 12px; color: #a4262c;"><strong>Issue:</strong> ${q.issue}</div>
+                    <div style="font-size: 12px; color: #323130;"><strong>Fix:</strong> ${q.fix}</div>
+                </div>
+            `).join('');
+        } else {
+            document.getElementById('completionQualityCard').style.display = 'none';
+        }
+    }
+
+    function renderMonitorList() {
+        const s = scenarios[currentScenario];
+        document.getElementById('monitorStatusBadge').className = `status-badge ${s.monitorBadgeClass}`;
+        document.getElementById('monitorStatusBadge').textContent = s.monitorBadgeText;
+        document.getElementById('monitorSummaryLine').textContent = s.monitorSummary;
+    }
+
+    // ── Navigation ──
+
+    function showScreen(n) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(`screen-${n}`).classList.add('active');
+        currentScreen = n;
+        document.getElementById('currentStep').textContent = n;
+
+        // Render screen-specific content
+        if (n === 2) renderSignals();
+        if (n === 3) renderTraining();
+        if (n === 4) renderCompletion();
+        if (n === 5) renderMonitorList();
+    }
+
+    function nextScreen() {
+        if (currentScreen < totalScreens) showScreen(currentScreen + 1);
+    }
+    function prevScreen() {
+        if (currentScreen > 1) showScreen(currentScreen - 1);
+    }
+
+    function setScenario(s) {
+        currentScenario = s;
+        document.querySelectorAll('.scenario-bar button').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+        // Re-render current screen
+        showScreen(currentScreen);
+    }
+
+    // ── Init ──
+    document.getElementById('totalSteps').textContent = totalScreens;
+    showScreen(1);
+</script>
+</body>
+</html>

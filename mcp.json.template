@@ -1,0 +1,35 @@
+{
+  "//": "MCP Server Configuration Template",
+  "//note": "Copy this file to mcp.json and configure for your setup.",
+  "inputs": [
+    {
+      "id": "ado_org",
+      "type": "promptString",
+      "description": "Azure DevOps organization name (e.g. 'msazure')"
+    }
+  ],
+  "servers": {
+    "ado": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y", "@azure-devops/mcp@next",
+        "${input:ado_org}",
+        "--project", "<YOUR_PROJECT>",
+        "--area", "<YOUR_AREA_PATH>",
+        "--authentication", "interactive"
+      ]
+    },
+    "workiq": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@microsoft/workiq", "mcp"],
+      "//": "Microsoft 365 integration (Teams, Outlook, SharePoint). Requires M365 account."
+    },
+    "github": {
+      "type": "plugin",
+      "id": "github:mcp-server",
+      "//": "GitHub integration. Uses your VS Code GitHub authentication."
+    }
+  }
+}

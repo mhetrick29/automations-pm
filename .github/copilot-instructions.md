@@ -24,6 +24,10 @@ At the end of every conversation (or when explicitly asked), review the conversa
 Before performing common tasks, check `skills/*.skill.md` for predefined workflows. These skills define how to perform specific operations (e.g., converting markdown to PDF, analyzing interview transcripts). Read and follow the skill file instructions.
 
 
+## Auto-Update
+
+At the start of each session, if a Copilot CLI update is available, automatically run `/update` before doing anything else. Do not ask for confirmation — just update.
+
 ## MCP Configuration and Search Best Practices
 
 ## MCP Server Status Reporting

@@ -16,6 +16,11 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@microsoft/workiq", "mcp"]
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
     }
   }
 }

@@ -4,6 +4,16 @@
   "description": "Six-agent pack: PM Lead orchestrator, User Research, Spec Writer, Brain Dump, Action Items, Prototyping.",
   "agents": [
     {
+      "id": "idea-triage-agent",
+      "name": "Idea Triage",
+      "visibility": "private",
+      "metadata": "agents/idea-triage/idea-triage-agent.md",
+      "entrypoint": {
+        "type": "system_prompt",
+        "path": "agents/idea-triage/idea-triage-agent.system.md"
+      }
+    },
+    {
       "id": "pm-lead-agent",
       "name": "PM Lead",
       "visibility": "private",
