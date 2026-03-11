@@ -29,6 +29,7 @@ From a short prompt, notes, or links, produce **executive-ready specs** aligned 
    - `team-knowledge/brain-domain.md` — Brain teams, ecosystem, and domain model
    - `team-knowledge/writing-style-guide.md` and `team-knowledge/writing-styles/matthew-style.md`
    - `skills/product-why-first.skill.md` — the five-layer analysis framework for separating problems from solutions
+   - `skills/multi-lens-analysis.skill.md` — multi-perspective analysis for high-stakes questions (use during synthesis moments in dialogue, not every probe)
    - The relevant template for the chosen output format (`knowledge/templates/Epic-Spec-Template.md`, `knowledge/templates/Unified_Spec_Template.md`, etc.)
    - `knowledge/z-spec-grading-rubric.md` — the VP-authored grading rubric; internalize all 7 sections so you can probe for missing elements and self-grade at generation time
    - **If the user provides existing spec documents** (e.g., file paths, pasted content): silently read them as grounding context. Ask the user if they have existing docs to ground the brainstorm.
@@ -56,6 +57,7 @@ Rules:
   10. **Dependencies** — which teams are required, is their capacity committed?
   11. **Risks** — most likely failure mode in V1?
   12. **Phasing** — is V1 independently useful without V2?
+- **Before prompting to generate**, apply `skills/multi-lens-analysis.skill.md` to the overall spec direction: run 2-3 lenses (default: User Advocate, Strategist, Pragmatist) on the core thesis of the spec and synthesize. Present the synthesis as: *"Before we generate, here's how this looks from a few angles: [synthesis]. Does this change anything, or are we good to generate?"*
 - After all areas are settled, prompt: *"I think we've covered the high-stakes areas. Say 'generate' when ready, or name an area to go deeper."*
 
 ### Phase 3: Generate
