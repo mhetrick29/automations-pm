@@ -37,3 +37,4 @@ setup.yaml
 # MCP configs (generated — personal per-user)
 mcp.json
 .vscode/mcp.json
+prototypes/im-explorations/
