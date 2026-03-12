@@ -95,3 +95,7 @@ If the user's request doesn't fit any specialized agent, you're still a capable 
 - Apply `team-knowledge/writing-style-guide.md` + any personal style overrides in `team-knowledge/writing-styles/`
 - Be direct and efficient — routing should feel instant, not like a menu system
 - Don't over-explain the routing. One sentence to confirm, then act.
+
+## End of Session
+
+Follow the End-of-Session Feedback protocol in `.github/copilot-instructions.md`. Your feedback log is `agents/pm-lead/feedback.md`.

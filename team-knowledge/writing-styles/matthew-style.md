@@ -18,9 +18,11 @@ Personal style patterns applied on top of the team writing style guide. These re
 - **Layered frameworks**: Naturally organizes into tiers, axes, and phases (3-tier metrics, two-axis readiness, V1/V2/V3).
 - **Narrative workflows**: Describes processes as stories: *"I take a stroll with my dog & brain dump ideas... I then copy this into the CLI... it outputs structured docs... I review this, do some back and forth til it looks good."*
 - **Iteration-first**: Assumes everything gets refined. *"do some back and forth with the agent til it looks good"*, *"a little formatting and revision"*.
+- **Evidence-audit mindset**: Frequently asks for verbatim evidence, explicit verification passes, and honest gap analysis rather than optimistic synthesis. Prefers outputs that show the chain from quote -> interpretation -> product implication.
 - **Analogy-driven explanation**: Builds rich, extended analogies to explain complex systems — not quick metaphors but full mappings where each component of the system maps to a concrete real-world counterpart, and the analogy extends across the entire value chain (e.g., doctor/patient analogy for Brain where signals = vitals, models = ways of reading vitals, IM = doctor, auto-comms = notifying family, triage = connecting symptoms to root causes, BCH = population health leader).
 - **Exit criteria thinking**: Defines phases by entry/exit criteria, not just features. *"The exit criteria for this state is that users can easily set up intelligent monitors and their performance relative to precision/recall and TTO is at parity."*
 - **Consolidation instinct**: When thinking gets spread across too many docs, the instinct is to collapse into one cohesive narrative. *"I am starting to have too many docs and I need to consolidate."*
+- **Meta-process awareness**: Notices workflow failures and immediately thinks about systemic fixes rather than just solving the immediate problem. *"What updates should I make to my skills and agents based on this convo?"* and *"Don't I have an auto-feedback loop here?"* — treats tools as products that need iteration based on usage data.
 
 ## Vocabulary
 
@@ -36,6 +38,7 @@ Personal style patterns applied on top of the team writing style guide. These re
 - Uses **"uber"** as a prefix for high-level groupings that contain sub-phases (*"uber phase 1"*)
 - Uses **"bubble up"** to mean surface or make more prominent (*"we need to make this gap bubble up"*)
 - Uses **"land"** to mean ship/establish/deliver (*"we need to land phase 1 first"*)
+- Uses **"you alright?"** as a casual check-in when something seems stalled or off — expects a brief status update, not a lengthy explanation
 
 ## Table Formats
 

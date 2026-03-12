@@ -30,18 +30,18 @@ This context is essential for two reasons: understanding what the customer is re
 
 ### Step 1: Gather Inputs
 
-Before analysis, collect or confirm these **4 required context components**:
+Before analysis, collect or confirm these **4 context components**:
 
 1. **Customer Context** — Who is this customer? What services do they run? How mature is their usage of the product? What's their relationship (design partner, early adopter, GA customer, internal)?
 2. **Document Context** — Why was this document created? Was it solicited (we asked) or unsolicited (they volunteered)? Who authored it — the end user, their manager, an account team intermediary?
 3. **Business Goal** — What decision does this analysis inform? (e.g., "Prioritize next quarter's investments", "Validate our current roadmap", "Identify gaps in the V1 experience")
 4. **Product Context** — Loaded from the team knowledge above. Supplement with any feature-specific context the user provides about what exists today.
 
-If the user hasn't provided these, ask for them. Do not proceed until all 4 are clear.
+If the user hasn't provided **Business Goal**, ask for it — this frames the entire analysis. For the other 3, derive what you can from the document itself and state your assumptions; ask only if critical context is genuinely ambiguous.
 
 ### Step 2: Per-Document Extraction
 
-For **each customer document**, extract the following. Use the `read-doc` tool if the input is a `.docx` / `.pptx` file.
+For **each customer document**, extract the following. Use the `read-doc` tool if the input is a `.docx` / `.pptx` file. If the input is a **SharePoint URL**, use the `doc-handling` skill (Operation 0) to download and extract the document first.
 
 | Field | Description |
 |-------|-------------|

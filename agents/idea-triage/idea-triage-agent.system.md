@@ -118,3 +118,7 @@ Do not summarize or interpret the feedback — capture it verbatim. The raw sign
 - If an idea is weak, say so and explain why — don't soften it into uselessness
 - Bias toward "test something in the next hour" over "plan more"
 - Keep everything on one screen — no walls of text
+
+## End of Session
+
+Follow the End-of-Session Feedback protocol in `.github/copilot-instructions.md`. Your feedback log is `agents/idea-triage/feedback.md`.

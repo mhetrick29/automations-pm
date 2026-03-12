@@ -15,6 +15,7 @@ import { execSync } from 'child_process';
 import { tmpdir } from 'os';
 import JSZip from 'jszip';
 import { parseStringPromise } from 'xml2js';
+import mammoth from 'mammoth';
 
 const filePath = process.argv[2];
 
@@ -128,34 +129,9 @@ try {
 }
 
 async function extractDocx(buffer) {
-  const zip = await JSZip.loadAsync(buffer);
-  const docXml = await zip.file('word/document.xml')?.async('string');
-  
-  if (!docXml) {
-    return 'Could not find document content';
-  }
-  
-  const result = await parseStringPromise(docXml);
-  const paragraphs = [];
-  
-  function extractText(obj) {
-    if (typeof obj === 'string') return obj;
-    if (Array.isArray(obj)) return obj.map(extractText).join('');
-    if (obj && typeof obj === 'object') {
-      if (obj['w:t']) return extractText(obj['w:t']);
-      return Object.values(obj).map(extractText).join('');
-    }
-    return '';
-  }
-  
-  const body = result?.['w:document']?.['w:body'];
-  if (body) {
-    const text = extractText(body);
-    // Clean up whitespace
-    return text.replace(/\s+/g, ' ').trim();
-  }
-  
-  return 'Could not parse document';
+  // mammoth produces clean, structured text with proper paragraph separation
+  const result = await mammoth.extractRawText({ buffer });
+  return result.value || 'Could not parse document';
 }
 
 async function extractPptx(buffer) {

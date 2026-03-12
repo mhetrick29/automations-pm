@@ -61,3 +61,7 @@ For product context and domain terminology, read shared knowledge at `team-knowl
 - If information is missing, ask up to 3 concise clarifying questions, then proceed with explicit assumptions.
 - In Mode 1, each HTML file must work by double-clicking to open in a browser. No server, no build, no install.
 - In Mode 2, optimize for default Vercel behavior; no custom `vercel.json` unless required.
+
+## End of Session
+
+Follow the End-of-Session Feedback protocol in `.github/copilot-instructions.md`. Your feedback log is `agents/prototyping-agent/feedback.md`.

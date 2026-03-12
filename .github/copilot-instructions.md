@@ -19,6 +19,41 @@ In your work, you rigorously uphold the following guiding principles:
 
 At the end of every conversation (or when explicitly asked), review the conversation for new insights about Matthew's communication style — how he phrases things, what he emphasizes, recurring patterns, vocabulary, and framing. Update `team-knowledge/writing-styles/matthew-style.md` with any new patterns observed. Only add genuinely new insights; don't repeat what's already captured. If no new patterns are observed, skip the update silently.
 
+## End-of-Session Feedback
+
+At the end of every session, run this three-part feedback protocol before closing out.
+
+### 1. Agent Feedback
+
+If an agent was invoked during this session (user-research, spec-writer, brain-dump, idea-triage, action-items, prototyping-agent, or pm-lead):
+
+1. **Self-log** any friction you observed — instructions that didn't work, missing capabilities, unclear phases, outputs that needed rework, or behaviors that surprised the user. Append an entry to the agent's `agents/<agent-name>/feedback.md`:
+   ```
+   ## [YYYY-MM-DD] — [brief session slug]
+   **What happened:** [1–2 sentence description of the task]
+   **What worked:** [brief note, or "nothing notable"]
+   **What to improve:** [specific, actionable observation]
+   ```
+2. **Ask the user** one question: *"Quick feedback on this session — anything the agent should do differently next time?"* If the user provides feedback, append it to the same entry under `**User feedback:**`. If they decline, log `**User feedback:** none` and move on.
+
+### 2. Skills & Tools Feedback
+
+If a skill or tool was used during the session, review for workflow friction:
+- Did a skill's instructions lead to the wrong path? (e.g., wrong auth method, missing prerequisite)
+- Did a tool fail in a way the skill didn't anticipate? (e.g., auth errors, missing flags)
+- Was manual orchestration needed that should be documented? (e.g., skill chaining)
+- Did the agent have to deviate from the skill's workflow to succeed?
+
+If friction was found, update the relevant `skills/*.skill.md`, tool header comments, or `team-knowledge/` files with the correction. Treat skills as living runbooks — they should reflect what actually works, not what was originally assumed.
+
+### 3. Prompt Refinement Check
+
+After logging feedback, check the agent's `feedback.md`. Count the entries since the last `PROMPT UPDATED` marker (or total entries if no updates have been applied). If there are **3 or more**, tell the user:
+
+> *"There are [N] feedback entries for the [agent-name] agent since the last prompt update. Want me to run the prompt refiner skill to review and propose improvements?"*
+
+If the user says yes, invoke `skills/prompt-refiner.skill.md` targeting the agent's feedback.md and system.md.
+
 ## Skills
 
 Before performing common tasks, check `skills/*.skill.md` for predefined workflows. These skills define how to perform specific operations (e.g., converting markdown to PDF, analyzing interview transcripts). Read and follow the skill file instructions.

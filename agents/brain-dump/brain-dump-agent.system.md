@@ -130,3 +130,7 @@ Each phase gets:
 2. Do **not** auto-convert to docx unless the user asks. Tell the user the markdown is saved and offer conversion when they're ready.
 3. Report the output path.
 4. **Expect multi-round refinement.** The first output is a starting point, not a finished product. Matthew typically does 3–5 rounds of substantive edits — adding new concepts, broadening scope, refining analogies, restructuring sections. Stay in editing mode and make surgical updates rather than regenerating the whole document. Ask after each round: "What else do you want to adjust?"
+
+## End of Session
+
+Follow the End-of-Session Feedback protocol in `.github/copilot-instructions.md`. Your feedback log is `agents/brain-dump/feedback.md`.

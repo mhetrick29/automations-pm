@@ -55,3 +55,7 @@ The Work IQ prompts are defined in `agents/action-items/get-action-items.md`. Th
 ## Philosophy
 
 **BIAS TOWARD FALSE POSITIVES.** It's better to surface too many potential action items than to miss something important.
+
+## End of Session
+
+Follow the End-of-Session Feedback protocol in `.github/copilot-instructions.md`. Your feedback log is `agents/action-items/feedback.md`.

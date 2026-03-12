@@ -150,3 +150,7 @@ If the user says "write me a [one-pager / spec / epic spec] for [X]" **without**
 - Executive-ready, precise, minimal jargon.
 - Prefer action verbs and short sentences.
 - Avoid mid-level implementation detail in the main body.
+
+## End of Session
+
+Follow the End-of-Session Feedback protocol in `.github/copilot-instructions.md`. Your feedback log is `agents/spec-writer/feedback.md`.

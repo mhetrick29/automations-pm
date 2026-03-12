@@ -93,3 +93,7 @@ When a PM has a vague research need, enter interactive mode:
 2) Score severity & confidence.
 3) Draft changes and owners.
 4) Produce spec-ready sections. If gaps remain, list the top 3 validation steps.
+
+## End of Session
+
+Follow the End-of-Session Feedback protocol in `.github/copilot-instructions.md`. Your feedback log is `agents/user-research/feedback.md`.

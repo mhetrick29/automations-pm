@@ -15,6 +15,46 @@ This skill also activates automatically when:
 
 ---
 
+## Operation 0: Download a SharePoint Document
+
+**Tool:** `node tools/download-sharepoint.js`  
+**When:** The document is a SharePoint URL (sharing link, `:w:` link, direct URL)
+
+```powershell
+# Download to temp (prints the local path to stdout)
+node tools/download-sharepoint.js "https://microsoft.sharepoint.com/:w:/t/..."
+
+# Download to a specific path
+node tools/download-sharepoint.js "https://microsoft.sharepoint.com/:w:/t/..." "C:\temp\doc.docx"
+```
+
+**Prerequisites:**
+- **Azure CLI** installed (`winget install Microsoft.AzureCLI`)
+- Signed in via `az login` (one-time; uses WAM broker on Windows — satisfies token protection CA policies)
+
+Authentication uses Azure CLI's cached WAM token — no browser popup, near-instant for Microsoft employees.
+
+**Workflow when user provides a SharePoint URL:**
+1. Download: `node tools/download-sharepoint.js "<url>"` — capture the output path
+2. Read: `node tools/read-doc.js "<output-path>"` — extract text from the downloaded file
+3. Proceed with analysis using the extracted text
+
+**Auth Troubleshooting:**
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `Azure CLI not found` | az not installed | `winget install Microsoft.AzureCLI` |
+| `Not signed in` | No cached token | `az login` (opens WAM on Windows) |
+| Error 530033 / token protection | Using a non-WAM auth flow | Must use `az login` — SDK-based flows (`@azure/identity`, device code) are blocked by Microsoft tenant CA policies |
+| AADSTS700016 | Wrong client ID for tenant | Use Azure CLI (correct client ID is baked in) |
+
+**Notes:**
+- Output goes to `$env:TEMP` by default — the file name is preserved from SharePoint
+- The tool uses Microsoft Graph API `/shares` endpoint — works with any SharePoint sharing URL
+- Requires Azure CLI (`az`) — does **not** use `@azure/identity` SDK
+
+---
+
 ## Operation 1: Read an Office Document
 
 **Tool:** `node tools/read-doc.js`  
