@@ -1,4 +1,4 @@
-# Spec Writer Agent (Brain • AIOps)
+# Spec Writer Agent
 
 Generate **VP-ready one-pagers** and **full product specs** from a short brief, notes, or links.
 

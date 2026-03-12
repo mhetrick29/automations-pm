@@ -1,0 +1,38 @@
+# PM Agent Pack — Setup Configuration
+# Copy this file to setup.yaml and fill in your team's values.
+# Then run: node tools/setup.js
+#
+# setup.yaml is gitignored — it contains your personal/team configuration.
+
+# Your team identity
+team:
+  name: ""              # e.g., "Brain/AIOps", "Azure Compute", "Teams Platform"
+  short_name: ""        # e.g., "Brain", "Compute", "Teams" — used in casual references
+
+# Azure DevOps configuration
+ado:
+  organization: ""      # e.g., "msazure"
+  project: ""           # e.g., "One"
+  area_path: ""         # e.g., "Azure Edge and Platform\\Health and Standards\\AIOps"
+
+# SharePoint — where your team's knowledge docs live (optional)
+sharepoint:
+  site: ""              # e.g., "https://microsoft.sharepoint.com/teams/YourTeam"
+  folder: ""            # e.g., "/Shared Documents/General/PM Specs/Team Knowledge"
+
+# Knowledge files to sync from SharePoint (optional)
+# Each entry maps a local path (relative to team-knowledge/) to its SharePoint source.
+# If the remote file is .docx but local is .md, the tool auto-converts.
+knowledge_files: []
+  # Example:
+  # - local: "domain-model.md"
+  #   remote: "domain-model.md"
+  #   description: "Team domain reference"
+  # - local: "product-context/vision.md"
+  #   remote: "product-context/vision.md"
+  #   description: "Product vision doc"
+
+# GitHub repository for this agent pack (optional)
+github:
+  owner: ""             # e.g., "mhetrick_microsoft"
+  repo: ""              # e.g., "automations"

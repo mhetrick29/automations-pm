@@ -90,7 +90,7 @@ Output:
 
 ### Step 6 — Save Output
 
-Save to `team-knowledge/ideas/<idea-slug>-<date>.md` including:
+Save to `ideas/<idea-slug>-<date>.md` including:
 - Raw idea (verbatim)
 - Triage summary
 - Product-why-first assessment
@@ -119,6 +119,6 @@ Append response verbatim to `agents/idea-triage/feedback.md`:
 - **Never generate a spec or prototype before triage is complete.** If another agent calls this skill, it must wait for the triage summary before proceeding.
 - **Always surface the key assumption explicitly.** If it can't be articulated, flag the idea as underspecified and stop.
 - **Validation approaches must be completable in under 2 hours.** No "run a 3-month pilot" approaches.
-- **Save output to `team-knowledge/ideas/` before closing.** Do not produce validation approaches without saving the triage file.
+- **Save output to `ideas/` before closing.** Do not produce validation approaches without saving the triage file.
 - **Always capture feedback at the end** — one question, verbatim capture, appended to `agents/idea-triage/feedback.md`.
 - **Do not hand off to the Spec Writer automatically.** The user must return with validation results and explicitly request a handoff.

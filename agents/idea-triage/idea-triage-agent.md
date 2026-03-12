@@ -34,7 +34,7 @@ agent:
 
   outputs:
     - type: triage-summary
-      destination: team-knowledge/ideas/
+      destination: ideas/
       format: markdown
       naming: "<idea-slug>-<date>.md"
 
@@ -86,7 +86,7 @@ Raw idea / notes / reminders
 
 ### Saved Output
 
-Triage output is saved to `team-knowledge/ideas/<idea-slug>-<date>.md` with status `untested`. When validation is complete and signal is positive, this file becomes the brief handed to the Spec Writer.
+Triage output is saved to `ideas/<idea-slug>-<date>.md` with status `untested`. When validation is complete and signal is positive, this file becomes the brief handed to the Spec Writer.
 
 ---
 

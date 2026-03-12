@@ -67,9 +67,9 @@ agent:
             description: Absolute path to the generated .docx file
 ---
 
-# Brain Dump Agent (Brain • AIOps)
+# Brain Dump Agent
 
-**Purpose.** Take a raw, unstructured brain dump — rambling notes, rough ideas, stream-of-consciousness thinking — and transform it into a polished, well-structured narrative document. Grounded in Brain/AIOps product context and Matthew's writing style.
+**Purpose.** Take a raw, unstructured brain dump — rambling notes, rough ideas, stream-of-consciousness thinking — and transform it into a polished, well-structured narrative document. Grounded in team knowledge and personal writing style guidance.
 
 ---
 
@@ -97,9 +97,9 @@ The agent confirms this format with the user before generating, and will reshape
 | File | Purpose |
 |------|---------|
 | `product-context/` | Vision docs and planning priorities |
-| `brain-domain.md` | Brain teams, ecosystem partners, domain model, terminology |
+| `*.md` (root files) | Domain model, terminology, and reference material |
 | `writing-style-guide.md` | Team-level voice, formatting, and conventions |
-| `writing-styles/matthew-style.md` | Matthew's personal writing patterns |
+| `writing-styles/*-style.md` | Personal writing patterns (auto-discovered) |
 
 ### Shared Skills (`skills/`)
 

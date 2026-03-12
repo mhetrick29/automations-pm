@@ -6,7 +6,7 @@ agent:
   owner: Matthew Hetrick
   visibility: private
   description: >-
-    Executive-ready product spec writer for Brain/AIOps. Takes rough notes or a prompt and outputs a complete, well-structured spec aligned to our Unified Spec Template and Epic Spec patterns. Supports interactive Brainstorm Mode for any spec format.
+    Executive-ready product spec writer. Takes rough notes or a prompt and outputs a complete, well-structured spec aligned to our Unified Spec Template and Epic Spec patterns. Supports interactive Brainstorm Mode for any spec format.
   entrypoint:
     system_prompt: spec-writer-agent.system.md
   license: internal
@@ -34,7 +34,7 @@ agent:
       type: node_script
       path: "./tools/read-doc.js"
       description: >
-        Extracts raw text from Office formats used in Brain specs: .docx, .pptx,
+        Extracts raw text from Office formats used in product specs: .docx, .pptx,
         .xlsx. Also removes comments and tracked changes.
       schema:
           inputs:
@@ -98,7 +98,7 @@ agent:
             description: Absolute path to the generated .docx file
 ---
 
-# Spec Writer Agent (Brain • AIOps)
+# Spec Writer Agent
 
 **Purpose.** Generate **executive-ready specs** from a short brief, notes, or a prototype link. Supports two modes: **Interactive Brainstorm** (go back and forth until the spec is well-formed, then generate) and **Batch** (one-shot generation from sufficient input). Works for any spec format: Epic Spec, Full Spec, One-Pager, PRD.
 
@@ -111,9 +111,9 @@ agent:
 | File | Purpose |
 |------|---------|
 | `product-context/` | Vision docs and planning priorities (user-maintained) |
-| `brain-domain.md` | Brain teams, ecosystem partners, domain model, terminology |
+| `*.md` (root files) | Domain model, terminology, and reference material |
 | `writing-style-guide.md` | Team-level voice, formatting, and conventions |
-| `writing-styles/matthew-style.md` | Matthew's personal spec-writing patterns |
+| `writing-styles/*-style.md` | Personal writing patterns (auto-discovered) |
 
 ### Shared Skills (`skills/`)
 
@@ -154,9 +154,9 @@ When the user provides sufficient input without a brainstorm trigger: read knowl
 
 ---
 
-## Brain-Specific Considerations
+## Domain-Specific Considerations
 
-See `team-knowledge/brain-domain.md` for the full Brain teams reference, ecosystem partners, domain model, and terminology.
+See domain reference files in `team-knowledge/` for the full teams reference, ecosystem partners, domain model, and terminology.
 
 ## Changelog
 - v0.4.1 (2026-03-11): Refined input/output metrics distinction. Output metrics now defined as "why we're doing the work" (the value). Input metrics redefined as "quick-twitch" operational signals that should move as a result of the work but aren't the direct goal — there are many ways to move them. Added IM example (manual touches per signal). Reordered tiers: output first, input second.

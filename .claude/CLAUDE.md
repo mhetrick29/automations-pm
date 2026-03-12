@@ -70,7 +70,7 @@ Set `PROJECTS_DIR` environment variable to override.
 - **Agent-specific knowledge** lives in `agents/*/knowledge/` — templates, content samples, checklists, and other material unique to each agent.
 - **Content samples** (`agents/spec-writer/knowledge/content-samples/`) are references for writing voice and technical depth — their structure predates current templates and should NOT be used as structural models.
 - **Product context** (`team-knowledge/product-context/`) contains vision and priorities docs. Local files serve as a cache; agents check for SharePoint updates at startup via `node tools/fetch-knowledge.js --status`. See `team-knowledge/config.yaml` for file mappings.
-- **Brain teams** are documented in `team-knowledge/brain-domain.md`: AI Models, AI Platform, AI Monitoring-Pipeline, AI Monitoring-Actions, Auto-Diagnosis, AI Experiences. External partners: SLO/SLI Platform, ARG, IcM.
+- **Team structure and domain model** are documented in `team-knowledge/` — agents discover domain files dynamically. Load all `.md` files in `team-knowledge/` root for domain context.
 - **Writing style** follows a layered model: `team-knowledge/writing-style-guide.md` (team default) + optional `team-knowledge/writing-styles/[name]-style.md` (personal overrides).
 
 ## Git

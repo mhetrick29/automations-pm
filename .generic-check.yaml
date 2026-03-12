@@ -1,0 +1,12 @@
+# Patterns to suppress when they are intentional structural references.
+allowlist:
+  - pattern: "Brain Dump"
+    reason: "Agent name — describes the action, not a product"
+  - pattern: "brain-dump"
+    reason: "Agent ID — kebab-case of Brain Dump"
+
+# Additional blocked patterns (extend defaults)
+extra_patterns: []
+
+# Files to skip entirely
+skip_files: []

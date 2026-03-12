@@ -2,11 +2,12 @@
 
 Personal style patterns applied on top of the team writing style guide. These reflect Matthew's preferred formatting for specs and product documents.
 
-*Last updated: 2026-02-26 — auto-updated from conversation insights*
+*Last updated: 2026-03-12 — auto-updated from conversation insights*
 
 ## Voice & Tone
 
 - **Direct and terse for tasks**: "commit and push", "merge this branch to main", "is workiq running?" — no filler, no pleasantries when giving instructions.
+- **Executable task specs**: When delegating implementation work, often provides exact filenames, required prompt text, numbered behaviors, and expected output blocks up front — the request reads like an acceptance test, not a vague ask.
 - **Flowing and connective for vision**: When explaining a concept or goal, uses long em-dash-heavy sentences that chain ideas together. Thinks out loud in a stream: *"how input metrics like adoption, onboarding, usage, etc. evolve over time, how they connect to the output metrics such as customer experience, reliability, AIR-O/D, and how we'll set the right inputs during planning."*
 - **Product-centric framing**: Defaults to "would a user choose this?" as the quality bar. *"If this were a product people had to choose to use, how would we know they love it, tolerate it, or are frustrated by it?"*
 - **Values clarity of purpose**: Frequently closes a thought with why it matters: *"so we all understand what we're driving toward and why it matters."*

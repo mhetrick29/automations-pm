@@ -17,7 +17,7 @@ This skill handles **any number of transcripts** from **any interview type** (mo
 ## Before You Start: Load Context
 
 **Required.** Before analyzing any transcript, load these knowledge sources silently:
-- `team-knowledge/brain-domain.md` — Brain terminology, capabilities, teams, and domain model
+- `team-knowledge/*.md` — domain model, terminology, capabilities, and teams
 - `team-knowledge/product-context/` — current product vision and priorities
 
 Use this knowledge to correctly interpret domain-specific language (e.g., "SLI", "outage", "DRI", "BCH") and ground findings in the product context.
@@ -32,7 +32,7 @@ Before analysis, collect or confirm these **4 required context components** (do 
 
 1. **Project Context** — What is the scope? What decision does this research inform? (e.g., "Exploring whether to redesign the monitor configuration experience")
 2. **Business Goal** — What are you trying to determine? (e.g., "Whether the new flow reduces time-to-value for onboarding teams")
-3. **Product Context** — Loaded from Brain team knowledge above. Supplement with any feature-specific context the user provides.
+3. **Product Context** — Loaded from the team knowledge above. Supplement with any feature-specific context the user provides.
 4. **Participant Overview** — Who are the participants? Roles, tenure, segment, relationship to the product (current user, churned, prospect, internal).
 
 If the user hasn't provided these, ask for them. Do not proceed with analysis until all 4 are clear.

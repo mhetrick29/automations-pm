@@ -77,7 +77,7 @@ End by recommending which approach to try first (pick the simplest one that test
 
 ## Phase 4 — Save and Gate
 
-Save the triage output to `team-knowledge/ideas/<idea-slug>-<date>.md` with:
+Save the triage output to `ideas/<idea-slug>-<date>.md` with:
 - Raw idea (verbatim)
 - Triage summary (behavior change, interaction loop, key assumption)
 - Product-why-first assessment

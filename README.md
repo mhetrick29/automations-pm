@@ -1,6 +1,6 @@
-# PM Automation Toolkit — Brain/AIOps
+# PM Automation Toolkit
 
-6 specialized Copilot agents + a shared knowledge layer for product management work on the Brain/AIOps platform at Microsoft.
+6 specialized Copilot agents + a shared knowledge layer for product management work.
 
 ---
 
@@ -12,13 +12,13 @@ Four layers:
 |-------|------|---------|
 | **Agents** | `agents/` | 6 Copilot agents, each with a two-file definition (card + system prompt). PM Lead orchestrator routes to specialists. |
 | **Skills** | `skills/` | Reusable skill files any agent can invoke (interview analysis, customer requirements analysis, product why-first thinking, document handling) |
-| **Shared Knowledge** | `team-knowledge/` | Product context, Brain domain model, writing style — loaded by all agents. Syncs from SharePoint via `tools/fetch-knowledge.js`. |
-| **Tools** | `tools/` | Shared utilities (doc extraction, knowledge sync, action items, ADO sync, end-of-day, doc classification) |
+| **Shared Knowledge** | `team-knowledge/` | Product context, domain model, writing style — loaded by all agents. Syncs from SharePoint via `tools/fetch-knowledge.js`. |
+| **Tools** | `tools/` | Shared utilities (setup, doc extraction, knowledge sync, template publishing, action items, ADO sync, end-of-day, doc classification) |
 | **MCP Servers** | `mcp.json` | Three MCP servers wired to agents: Azure DevOps, Work IQ, GitHub |
 
 ### Why specialized agents, not one PM agent
 
-`team-knowledge/` is already the unified PM context layer. Every agent loads the same product context, domain model, and writing style. That IS the shared brain.
+`team-knowledge/` is already the unified PM context layer. Every agent loads the same product context, domain model, and writing style. That IS the shared context layer.
 
 Splitting into specialized agents means:
 
@@ -72,17 +72,25 @@ agents/
     pm-lead-agent.md
     pm-lead-agent.system.md
 
+ideas/                              # Idea triage output (gitignored .md files)
+  apps/
+  features/
+  process/
+
 team-knowledge/                     # SHARED — all agents read this
-  brain-domain.md                   # Brain teams, capabilities, ecosystem, terminology
+  *.md                              # Domain model, terminology, and shared reference docs
   config.yaml                       # Knowledge source registry (local, SharePoint, ADO repo, MCP)
   writing-style-guide.md            # Team-level writing conventions
   writing-styles/
-    matthew-style.md                # Personal writing patterns (auto-updated per conversation)
+    *-style.md                      # Personal writing patterns (auto-updated per conversation)
   product-context/                  # Vision & priorities docs (user-maintained)
 
 tools/
+  setup.js                          # Interactive setup for new template users
   read-doc.js                       # Extract text from .docx/.pptx/.xlsx
   fetch-knowledge.js                # Team knowledge sync (--status, --pull, --snapshot, --convert)
+  publish-template.js               # Publish template to shared remotes (strips team-specific content)
+  check-generic.js                  # Lint agent prompts for hardcoded domain references
   action-items.js                   # Extract action items via Work IQ
   sync-ado.js                       # Update project manifests from ADO
   classify-docs.js                  # Classify today's edited docs into projects
@@ -104,11 +112,12 @@ copilot.json                        # Agent registry
 
 ## Setup
 
-One-time tool install:
+One-time configuration:
 
-```bash
-cd tools && npm install
-```
+1. Copy `setup.yaml.template` → `setup.yaml` and fill in your team's values
+2. Run `node tools/setup.js` to generate MCP configs and knowledge placeholders
+3. Install tool dependencies: `cd tools && npm install`
+4. (Optional) Sync knowledge from SharePoint: `node tools/fetch-knowledge.js --pull`
 
 ---
 
@@ -118,11 +127,57 @@ Three MCP servers are configured in `mcp.json` and used by agents and workflows:
 
 | Server | Package | Used by |
 |--------|---------|---------|
-| **Azure DevOps** (`ado`) | `@azure-devops/mcp` | All agents — browsing work items, PRs, iterations, repos. Scoped to project `One`, area `Azure Edge and Platform\Health and Standards\AIOps`. Uses interactive auth (no stored credentials). |
+| **Azure DevOps** (`ado`) | `@azure-devops/mcp` | All agents — browsing work items, PRs, iterations, repos. Scoped by your generated MCP config. Uses interactive auth (no stored credentials). |
 | **Work IQ** (`workiq`) | `@microsoft/workiq` | Action Items agent, end-of-day workflow — extracts action items and summaries from Teams chats, meetings, and Outlook. |
 | **GitHub** (`github`) | `github:mcp-server` (plugin) | Project overviews — reading repos, commits, PRs when exploring linked GitHub repositories. |
 
 `mcp.json` is safe to commit — no credentials are stored. ADO uses interactive auth (`--authentication interactive`); Work IQ and GitHub use the host environment's logged-in identity.
+
+---
+
+## Publishing and Sync
+
+This repo supports a multi-remote workflow. The primary working copy (origin) contains your team-specific knowledge. Template copies are published to shared remotes with team-specific content stripped.
+
+### Publish to template repos
+
+```bash
+node tools/publish-template.js --dry-run   # Preview what will be removed
+node tools/publish-template.js             # Strip team content, push to remotes
+```
+
+### Import changes from a remote
+
+If you make changes on a remote copy (e.g., personal), import them back:
+
+```bash
+node tools/publish-template.js --import personal
+```
+
+### Lint for portability
+
+Check that agent prompts don't contain hardcoded domain references:
+
+```bash
+node tools/check-generic.js
+```
+
+---
+
+## Tools
+
+| Tool | Purpose |
+|------|---------|
+| `setup.js` | Interactive setup for new template users |
+| `read-doc.js` | Extract text from `.docx`, `.pptx`, and `.xlsx` files |
+| `fetch-knowledge.js` | Team knowledge sync (`--status`, `--pull`, `--snapshot`, `--convert`) |
+| `publish-template.js` | Publish template to shared remotes (strips team-specific content) |
+| `check-generic.js` | Lint agent prompts for hardcoded domain references |
+| `action-items.js` | Extract action items via Work IQ |
+| `sync-ado.js` | Update project manifests from ADO |
+| `classify-docs.js` | Classify today's edited docs into projects |
+| `end-of-day.js` | Daily summaries per project via Work IQ |
+| `md-to-docx.js` | Convert markdown to Word |
 
 ---
 
@@ -179,7 +234,7 @@ The PM Lead classifies your intent and activates the right specialist automatica
 ### Tips
 
 - **Attach files** — drag files into the chat or use `#file:path` to give agents additional context (specs, notes, interview transcripts).
-- **Project context** — agents automatically load shared knowledge from `team-knowledge/`. No need to re-explain Brain/AIOps context.
+- **Project context** — agents automatically load shared knowledge from `team-knowledge/`. No need to re-explain your team's domain context.
 - **Brainstorm mode** — the Spec Writer supports interactive back-and-forth; just start with "Let's brainstorm" and keep the conversation going.
 
 ---

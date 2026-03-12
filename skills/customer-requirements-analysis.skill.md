@@ -19,7 +19,7 @@ This skill is **not** for interview transcripts (use `interview-analysis.skill.m
 **Required.** Before analyzing any customer document, load these knowledge sources silently:
 
 1. `team-knowledge/product-context/` — current product vision, priorities, and roadmap
-2. `team-knowledge/brain-domain.md` — Brain capabilities, teams, ecosystem, domain model, and terminology
+2. `team-knowledge/*.md` — domain model, capabilities, teams, ecosystem, and terminology
 3. `skills/product-why-first.skill.md` — the five-layer analysis framework (used heavily throughout)
 
 This context is essential for two reasons: understanding what the customer is really asking about, and classifying each need against the current state of the product.
@@ -35,7 +35,7 @@ Before analysis, collect or confirm these **4 required context components**:
 1. **Customer Context** — Who is this customer? What services do they run? How mature is their usage of the product? What's their relationship (design partner, early adopter, GA customer, internal)?
 2. **Document Context** — Why was this document created? Was it solicited (we asked) or unsolicited (they volunteered)? Who authored it — the end user, their manager, an account team intermediary?
 3. **Business Goal** — What decision does this analysis inform? (e.g., "Prioritize next quarter's investments", "Validate our current roadmap", "Identify gaps in the V1 experience")
-4. **Product Context** — Loaded from Brain team knowledge above. Supplement with any feature-specific context the user provides about what exists today.
+4. **Product Context** — Loaded from the team knowledge above. Supplement with any feature-specific context the user provides about what exists today.
 
 If the user hasn't provided these, ask for them. Do not proceed until all 4 are clear.
 

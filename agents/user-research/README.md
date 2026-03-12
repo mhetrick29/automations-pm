@@ -1,4 +1,4 @@
-# User Research Agent (Brain • AIOps)
+# User Research Agent
 
 A reusable Copilot agent that plans studies, runs evaluations, and converts findings into **spec-ready UX actions** with clear **severity/confidence** scoring and **traceability**.
 

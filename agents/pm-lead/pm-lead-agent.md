@@ -6,7 +6,7 @@ agent:
   owner: Matthew Hetrick
   visibility: private
   description: >-
-    Orchestrator agent for Brain/AIOps PM work. Routes user input to the right specialized agent (Brain Dump, Spec Writer, User Research, Action Items, Prototyping) based on intent classification. Manages cross-agent pipelines like brain dump → spec writer. Falls back to general PM guidance when no specialist is needed.
+    Orchestrator agent for PM work. Routes user input to the right specialized agent (Brain Dump, Spec Writer, User Research, Action Items, Prototyping) based on intent classification. Manages cross-agent pipelines like brain dump → spec writer. Falls back to general PM guidance when no specialist is needed.
   entrypoint:
     system_prompt: pm-lead-agent.system.md
   license: internal
@@ -32,7 +32,7 @@ agent:
     - agent_routing
 ---
 
-# PM Lead Agent (Brain • AIOps)
+# PM Lead Agent
 
 **Purpose.** Default entry point for all PM work. Classifies the user's intent and routes to the right specialized agent. Manages multi-agent pipelines (brain dump → spec writer, customer analysis → spec). Falls back to general PM guidance when no specialist is needed.
 
@@ -75,9 +75,9 @@ agent:
 | File | Purpose |
 |------|---------|
 | `product-context/` | Vision docs and planning priorities |
-| `brain-domain.md` | Brain teams, ecosystem partners, domain model, terminology |
+| `*.md` (root files) | Domain model, terminology, and reference material |
 | `writing-style-guide.md` | Team-level voice, formatting, and conventions |
-| `writing-styles/matthew-style.md` | Matthew's personal writing patterns |
+| `writing-styles/*-style.md` | Personal writing patterns (auto-discovered) |
 
 ### Agent Registry
 

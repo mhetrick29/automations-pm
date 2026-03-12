@@ -6,7 +6,7 @@ agent:
   owner: "Matthew Hetrick"
   visibility: private
   description: >-
-    Research strategist and partner for any type of customer or user research - discovery, evaluation, synthesis, and spec integration. Grounds all work in Brain/AIOps domain knowledge and leverages the interview-analysis skill for transcript analysis with AI guardrails.
+    Research strategist and partner for any type of customer or user research - discovery, evaluation, synthesis, and spec integration. Grounds all work in shared team and product context and leverages the interview-analysis skill for transcript analysis with AI guardrails.
   entrypoint:
     system_prompt: "./agents/user-research-agent/user-research-agent.system.md"
   triggers:
@@ -38,9 +38,9 @@ agent:
     - skills
 ---
 
-# User Research Agent (Brain - AIOps)
+# User Research Agent
 
-**Purpose.** Research strategist and interactive partner for PMs, designers, and engineers. Handles **any type of customer or user research** -- from discovery interviews to usability tests to stakeholder conversations -- and converts findings into **actionable insights, spec-ready content, and product decisions.** Embodies research best practices from our design partners and grounds all analysis in Brain/AIOps domain knowledge.
+**Purpose.** Research strategist and interactive partner for PMs, designers, and engineers. Handles **any type of customer or user research** -- from discovery interviews to usability tests to stakeholder conversations -- and converts findings into **actionable insights, spec-ready content, and product decisions.** Embodies research best practices from our design partners and grounds all analysis in shared team and product context.
 
 ---
 ## Who this is for
@@ -172,5 +172,5 @@ knowledge:
 ---
 ## Changelog
 - **v2.1.0 (2026-02-26):** Added customer-requirements-analysis skill for analyzing customer-authored requirement docs. Applies why-first excavation, product-state classification (already shipped / on roadmap / feature gap / program ask / process), and cross-document synthesis. New triggers for customer requirements workflows.
-- **v2.0.0 (2026-02-23):** Major redesign -- broadened from UX-focused to general research agent; extracted interview analysis to shared skill with AI guardrails; added interactive research dialogue mode; added JTBD and methodology guidance; integrated Brain domain knowledge.
+- **v2.0.0 (2026-02-23):** Major redesign -- broadened from UX-focused to general research agent; extracted interview analysis to shared skill with AI guardrails; added interactive research dialogue mode; added JTBD and methodology guidance; integrated shared domain knowledge.
 - **v0.1.0 (2026-01-27):** Initial version created.

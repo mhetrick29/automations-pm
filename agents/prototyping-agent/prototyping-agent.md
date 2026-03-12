@@ -104,7 +104,7 @@ The agent auto-detects mode based on context:
 ### Mode 1 (Validation)
 ```
 @prototyping-agent Make 3 quick HTML prototypes for this idea: 
-#file:team-knowledge/ideas/auto-monitor-config-2026-03-10.md
+#file:ideas/auto-monitor-config-2026-03-10.md
 Design goals: (1) minimal — fewest clicks, (2) wizard — guided step-by-step, (3) dashboard — everything visible at once
 
 @prototyping-agent Create validation prototypes from this triage summary. 
