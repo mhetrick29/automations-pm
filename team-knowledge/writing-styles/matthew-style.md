@@ -2,7 +2,7 @@
 
 Personal style patterns applied on top of the team writing style guide. These reflect Matthew's preferred formatting for specs and product documents.
 
-*Last updated: 2026-03-12 — auto-updated from conversation insights*
+*Last updated: 2026-03-13 — auto-updated from conversation insights*
 
 ## Voice & Tone
 
@@ -39,6 +39,14 @@ Personal style patterns applied on top of the team writing style guide. These re
 - Uses **"bubble up"** to mean surface or make more prominent (*"we need to make this gap bubble up"*)
 - Uses **"land"** to mean ship/establish/deliver (*"we need to land phase 1 first"*)
 - Uses **"you alright?"** as a casual check-in when something seems stalled or off — expects a brief status update, not a lengthy explanation
+
+## Conversational Patterns
+
+- **Approval-then-pivot**: Starts with brief positive feedback ("This is great", "I like that", "That was awesome") then immediately pivots to the next instruction or constraint in the same message. The approval is a one-beat acknowledgment, not an invitation to discuss.
+- **Statement-as-question**: Drops question marks on simple queries — *"Did you push these"*, *"how would I make this into a plugin"* — treats chat like speech, not formal writing.
+- **Typo tolerance**: Doesn't correct casual typos in chat (*"ting"* for *"thing"*) — prioritizes speed over polish in conversational context.
+- **Implicit tool shorthand**: References tools by informal names and assumes shared context — *"Use workiq to send myself an email"* not "Use the Work IQ tool to compose an email for me."
+- **Confirmation + delegation**: Combines a yes with the next action in one breath — *"yep and then you can plan out the conversion"*, *"Keep those out of the mcp, good catch."*
 
 ## Table Formats
 
