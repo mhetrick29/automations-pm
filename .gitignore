@@ -39,3 +39,6 @@ mcp.json
 .publish-state.json
 .vscode/mcp.json
 prototypes/im-explorations/
+
+# Screenshots (local artifacts, not for version control)
+playwright-screenshots/
