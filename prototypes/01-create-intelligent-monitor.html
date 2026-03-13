@@ -355,25 +355,257 @@
         .step-dot.active .dot { background: #0078d4; width: 10px; height: 10px; }
         .step-dot.done .dot { background: #107c10; }
         .step-connector { width: 24px; height: 1px; background: #c8c6c4; }
+
+        /* ── Modal Overlay ── */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 10000;
+            display: none; align-items: center; justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: #fff; border-radius: 8px; padding: 40px 48px; text-align: center;
+            max-width: 460px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+        .modal-icon { font-size: 48px; margin-bottom: 16px; }
+        .modal-box h2 { font-size: 20px; font-weight: 600; margin-bottom: 12px; color: #323130; }
+        .modal-box p { font-size: 14px; color: #605e5c; margin-bottom: 24px; line-height: 1.5; }
+
+        /* ── Monitor Table ── */
+        .monitor-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e1dfdd; border-radius: 2px; }
+        .monitor-table th {
+            text-align: left; padding: 10px 16px; font-size: 12px; font-weight: 600;
+            color: #605e5c; background: #faf9f8; border-bottom: 1px solid #e1dfdd;
+        }
+        .monitor-table td {
+            padding: 12px 16px; font-size: 13px; color: #323130; border-bottom: 1px solid #f3f2f1;
+        }
+        .monitor-table .clickable { cursor: pointer; }
+        .monitor-table .clickable:hover { background: #f3f2f1; }
+        .monitor-table .monitor-name { color: #0078d4; font-weight: 600; font-size: 14px; }
+        .monitor-table .chevron-cell { color: #0078d4; font-size: 18px; text-align: center; width: 30px; }
+
+        /* ── Summary Grid (read-only details) ── */
+        .summary-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px;
+        }
+        .summary-field { padding: 8px 0; }
+        .summary-label { font-size: 12px; color: #605e5c; font-weight: 600; margin-bottom: 2px; }
+        .summary-value { font-size: 14px; color: #323130; }
+        .change-link { color: #0078d4; font-size: 12px; cursor: pointer; margin-left: 6px; }
+        .change-link:hover { text-decoration: underline; }
+
+        /* ── ARM Path Header ── */
+        .arm-path-header {
+            font-size: 12px; color: #605e5c; font-family: 'Consolas', 'Courier New', monospace;
+            padding: 4px 0 8px; word-break: break-all; background: #f3f2f1;
+            padding: 10px 16px; border-radius: 2px; margin-bottom: 12px;
+        }
+        .edit-monitor-link { color: #0078d4; font-size: 13px; cursor: pointer; text-decoration: none; }
+        .edit-monitor-link:hover { text-decoration: underline; }
+
+        /* ── Performance Stats ── */
+        .perf-stats {
+            display: flex; gap: 24px; padding: 16px 0; border-bottom: 1px solid #e1dfdd; margin-bottom: 16px;
+        }
+        .perf-stat { flex: 1; }
+        .perf-stat-label { font-size: 12px; color: #605e5c; margin-bottom: 4px; }
+        .perf-stat-value { font-size: 28px; font-weight: 700; color: #323130; }
+        .perf-stat-value .perf-stat-sub { font-size: 14px; font-weight: 400; color: #605e5c; }
+
+        /* ── Results Table ── */
+        .results-table { width: 100%; border-collapse: collapse; }
+        .results-table th {
+            text-align: left; padding: 8px 10px; font-size: 11px; font-weight: 600;
+            color: #605e5c; background: #faf9f8; border-bottom: 1px solid #e1dfdd;
+            white-space: nowrap;
+        }
+        .results-table td {
+            padding: 8px 10px; font-size: 12px; color: #323130; border-bottom: 1px solid #f3f2f1;
+            white-space: nowrap;
+        }
+        .results-table .incident-link { color: #0078d4; text-decoration: none; font-weight: 600; }
+        .results-table .incident-link:hover { text-decoration: underline; }
+        .results-table .signal-link { color: #0078d4; text-decoration: none; }
+        .results-table .signal-link:hover { text-decoration: underline; }
+        .status-detected { color: #107c10; font-weight: 600; }
+        .status-missed { color: #d13438; font-weight: 600; }
+        .outcome-tp { color: #107c10; }
+        .outcome-fp { color: #ca5010; }
+        .outcome-fn { color: #d13438; }
+
+        /* ── Filter Bar ── */
+        .filter-bar {
+            display: flex; align-items: center; gap: 10px; padding: 12px 0; flex-wrap: nowrap;
+        }
+        .search-input {
+            padding: 6px 10px 6px 30px; border: 1px solid #c8c6c4; border-radius: 2px;
+            font-size: 13px; font-family: inherit; width: 200px;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") 8px center no-repeat;
+        }
+        .search-input:focus { border-color: #0078d4; outline: none; }
+        .filter-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 10px; border: 1px solid #c8c6c4; border-radius: 14px;
+            font-size: 12px; color: #323130; background: #fff; cursor: default;
+        }
+        .filter-pill .pill-close { cursor: pointer; color: #605e5c; font-weight: 600; }
+        .filter-pill .pill-close:hover { color: #d13438; }
+        .add-filter-btn {
+            background: none; border: none; color: #0078d4; font-size: 13px;
+            cursor: pointer; font-family: inherit; padding: 4px 8px;
+        }
+        .add-filter-btn:hover { text-decoration: underline; }
+
+        /* ── What-if Button ── */
+        .whatif-btn {
+            padding: 8px 20px; border-radius: 2px; font-size: 14px; font-family: inherit;
+            cursor: pointer; border: 1px solid #107c10; background: #107c10; color: #fff;
+            font-weight: 600; transition: all 0.15s;
+        }
+        .whatif-btn:hover { background: #0b6a0b; border-color: #0b6a0b; }
+
+        /* ── What-if Overlay & Panel ── */
+        .whatif-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); z-index: 10000;
+            display: none;
+        }
+        .whatif-overlay.show { display: block; }
+        .whatif-panel {
+            position: fixed; top: 0; right: -900px; width: 860px; height: 100%;
+            background: #fff; z-index: 10001; box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+            display: flex; flex-direction: column; transition: right 0.3s ease;
+            overflow: hidden;
+        }
+        .whatif-panel.show { right: 0; }
+        .whatif-header {
+            padding: 20px 24px; border-bottom: 1px solid #e1dfdd; flex-shrink: 0;
+            display: flex; justify-content: space-between; align-items: flex-start;
+        }
+        .whatif-header h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+        .whatif-header p { font-size: 13px; color: #605e5c; }
+        .whatif-close {
+            background: none; border: none; font-size: 14px; color: #605e5c;
+            cursor: pointer; font-family: inherit; padding: 4px 8px;
+        }
+        .whatif-close:hover { color: #d13438; }
+
+        /* ── What-if Body Layout ── */
+        .whatif-body {
+            display: flex; flex: 1; overflow: hidden;
+        }
+        .whatif-sidebar {
+            width: 220px; border-right: 1px solid #e1dfdd; padding: 20px 16px;
+            flex-shrink: 0; overflow-y: auto;
+        }
+        .whatif-main {
+            flex: 1; padding: 20px 24px; overflow-y: auto;
+        }
+
+        /* ── Noise Presets ── */
+        .noise-slider { width: 100%; margin: 8px 0; accent-color: #0078d4; cursor: pointer; }
+        .noise-callout {
+            background: #fff4ce; border: 1px solid #ffc107; border-radius: 4px;
+            padding: 10px 12px; font-size: 11px; color: #664d03; line-height: 1.4;
+            margin-top: 12px;
+        }
+
+        /* ── What-if Tabs ── */
+        .whatif-tabs { display: flex; gap: 0; margin-bottom: 16px; }
+        .whatif-tab {
+            padding: 8px 20px; border: 1px solid #c8c6c4; cursor: pointer;
+            font-size: 13px; font-family: inherit; background: #fff;
+            transition: all 0.15s;
+        }
+        .whatif-tab:first-child { border-radius: 4px 0 0 4px; }
+        .whatif-tab:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+        .whatif-tab.active { background: #0078d4; color: #fff; border-color: #0078d4; font-weight: 600; }
+
+        /* ── What-if Cards & Stats ── */
+        .whatif-card {
+            background: #f3f2f1; border: 1px solid #e1dfdd; border-radius: 4px;
+            padding: 14px 16px; margin-bottom: 16px;
+        }
+        .whatif-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .whatif-card li { font-size: 13px; color: #323130; margin-bottom: 4px; }
+        .whatif-stats-row { display: flex; gap: 12px; margin-bottom: 16px; }
+        .whatif-stat-box {
+            flex: 1; background: #fff; border: 1px solid #e1dfdd; border-radius: 4px;
+            padding: 14px 16px;
+        }
+        .ws-label { font-size: 11px; color: #605e5c; font-weight: 600; text-transform: uppercase; margin-bottom: 6px; }
+        .ws-value { font-size: 22px; font-weight: 700; color: #323130; margin-bottom: 4px; }
+        .ws-sub { font-size: 11px; color: #605e5c; }
+        .ws-badge {
+            display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600;
+        }
+        .ws-badge.yellow { background: #fff4ce; color: #664d03; }
+
+        /* ── Severity Badge ── */
+        .sev-badge {
+            display: inline-block; padding: 2px 8px; border-radius: 10px;
+            font-size: 11px; font-weight: 600;
+        }
+        .sev-badge.sev2 { background: #fde7e9; color: #a4262c; }
+        .sev-badge.sev3 { background: #fff4ce; color: #664d03; }
+
+        /* ── Timeline Placeholder ── */
+        .timeline-placeholder {
+            background: #f3f2f1; border: 1px dashed #c8c6c4; border-radius: 4px;
+            padding: 32px 20px; text-align: center; color: #605e5c;
+            font-size: 13px; font-style: italic; margin-bottom: 16px;
+        }
+
+        /* ── What-if Detail Table ── */
+        .whatif-detail-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .whatif-detail-table th {
+            text-align: left; padding: 8px 10px; font-weight: 600; color: #605e5c;
+            background: #faf9f8; border-bottom: 1px solid #e1dfdd;
+        }
+        .whatif-detail-table td {
+            padding: 8px 10px; color: #323130; border-bottom: 1px solid #f3f2f1;
+        }
+
+        /* ── What-if Footer ── */
+        .whatif-footer {
+            padding: 14px 24px; border-top: 1px solid #e1dfdd; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: space-between;
+            background: #faf9f8;
+        }
+        .footer-note { font-size: 12px; color: #605e5c; }
+        .footer-actions { display: flex; gap: 10px; }
+
+        /* ── Time Range Buttons ── */
+        .time-range-btns { display: flex; gap: 0; }
+        .time-range-btn {
+            padding: 4px 12px; border: 1px solid #c8c6c4; font-size: 12px;
+            font-family: inherit; cursor: pointer; background: #fff;
+        }
+        .time-range-btn:first-child { border-radius: 4px 0 0 4px; }
+        .time-range-btn:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+        .time-range-btn.active { background: #0078d4; color: #fff; border-color: #0078d4; font-weight: 600; }
+
+        /* ── Collapsible Section ── */
+        .section-body.collapsed { display: none; }
+
     </style>
 </head>
 <body>
 
 <!-- ══════════ SCENARIO BAR (prototype control) ══════════ -->
 <div class="scenario-bar">
-    <label>Prototype 1 — Scenario:</label>
+    <label>Prototype 1 + 2 — Scenario:</label>
     <button class="active" onclick="setScenario('happy')">Happy Path</button>
     <button onclick="setScenario('mixed')">Mixed SLI Quality</button>
     <button onclick="setScenario('nodata')">No Historical Data</button>
     <div class="step-indicator">
-        Screen <span id="currentStep">1</span> / <span id="totalSteps">5</span>
+        Screen <span id="currentStep">1</span> / <span id="totalSteps">6</span>
         &nbsp;|&nbsp;
         <button class="btn-secondary" style="padding:2px 8px; font-size:11px;" onclick="prevScreen()">◄ Back</button>
         <button class="btn-secondary" style="padding:2px 8px; font-size:11px;" onclick="nextScreen()">Next ►</button>
     </div>
 </div>
-
-<!-- ══════════ JARVIS SHELL ══════════ -->
 <div class="jarvis-shell">
 
     <!-- ── Top Bar ── -->
@@ -440,9 +672,6 @@
                 </div>
             </div>
 
-            <!-- ════════════════════════════════════════════ -->
-            <!-- SCREEN 2: Create IM — Form                  -->
-            <!-- ════════════════════════════════════════════ -->
             <div class="screen" id="screen-2">
                 <div class="content-breadcrumb">
                     <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›
@@ -559,21 +788,108 @@
 
                     <div class="btn-group">
                         <button class="btn btn-secondary" onclick="prevScreen()">Cancel</button>
-                        <button class="btn btn-primary" onclick="nextScreen()">Save & Start Training</button>
+                        <button class="btn btn-primary" onclick="showTrainingPopup()">Save & Start Training</button>
                     </div>
                 </div>
             </div>
 
             <!-- ════════════════════════════════════════════ -->
-            <!-- SCREEN 3: Training in Progress              -->
+            <!-- SCREEN 3: Monitors Table (Training State)   -->
             <!-- ════════════════════════════════════════════ -->
             <div class="screen" id="screen-3">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Brain Monitors</div>
+                <div class="content-body" style="max-width: 960px;">
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="font-size: 16px; font-weight: 600;">Monitors</h3>
+                        <button class="btn btn-primary" onclick="showScreen(2)">+ Create Monitor</button>
+                    </div>
+
+                    <table class="monitor-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Signals</th>
+                                <th>ETA</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="clickable" onclick="showScreen(4)">
+                                <td class="monitor-name">Cosmos DB — Intelligent Monitor</td>
+                                <td><span class="status-badge" id="tableTrainingBadge">Training</span></td>
+                                <td id="tableTrainingSignals">5 signals</td>
+                                <td id="tableTrainingEta">~3 days</td>
+                                <td class="chevron-cell">›</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 4: Training Detail + Read-Only Summary -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen" id="screen-4">
                 <div class="content-breadcrumb">
                     <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›&nbsp; <a href="#">Brain Monitors</a> &nbsp;›
                 </div>
                 <div class="content-title">Cosmos DB — Intelligent Monitor</div>
                 <div class="content-body">
 
+                    <!-- Read-only Monitor Details (collapsible) -->
+                    <div class="section">
+                        <div class="section-header" onclick="this.querySelector('.chevron').textContent = this.nextElementSibling.classList.toggle('collapsed') ? '▼' : '▲'">
+                            <h3>Monitor details <span class="info-icon">?</span></h3>
+                            <span class="chevron">▲</span>
+                        </div>
+                        <div class="section-body">
+                            <div class="summary-grid">
+                                <div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Title</div>
+                                        <div class="summary-value">Cosmos DB — Intelligent Monitor</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Description</div>
+                                        <div class="summary-value">Service-level intelligent monitor for Cosmos DB</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Signals</div>
+                                        <div class="summary-value">5</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">IcM team</div>
+                                        <div class="summary-value">AZURECOSMOSDB\ControlPlane... <span class="info-icon">?</span> <span class="change-link">(change)</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Incident severity</div>
+                                        <div class="summary-value">2 <span class="change-link">(change)</span></div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Outage declaration</div>
+                                        <div class="summary-value">On - Brain decided <span class="change-link">(change)</span></div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Auto communication</div>
+                                        <div class="summary-value">On - Generic template <span class="change-link">(change)</span></div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">TSG</div>
+                                        <div class="summary-value">TSG-COSMOS-001: Database Performance ↗ <span class="change-link">(change)</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Training Progress -->
                     <div id="trainingBanner"></div>
 
                     <div class="training-card">
@@ -585,66 +901,22 @@
                         </div>
                         <p style="font-size: 12px; color: #605e5c; margin-bottom: 16px;" id="trainingProgressLabel">Estimated time remaining: ~2 hours</p>
 
-                        <div id="trainingSignalList">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-
-                    <div class="training-card" id="trainingQualityCard" style="display:none;">
-                        <h3 style="color: #a4262c;">Signals Needing Attention</h3>
-                        <p class="subtitle">These signals have quality issues that prevent them from being included in training. Fix the issues and they will be automatically included.</p>
-                        <div id="trainingQualityList"></div>
                     </div>
 
                 </div>
             </div>
 
             <!-- ════════════════════════════════════════════ -->
-            <!-- SCREEN 4: Training Complete — Notification  -->
-            <!-- ════════════════════════════════════════════ -->
-            <div class="screen" id="screen-4">
-                <div class="content-breadcrumb">
-                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›&nbsp; <a href="#">Brain Monitors</a> &nbsp;›
-                </div>
-                <div class="content-title">Cosmos DB — Intelligent Monitor</div>
-                <div class="content-body">
-
-                    <div id="completionBanner"></div>
-
-                    <div class="training-card">
-                        <h3>Training Complete</h3>
-                        <p class="subtitle" id="completionSubtitle"></p>
-
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-fill green" id="completionProgressBar" style="width: 100%"></div>
-                        </div>
-
-                        <div id="completionSignalList"></div>
-                    </div>
-
-                    <div class="training-card" id="completionQualityCard" style="display:none;">
-                        <h3 style="color: #ca5010;">Signals to Improve</h3>
-                        <p class="subtitle">These signals were excluded from training. Fix the issues below and they'll be included automatically on the next training cycle.</p>
-                        <div id="completionQualityList"></div>
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn btn-primary" onclick="nextScreen()">Review Results & Configure →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ════════════════════════════════════════════ -->
-            <!-- SCREEN 5: Monitor List (post-creation)      -->
+            <!-- SCREEN 5: Monitors Table (Ready for Review)  -->
             <!-- ════════════════════════════════════════════ -->
             <div class="screen" id="screen-5">
                 <div class="content-breadcrumb">
                     <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›
                 </div>
                 <div class="content-title">Cosmos DB — Brain Monitors</div>
-                <div class="content-body">
+                <div class="content-body" style="max-width: 960px;">
 
-                    <div class="notification-banner info" style="margin-bottom: 20px;">
+                    <div class="notification-banner info" style="margin-bottom: 20px;" id="monitorInfoBanner">
                         <span class="notif-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
                         <div>
                             <h4>Next step: Review detection results</h4>
@@ -654,22 +926,194 @@
 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                         <h3 style="font-size: 16px; font-weight: 600;">Monitors</h3>
+                        <button class="btn btn-primary" onclick="showScreen(2)">+ Create Monitor</button>
                     </div>
 
-                    <!-- Monitor card -->
-                    <div style="background: #fff; border: 1px solid #e1dfdd; border-radius: 2px; padding: 16px 20px; cursor: pointer;" onclick="alert('→ Opens Prototype 2: Review Backtested Results & Go Live')">
-                        <div style="display: flex; align-items: center; justify-content: space-between;">
-                            <div>
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                                    <span style="font-size: 16px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0078d4" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
-                                    <span style="font-size: 15px; font-weight: 600; color: #0078d4;">Cosmos DB — Intelligent Monitor</span>
-                                    <span class="status-badge" id="monitorStatusBadge" style="margin-left: 4px;">Ready for Review</span>
+                    <table class="monitor-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Signals</th>
+                                <th>Last Updated</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="clickable" onclick="showScreen(6)">
+                                <td class="monitor-name">Cosmos DB — Intelligent Monitor</td>
+                                <td><span class="status-badge" id="monitorStatusBadge">Ready for Review</span></td>
+                                <td id="monitorSignalsCount">5 signals</td>
+                                <td id="monitorLastUpdated">Training completed 2 min ago</td>
+                                <td class="chevron-cell">›</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 6: Review Results (Prototype 2)       -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen" id="screen-6">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›&nbsp; <a href="#">Brain Monitors</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Manage</div>
+                <div class="content-body" style="max-width: 1100px;">
+
+                    <!-- ARM RP SLI Header -->
+                    <div class="arm-path-header">ARM RP SLI – /PROVIDERS/MICROSOFT.DOCUMENTDB/CASSANDRACLUSTERS GET</div>
+                    <div style="margin-bottom: 16px;">
+                        <a href="#" class="edit-monitor-link">✏ Edit monitor</a>
+                    </div>
+
+                    <!-- Monitor details (collapsible) -->
+                    <div class="section">
+                        <div class="section-header" onclick="this.querySelector('.chevron').textContent = this.nextElementSibling.classList.toggle('collapsed') ? '▼' : '▲'">
+                            <h3>Monitor details <span class="info-icon">?</span></h3>
+                            <span class="chevron">▲</span>
+                        </div>
+                        <div class="section-body">
+                            <div class="summary-grid">
+                                <div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Title</div>
+                                        <div class="summary-value">Cosmos DB — Intelligent Monitor</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Description</div>
+                                        <div class="summary-value">Service-level intelligent monitor for Cosmos DB</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Signals</div>
+                                        <div class="summary-value">5</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">IcM team</div>
+                                        <div class="summary-value">AZURECOSMOSDB\ControlPlane... <span class="info-icon">?</span> <span class="change-link">(change)</span></div>
+                                    </div>
                                 </div>
-                                <div style="font-size: 12px; color: #605e5c;" id="monitorSummaryLine">
-                                    5 signals &nbsp;·&nbsp; OPM model &nbsp;·&nbsp; Training completed 2 min ago
+                                <div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Incident severity</div>
+                                        <div class="summary-value">2 <span class="change-link">(change)</span></div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Outage declaration</div>
+                                        <div class="summary-value">On - Brain decided <span class="change-link">(change)</span></div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Auto communication</div>
+                                        <div class="summary-value">On - Generic template <span class="change-link">(change)</span></div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">TSG</div>
+                                        <div class="summary-value">TSG-COSMOS-001: Database Performance ↗ <span class="change-link">(change)</span></div>
+                                    </div>
                                 </div>
                             </div>
-                            <div style="color: #0078d4; font-size: 18px;">›</div>
+                        </div>
+                    </div>
+
+                    <!-- Performance insight -->
+                    <div class="section">
+                        <div class="section-header" style="cursor: default;">
+                            <h3>Performance insight <span class="info-icon">?</span></h3>
+                        </div>
+                        <div class="section-body">
+                            <!-- Filter bar -->
+                            <div class="filter-bar">
+                                <input class="search-input" type="text" placeholder="Search by keyword" />
+                                <span class="filter-pill">Date range == 7 days <span class="pill-close">✕</span></span>
+                                <button class="add-filter-btn">+ Add filter</button>
+                                <div style="flex: 1;"></div>
+                                <button class="whatif-btn" onclick="openWhatIf()">What-if Preview</button>
+                            </div>
+
+                            <!-- Stats row -->
+                            <div class="perf-stats">
+                                <div class="perf-stat">
+                                    <div class="perf-stat-label">Brain detected coverage</div>
+                                    <div class="perf-stat-value">3 <span class="perf-stat-sub">/5 (60%)</span></div>
+                                </div>
+                                <div class="perf-stat">
+                                    <div class="perf-stat-label">Precision</div>
+                                    <div class="perf-stat-value">67%</div>
+                                </div>
+                                <div class="perf-stat">
+                                    <div class="perf-stat-label">TTO</div>
+                                    <div class="perf-stat-value">10 <span class="perf-stat-sub">min</span></div>
+                                </div>
+                            </div>
+
+                            <!-- Results table -->
+                            <table class="results-table">
+                                <thead>
+                                    <tr>
+                                        <th>Incidents ↕</th>
+                                        <th>Title ↕</th>
+                                        <th>Date/Time ↕</th>
+                                        <th>Signal ↕</th>
+                                        <th>Status ↕</th>
+                                        <th>Outcome ↕</th>
+                                        <th>Action taken ↕</th>
+                                        <th>Sev ↕</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="#" class="incident-link">3562756 ↗</a></td>
+                                        <td>Lorem ipsum</td>
+                                        <td>2026-03-02 14:23</td>
+                                        <td><a href="#" class="signal-link">Service Health Check</a></td>
+                                        <td class="status-detected">✓ Detected</td>
+                                        <td class="outcome-tp">True-Positive</td>
+                                        <td>✏ Outage declared, Comms se...</td>
+                                        <td>2</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#" class="incident-link">5425683 ↗</a></td>
+                                        <td>Lorem ipsum</td>
+                                        <td>2026-03-02 14:23</td>
+                                        <td><a href="#" class="signal-link">Overall Error Rate</a></td>
+                                        <td class="status-detected">✓ Detected</td>
+                                        <td class="outcome-tp">True-Positive</td>
+                                        <td>✏ Outage declared, Comms se...</td>
+                                        <td>3</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#" class="incident-link">9003235 ↗</a></td>
+                                        <td>Lorem ipsum</td>
+                                        <td>2026-02-25 16:45</td>
+                                        <td><a href="#" class="signal-link">Overall Error Rate</a></td>
+                                        <td class="status-detected">✓ Detected</td>
+                                        <td class="outcome-fp">False-Positive</td>
+                                        <td>✏ Incident created</td>
+                                        <td>3</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#" class="incident-link">9232734 ↗</a></td>
+                                        <td>Lorem ipsum</td>
+                                        <td>2026-02-25 17:45</td>
+                                        <td><a href="#" class="signal-link">Request Success Rate</a></td>
+                                        <td class="status-missed">✗ Missed</td>
+                                        <td class="outcome-fn">False-Negative</td>
+                                        <td>✏ No action taken</td>
+                                        <td>3</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#" class="incident-link">5227365 ↗</a></td>
+                                        <td>Lorem ipsum</td>
+                                        <td>2026-02-25 18:45</td>
+                                        <td><a href="#" class="signal-link">Request Success Rate</a></td>
+                                        <td class="status-missed">✗ Missed</td>
+                                        <td class="outcome-fn">False-Negative</td>
+                                        <td>✏ No action taken</td>
+                                        <td>3</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -680,6 +1124,134 @@
     </div><!-- /main-layout -->
 </div><!-- /jarvis-shell -->
 
+<!-- ══════════ MODAL POPUP ══════════ -->
+<div class="modal-overlay" id="trainingModal">
+    <div class="modal-box">
+        <div class="modal-icon">🧠</div>
+        <h2>Training has started!</h2>
+        <p>Your Intelligent Monitor is being trained and will be ready in approximately <strong>3 days</strong>. We'll notify you when training is complete.</p>
+        <button class="btn btn-primary" onclick="dismissModal()">Got it</button>
+    </div>
+</div>
+
+<!-- ══════════ WHAT-IF PREVIEW PANEL ══════════ -->
+<div class="whatif-overlay" id="whatifOverlay" onclick="closeWhatIf()"></div>
+<div class="whatif-panel" id="whatifPanel">
+    <div class="whatif-header">
+        <div>
+            <h2>What-if Preview</h2>
+            <p>Adjust risk tolerance and signals to see projected detection results</p>
+        </div>
+        <button class="whatif-close" onclick="closeWhatIf()">✕ Close</button>
+    </div>
+    <div class="whatif-body">
+        <!-- Sidebar -->
+        <div class="whatif-sidebar">
+            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 6px;">Risk Tolerance</h4>
+            <p style="font-size: 12px; color: #605e5c; margin-bottom: 16px; line-height: 1.5;">Controls how much evidence Brain requires before creating an incident or declaring an outage.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span style="font-size: 13px; font-weight: 600; color: #323130;" id="riskLabel">Balanced</span>
+            </div>
+            <input type="range" class="noise-slider" min="0" max="2" step="1" value="1" id="riskSlider" oninput="updateRiskLabel(this.value)" style="width: 100%;" />
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: #605e5c; margin-top: 2px;">
+                <span>Conservative</span>
+                <span>Balanced</span>
+                <span>Aggressive</span>
+            </div>
+            <div class="noise-callout" style="margin-top: 16px;">
+                <strong>Conservative</strong> — Brain requires strong evidence across multiple signals before acting. Best for critical production services.<br/><br/>
+                <strong>Balanced</strong> — Brain weighs evidence proportionally. A good default for most services.<br/><br/>
+                <strong>Aggressive</strong> — Brain acts on early signal evidence. Best for services where fast response outweighs the cost of investigation.
+            </div>
+        </div>
+        <!-- Main content -->
+        <div class="whatif-main">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div class="whatif-tabs">
+                    <div class="whatif-tab">Current</div>
+                    <div class="whatif-tab active">Proposed</div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 14px; color: #605e5c; cursor: pointer;">☰</span>
+                    <div class="time-range-btns">
+                        <button class="time-range-btn active">Last 30 days</button>
+                        <button class="time-range-btn">Last 90 days</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What changed card -->
+            <div class="whatif-card">
+                <h4>What changed?</h4>
+                <ul style="list-style: disc; padding-left: 20px;">
+                    <li>+6 detections (3 declared outages)</li>
+                    <li>2 historical outages would no longer trigger</li>
+                    <li>Top driver: adjusting risk tolerance and signal selection</li>
+                </ul>
+            </div>
+
+            <!-- Stats row -->
+            <div class="whatif-stats-row">
+                <div class="whatif-stat-box">
+                    <div class="ws-label">Detected Outages</div>
+                    <div class="ws-value">12 → 18</div>
+                    <div class="ws-sub">+6 detections (50% increase)</div>
+                </div>
+                <div class="whatif-stat-box">
+                    <div class="ws-label">Estimated False Positives</div>
+                    <div class="ws-value"><span class="ws-badge yellow">Medium</span></div>
+                    <div class="ws-sub">~3 non-outage detections</div>
+                </div>
+                <div class="whatif-stat-box">
+                    <div class="ws-label">Potential Missed Outages</div>
+                    <div class="ws-value">2</div>
+                    <div class="ws-sub">Coverage proxy estimate</div>
+                </div>
+            </div>
+
+            <!-- Timeline placeholder -->
+            <div class="timeline-placeholder">
+                Timeline visualization showing events over last 30 days (Sev2 in red, Sev3 in yellow)
+            </div>
+
+            <!-- What Brain Would Have Done -->
+            <div class="whatif-card" style="background: #fff;">
+                <h4>What Brain Would Have Done</h4>
+                <table class="whatif-detail-table" style="margin-top: 8px;">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Scope</th>
+                            <th>Proposed Severity</th>
+                            <th>Would Declare</th>
+                            <th>Confidence</th>
+                            <th>Reasoning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2026-03-02</td>
+                            <td>West US 2 / Cluster</td>
+                            <td><span class="sev-badge sev2">SEV2</span></td>
+                            <td style="color: #107c10; font-weight: 600;">✓</td>
+                            <td>High confidence detection</td>
+                            <td>2 signals were significantly impacted</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="whatif-footer">
+        <span class="footer-note">Changes are not applied until you confirm</span>
+        <div class="footer-actions">
+            <button class="btn btn-secondary" onclick="closeWhatIf()">Discard</button>
+            <button class="btn btn-secondary">Save as draft</button>
+            <button class="btn btn-primary" onclick="closeWhatIf()">Apply changes</button>
+        </div>
+    </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -687,7 +1259,7 @@
     // ── State ──
     let currentScreen = 1;
     let currentScenario = 'happy';
-    const totalScreens = 5;
+    const totalScreens = 6;
 
     // ── SVG Icon helpers ──
     const svgIcon = {
@@ -697,6 +1269,7 @@
         signal: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>',
         info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
     };
+
     const scenarios = {
         happy: {
             signals: [
@@ -713,20 +1286,17 @@
                 { name: 'Dependency Health Score', status: 'waiting' },
                 { name: 'Request Success Rate', status: 'waiting' },
             ],
-            completionSignals: [
-                { name: 'Service Health Check', status: 'complete' },
-                { name: 'Endpoint Availability', status: 'complete' },
-                { name: 'Overall Error Rate', status: 'complete' },
-                { name: 'Dependency Health Score', status: 'complete' },
-                { name: 'Request Success Rate', status: 'complete' },
-            ],
             trainingBanner: { type: 'info', icon: 'clock', title: 'Training in progress', text: 'Brain is analyzing 90 days of historical data across 5 signals. You\'ll be notified when training is complete.' },
-            completionBanner: { type: 'success', icon: 'check', title: 'Training complete — ready for review', text: 'Brain has finished analyzing your signals. Review the backtested results, set your risk tolerance, and enable AOD.' },
-            completionSubtitle: 'All 5 signals successfully analyzed over 90 days of historical data.',
             qualityIssues: false,
+            // Screen 3 table
+            tableTrainingBadge: { cls: 'processing', text: 'Training' },
+            tableTrainingSignals: '5 signals',
+            tableTrainingEta: '~3 days',
+            // Screen 5 table
             monitorBadgeClass: 'complete',
             monitorBadgeText: 'Ready for Review',
-            monitorSummary: '5 signals  ·  OPM model  ·  Training completed 2 min ago'
+            monitorSignalsCount: '5 signals',
+            monitorLastUpdated: 'Training completed 2 min ago',
         },
         mixed: {
             signals: [
@@ -744,22 +1314,20 @@
                 { name: 'Overall Error Rate', status: 'processing' },
                 { name: 'Dependency Health Score', status: 'waiting' },
             ],
-            completionSignals: [
-                { name: 'Service Health Check', status: 'complete' },
-                { name: 'Endpoint Availability', status: 'complete' },
-                { name: 'Overall Error Rate', status: 'complete' },
-                { name: 'Dependency Health Score', status: 'complete' },
-            ],
             qualityIssues: true,
             qualityList: [
                 { name: 'Request Success Rate', issue: 'No transitions detected in last 30 days', fix: 'Verify LocationID and CustomerResourceId dimensions in the SLI authoring wizard. Ensure the SLI is receiving traffic in production.', severity: 'blocking' }
             ],
             trainingBanner: { type: 'warning', icon: 'warning', title: 'Training in progress — 1 signal excluded', text: 'Brain is training on 4 of 5 signals. 1 signal was excluded due to quality issues. You can fix it and it will be included in the next training cycle.' },
-            completionBanner: { type: 'warning', icon: 'warning', title: 'Training complete — 1 signal needs attention', text: '4 of 5 signals analyzed successfully. 1 signal was excluded due to quality issues. Review the results and fix the flagged signal to improve coverage.' },
-            completionSubtitle: '4 of 5 signals successfully analyzed. 1 signal excluded due to quality issues.',
+            // Screen 3 table
+            tableTrainingBadge: { cls: 'processing', text: 'Training' },
+            tableTrainingSignals: '4/5 signals',
+            tableTrainingEta: '~3 days',
+            // Screen 5 table
             monitorBadgeClass: 'collecting',
             monitorBadgeText: 'Ready for Review (1 signal excluded)',
-            monitorSummary: '4/5 signals  ·  OPM model  ·  1 signal needs attention'
+            monitorSignalsCount: '4/5 signals',
+            monitorLastUpdated: '4/5 signals · 1 signal needs attention',
         },
         nodata: {
             signals: [
@@ -781,20 +1349,17 @@
                 { name: 'Dependency Health Score', status: 'collecting' },
                 { name: 'Request Success Rate', status: 'collecting' },
             ],
-            completionSignals: [
-                { name: 'Service Health Check', status: 'collecting' },
-                { name: 'Endpoint Availability', status: 'collecting' },
-                { name: 'Overall Error Rate', status: 'collecting' },
-                { name: 'Dependency Health Score', status: 'collecting' },
-                { name: 'Request Success Rate', status: 'collecting' },
-            ],
             qualityIssues: false,
             trainingBanner: { type: 'info', icon: 'signal', title: 'Collecting data', text: 'Your SLIs were recently authored and have no historical data yet. Brain is collecting data now and will notify you when enough data exists to generate a meaningful preview (typically 3–7 days).' },
-            completionBanner: { type: 'info', icon: 'signal', title: 'Data collection in progress', text: 'Brain is collecting data from your signals. A meaningful preview requires at least 3 days of data. You\'ll be notified when the preview is ready. You can enable AOD now at the most conservative setting, or wait for the preview.' },
-            completionSubtitle: 'No historical data available yet. Brain is collecting signal data — preview will be available in approximately 3–7 days.',
+            // Screen 3 table
+            tableTrainingBadge: { cls: 'processing', text: 'Collecting Data' },
+            tableTrainingSignals: '5 signals',
+            tableTrainingEta: '~5-7 days',
+            // Screen 5 table
             monitorBadgeClass: 'processing',
             monitorBadgeText: 'Collecting Data',
-            monitorSummary: '5 signals  ·  OPM model  ·  Collecting data (~3–7 days for preview)'
+            monitorSignalsCount: '5 signals',
+            monitorLastUpdated: 'Collecting data (~3-7 days for preview)',
         }
     };
 
@@ -821,7 +1386,16 @@
         `).join('');
     }
 
-    function renderTraining() {
+    function renderTrainingTable() {
+        const s = scenarios[currentScenario];
+        const badge = document.getElementById('tableTrainingBadge');
+        badge.className = 'status-badge ' + s.tableTrainingBadge.cls;
+        badge.textContent = s.tableTrainingBadge.text;
+        document.getElementById('tableTrainingSignals').textContent = s.tableTrainingSignals;
+        document.getElementById('tableTrainingEta').textContent = s.tableTrainingEta;
+    }
+
+    function renderTrainingDetail() {
         const s = scenarios[currentScenario];
 
         // Banner
@@ -845,102 +1419,18 @@
             document.getElementById('trainingProgressLabel').textContent = 'Estimated time remaining: ~2 hours';
             document.getElementById('trainingSubtitle').textContent = 'Brain is analyzing your signals over the last 90 days to build a detection model.';
         }
-
-        // Signal list
-        document.getElementById('trainingSignalList').innerHTML = s.trainingSignals.map(sig => `
-            <div class="training-signal">
-                <span>${sig.name}</span>
-                <div class="training-status">
-                    ${sig.status === 'processing' ? '<span class="spinner"></span>' : ''}
-                    <span class="status-badge ${sig.status}">${
-                        sig.status === 'complete' ? '✓ Complete' :
-                        sig.status === 'processing' ? 'Processing...' :
-                        sig.status === 'collecting' ? 'Collecting data' :
-                        '○ Waiting'
-                    }</span>
-                </div>
-            </div>
-        `).join('');
-
-        // Quality card
-        if (s.qualityIssues) {
-            document.getElementById('trainingQualityCard').style.display = 'block';
-            document.getElementById('trainingQualityList').innerHTML = s.qualityList.map(q => `
-                <div class="training-signal" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                        <span style="font-weight: 600;">${q.name}</span>
-                        <span class="status-badge error">Excluded</span>
-                    </div>
-                    <div style="font-size: 12px; color: #a4262c;"><strong>Issue:</strong> ${q.issue}</div>
-                    <div style="font-size: 12px; color: #323130;"><strong>Fix:</strong> ${q.fix}</div>
-                </div>
-            `).join('');
-        } else {
-            document.getElementById('trainingQualityCard').style.display = 'none';
-        }
     }
 
-    function renderCompletion() {
+    function renderMonitorTable() {
         const s = scenarios[currentScenario];
-
-        // Banner
-        const b = s.completionBanner;
-        document.getElementById('completionBanner').innerHTML = `
-            <div class="notification-banner ${b.type}">
-                <span class="notif-icon">${svgIcon[b.icon]}</span>
-                <div><h4>${b.title}</h4><p>${b.text}</p></div>
-            </div>
-        `;
-
-        // Subtitle
-        document.getElementById('completionSubtitle').textContent = s.completionSubtitle;
-
-        // Progress bar
-        if (currentScenario === 'nodata') {
-            document.getElementById('completionProgressBar').style.width = '15%';
-            document.getElementById('completionProgressBar').className = 'progress-bar-fill blue';
-        } else {
-            document.getElementById('completionProgressBar').style.width = '100%';
-            document.getElementById('completionProgressBar').className = 'progress-bar-fill green';
-        }
-
-        // Signal list
-        document.getElementById('completionSignalList').innerHTML = s.completionSignals.map(sig => `
-            <div class="training-signal">
-                <span>${sig.name}</span>
-                <div class="training-status">
-                    <span class="status-badge ${sig.status}">${
-                        sig.status === 'complete' ? '✓ Complete' :
-                        sig.status === 'collecting' ? '📡 Collecting data' :
-                        sig.status
-                    }</span>
-                </div>
-            </div>
-        `).join('');
-
-        // Quality card
-        if (s.qualityIssues) {
-            document.getElementById('completionQualityCard').style.display = 'block';
-            document.getElementById('completionQualityList').innerHTML = s.qualityList.map(q => `
-                <div class="training-signal" style="flex-direction: column; align-items: flex-start; gap: 4px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                        <span style="font-weight: 600;">${q.name}</span>
-                        <span class="status-badge error">Needs Fix</span>
-                    </div>
-                    <div style="font-size: 12px; color: #a4262c;"><strong>Issue:</strong> ${q.issue}</div>
-                    <div style="font-size: 12px; color: #323130;"><strong>Fix:</strong> ${q.fix}</div>
-                </div>
-            `).join('');
-        } else {
-            document.getElementById('completionQualityCard').style.display = 'none';
-        }
-    }
-
-    function renderMonitorList() {
-        const s = scenarios[currentScenario];
-        document.getElementById('monitorStatusBadge').className = `status-badge ${s.monitorBadgeClass}`;
+        document.getElementById('monitorStatusBadge').className = 'status-badge ' + s.monitorBadgeClass;
         document.getElementById('monitorStatusBadge').textContent = s.monitorBadgeText;
-        document.getElementById('monitorSummaryLine').textContent = s.monitorSummary;
+        document.getElementById('monitorSignalsCount').textContent = s.monitorSignalsCount;
+        document.getElementById('monitorLastUpdated').textContent = s.monitorLastUpdated;
+    }
+
+    function renderReview() {
+        // Static content — no dynamic scenario changes needed
     }
 
     // ── Navigation ──
@@ -953,9 +1443,10 @@
 
         // Render screen-specific content
         if (n === 2) renderSignals();
-        if (n === 3) renderTraining();
-        if (n === 4) renderCompletion();
-        if (n === 5) renderMonitorList();
+        if (n === 3) renderTrainingTable();
+        if (n === 4) renderTrainingDetail();
+        if (n === 5) renderMonitorTable();
+        if (n === 6) renderReview();
     }
 
     function nextScreen() {
@@ -969,8 +1460,30 @@
         currentScenario = s;
         document.querySelectorAll('.scenario-bar button').forEach(b => b.classList.remove('active'));
         event.target.classList.add('active');
-        // Re-render current screen
         showScreen(currentScreen);
+    }
+
+    // ── Modal ──
+    function showTrainingPopup() {
+        document.getElementById('trainingModal').classList.add('show');
+    }
+    function dismissModal() {
+        document.getElementById('trainingModal').classList.remove('show');
+        showScreen(3);
+    }
+
+    // ── What-if Panel ──
+    function openWhatIf() {
+        document.getElementById('whatifOverlay').classList.add('show');
+        document.getElementById('whatifPanel').classList.add('show');
+    }
+    function closeWhatIf() {
+        document.getElementById('whatifOverlay').classList.remove('show');
+        document.getElementById('whatifPanel').classList.remove('show');
+    }
+    function updateRiskLabel(val) {
+        const labels = ['Conservative', 'Balanced', 'Aggressive'];
+        document.getElementById('riskLabel').textContent = labels[val];
     }
 
     // ── Init ──

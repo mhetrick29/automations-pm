@@ -26,7 +26,7 @@ team-knowledge/ado-copy-relevant/
 Docs/
 
 # Idea files (local only — triage output, not for version control)
-team-knowledge/ideas/**/*.md
+ideas/**/*.md
 
 # Daily digest output (personal, auto-generated)
 daily-summaries/

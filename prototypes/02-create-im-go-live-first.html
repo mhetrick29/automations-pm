@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototype 2: Go-Live-First Intelligent Monitor</title>
+    <style>
+        /* ── Reset ── */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; color: #323130; overflow: hidden; background: #faf9f8; }
+
+        /* ── Scenario Bar (prototype control, outside Jarvis chrome) ── */
+        .scenario-bar {
+            background: #fff3cd; border-bottom: 2px solid #ffc107; padding: 8px 20px;
+            display: flex; align-items: center; gap: 16px; font-size: 13px; z-index: 1000;
+        }
+        .scenario-bar label { font-weight: 600; color: #664d03; }
+        .scenario-bar button {
+            padding: 4px 12px; border: 1px solid #ffc107; border-radius: 4px;
+            background: #fff; cursor: pointer; font-size: 12px; font-family: inherit;
+            transition: all 0.15s;
+        }
+        .scenario-bar button:hover { background: #ffc107; color: #fff; }
+        .scenario-bar button.active { background: #0078d4; color: #fff; border-color: #0078d4; }
+        .scenario-bar .step-indicator {
+            margin-left: auto; color: #664d03; font-size: 12px;
+        }
+        .scenario-bar .step-indicator span { font-weight: 600; }
+        .scenario-bar .concept-note {
+            background: #e8f5e9; border: 1px solid #4caf50; border-radius: 4px;
+            padding: 4px 10px; font-size: 11px; color: #2e7d32; margin-left: 8px;
+        }
+
+        /* ── Jarvis Shell ── */
+        .jarvis-shell { display: flex; flex-direction: column; height: calc(100vh - 38px); }
+
+        /* ── Top Bar ── */
+        .top-bar {
+            background: #fff; height: 40px; display: flex; align-items: center;
+            padding: 0 16px; justify-content: space-between; flex-shrink: 0;
+            border-bottom: 1px solid #e1dfdd;
+        }
+        .top-bar-left { display: flex; align-items: center; gap: 10px; }
+        .top-bar-title { color: #323130; font-size: 15px; font-weight: 600; }
+        .top-bar-right { display: flex; align-items: center; gap: 16px; }
+        .top-bar-right a { color: #605e5c; text-decoration: none; font-size: 13px; }
+        .top-bar-right a:hover { color: #323130; }
+        .top-bar-icon { color: #605e5c; font-size: 16px; cursor: pointer; display: flex; }
+        .top-bar-icon:hover { color: #323130; }
+        .top-bar-avatar {
+            width: 28px; height: 28px; background: #0078d4; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 12px; font-weight: 600;
+        }
+
+        /* ── Main Layout ── */
+        .main-layout { display: flex; flex: 1; overflow: hidden; }
+
+        /* ── Left Nav ── */
+        .left-nav {
+            width: 140px; background: #f3f2f1; display: flex; flex-direction: column;
+            padding-top: 8px; flex-shrink: 0; overflow-y: auto; border-right: 1px solid #e1dfdd;
+        }
+        .left-nav-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+            color: #605e5c; cursor: pointer; font-size: 13px; text-decoration: none;
+            border-left: 3px solid transparent; transition: all 0.15s;
+        }
+        .left-nav-item:hover { background: #e8e6e4; color: #323130; }
+        .left-nav-item.active { background: #e8e6e4; color: #0078d4; border-left-color: #0078d4; font-weight: 600; }
+        .left-nav-item .nav-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; opacity: 0.85; flex-shrink: 0; }
+        .left-nav-item .nav-icon svg { width: 18px; height: 18px; }
+        .left-nav-separator { height: 1px; background: #d2d0ce; margin: 8px 14px; }
+
+        /* ── Inner Left Nav ── */
+        .inner-left-nav {
+            width: 185px; background: #f3f2f1; border-right: 1px solid #e1dfdd;
+            display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto;
+        }
+        .inner-nav-search {
+            padding: 12px; border-bottom: 1px solid #e1dfdd;
+        }
+        .inner-nav-search input {
+            width: 100%; padding: 6px 8px 6px 28px; border: 1px solid #c8c6c4;
+            border-radius: 2px; font-size: 13px; font-family: inherit;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") 8px center no-repeat;
+        }
+        .inner-nav-search input:focus { border-color: #0078d4; outline: none; }
+        .inner-nav-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+            color: #323130; cursor: pointer; font-size: 13px; transition: all 0.15s;
+        }
+        .inner-nav-item:hover { background: #e1dfdd; }
+        .inner-nav-item.active { background: #e1dfdd; font-weight: 600; }
+        .inner-nav-item .inner-icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; color: #605e5c; flex-shrink: 0; }
+        .inner-nav-item .inner-icon svg { width: 16px; height: 16px; }
+
+        /* ── Content Area ── */
+        .content-area {
+            flex: 1; overflow-y: auto; background: #faf9f8;
+        }
+        .content-breadcrumb {
+            padding: 12px 24px 0; font-size: 13px; color: #605e5c;
+        }
+        .content-breadcrumb a { color: #0078d4; text-decoration: none; }
+        .content-breadcrumb a:hover { text-decoration: underline; }
+        .content-title {
+            padding: 8px 24px 16px; font-size: 22px; font-weight: 600; color: #323130;
+        }
+        .content-body { padding: 0 24px 40px; max-width: 860px; }
+
+        /* ── Sections ── */
+        .section {
+            background: #fff; border: 1px solid #e1dfdd; border-radius: 2px;
+            margin-bottom: 16px;
+        }
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 20px; border-bottom: 1px solid #e1dfdd; cursor: pointer;
+        }
+        .section-header h3 { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .section-header .info-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 16px; height: 16px; border-radius: 50%; border: 1px solid #a19f9d;
+            font-size: 10px; color: #605e5c; cursor: help;
+        }
+        .section-header .chevron { color: #0078d4; font-size: 12px; transition: transform 0.2s; }
+        .section-body { padding: 16px 20px; }
+
+        /* ── Form Elements ── */
+        .form-group { margin-bottom: 16px; }
+        .form-label {
+            display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #323130;
+        }
+        .form-label .required { color: #a4262c; }
+        .form-input, .form-textarea, .form-select {
+            width: 100%; max-width: 400px; padding: 6px 10px; border: 1px solid #8a8886;
+            border-radius: 2px; font-size: 14px; font-family: inherit; color: #323130;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            border-color: #0078d4; outline: none;
+        }
+        .form-textarea { min-height: 60px; resize: vertical; }
+        .form-select { appearance: auto; background: #fff; }
+        .form-hint { font-size: 12px; color: #605e5c; margin-top: 2px; }
+
+        /* ── Signal List ── */
+        .signal-list { margin-top: 8px; }
+        .signal-item {
+            display: flex; align-items: flex-start; gap: 10px; padding: 8px 0;
+            border-bottom: 1px solid #f3f2f1;
+        }
+        .signal-item:last-of-type { border-bottom: none; }
+        .signal-checkbox {
+            width: 18px; height: 18px; accent-color: #0078d4; margin-top: 2px; cursor: pointer;
+        }
+        .signal-info { flex: 1; }
+        .signal-name { font-size: 14px; font-weight: 600; color: #323130; }
+        .signal-meta { font-size: 12px; color: #605e5c; margin-top: 2px; }
+        .signal-meta .quality-dot {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 3px;
+            vertical-align: middle;
+        }
+        .quality-dot.high { background: #107c10; }
+        .quality-dot.medium { background: #ca5010; }
+        .quality-dot.low { background: #d13438; }
+        .quality-dot.none { background: #8a8886; }
+        .quality-label.high { color: #107c10; font-weight: 600; }
+        .quality-label.medium { color: #ca5010; font-weight: 600; }
+        .quality-label.low { color: #d13438; font-weight: 600; }
+        .quality-label.none { color: #8a8886; font-weight: 600; }
+        .signal-warning {
+            margin-top: 4px; padding: 6px 10px; border-radius: 2px;
+            font-size: 12px; display: flex; align-items: flex-start; gap: 6px;
+        }
+        .signal-warning.blocking {
+            background: #fde7e9; color: #a4262c; border-left: 3px solid #d13438;
+        }
+        .signal-warning.info {
+            background: #fff4ce; color: #664d03; border-left: 3px solid #ca5010;
+        }
+        .signal-warning.no-data {
+            background: #f3f2f1; color: #605e5c; border-left: 3px solid #8a8886;
+        }
+        .add-signal {
+            display: flex; align-items: center; gap: 6px; padding: 10px 0;
+            color: #0078d4; cursor: pointer; font-size: 13px;
+        }
+        .add-signal:hover { text-decoration: underline; }
+
+        /* ── Radio Groups ── */
+        .radio-group { display: flex; gap: 20px; margin-top: 6px; }
+        .radio-item { display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; }
+        .radio-item input[type="radio"] { accent-color: #0078d4; cursor: pointer; }
+
+        /* ── Toggle Switch ── */
+        .toggle-switch { position: relative; display: inline-block; width: 40px; height: 20px; cursor: pointer; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: #8a8886; border-radius: 20px; transition: 0.2s;
+        }
+        .toggle-slider::before {
+            content: ''; position: absolute; height: 14px; width: 14px;
+            left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.2s;
+        }
+        .toggle-switch input:checked + .toggle-slider { background: #0078d4; }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+        /* ── Buttons ── */
+        .btn {
+            padding: 8px 20px; border-radius: 2px; font-size: 14px; font-family: inherit;
+            cursor: pointer; border: 1px solid transparent; transition: all 0.15s;
+            font-weight: 600;
+        }
+        .btn-primary { background: #0078d4; color: #fff; border-color: #0078d4; }
+        .btn-primary:hover { background: #106ebe; }
+        .btn-secondary { background: #fff; color: #323130; border-color: #8a8886; }
+        .btn-secondary:hover { background: #f3f2f1; }
+        .btn-success { background: #107c10; color: #fff; border-color: #107c10; }
+        .btn-success:hover { background: #0b6a0b; }
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center; padding: 60px 40px;
+            background: #fff; border: 1px solid #e1dfdd; border-radius: 2px;
+        }
+        .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+        .empty-state h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .empty-state p { color: #605e5c; margin-bottom: 24px; max-width: 420px; margin-left: auto; margin-right: auto; }
+
+        /* ── Training Progress ── */
+        .training-card {
+            background: #fff; border: 1px solid #e1dfdd; border-radius: 2px;
+            padding: 24px; margin-bottom: 16px;
+        }
+        .training-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+        .training-card .subtitle { font-size: 13px; color: #605e5c; margin-bottom: 16px; }
+        .progress-bar-container {
+            height: 6px; background: #e1dfdd; border-radius: 3px; overflow: hidden; margin: 12px 0;
+        }
+        .progress-bar-fill {
+            height: 100%; border-radius: 3px; transition: width 0.6s ease;
+        }
+        .progress-bar-fill.blue { background: #0078d4; }
+        .progress-bar-fill.green { background: #107c10; }
+        .training-signal {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 0; border-bottom: 1px solid #f3f2f1; font-size: 13px;
+        }
+        .training-signal:last-child { border-bottom: none; }
+        .training-status { display: flex; align-items: center; gap: 6px; }
+        .status-badge {
+            padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;
+        }
+        .status-badge.complete { background: #dff6dd; color: #107c10; }
+        .status-badge.processing { background: #deecf9; color: #0078d4; }
+        .status-badge.error { background: #fde7e9; color: #a4262c; }
+        .status-badge.waiting { background: #f3f2f1; color: #605e5c; }
+        .status-badge.collecting { background: #fff4ce; color: #664d03; }
+        .status-badge.active { background: #dff6dd; color: #107c10; }
+
+        /* ── Notification Banner ── */
+        .notification-banner {
+            padding: 16px 20px; border-radius: 2px; margin-bottom: 16px;
+            display: flex; align-items: flex-start; gap: 12px;
+        }
+        .notification-banner.success {
+            background: #dff6dd; border: 1px solid #107c10; color: #0b6a0b;
+        }
+        .notification-banner.warning {
+            background: #fff4ce; border: 1px solid #ca5010; color: #664d03;
+        }
+        .notification-banner.info {
+            background: #deecf9; border: 1px solid #0078d4; color: #004578;
+        }
+        .notification-banner .notif-icon { font-size: 20px; flex-shrink: 0; }
+        .notification-banner h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .notification-banner p { font-size: 13px; }
+
+        /* ── Screens ── */
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        /* ── Modal Overlay ── */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 10000;
+            display: none; align-items: center; justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: #fff; border-radius: 8px; padding: 40px 48px; text-align: center;
+            max-width: 520px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+        .modal-icon { font-size: 48px; margin-bottom: 16px; }
+        .modal-box h2 { font-size: 20px; font-weight: 600; margin-bottom: 12px; color: #323130; }
+        .modal-box p { font-size: 14px; color: #605e5c; margin-bottom: 24px; line-height: 1.5; }
+        .modal-box .modal-detail {
+            text-align: left; background: #f3f2f1; border-radius: 4px; padding: 16px 20px;
+            margin-bottom: 20px; font-size: 13px;
+        }
+        .modal-box .modal-detail div { display: flex; justify-content: space-between; padding: 4px 0; }
+        .modal-box .modal-detail .detail-label { color: #605e5c; }
+        .modal-box .modal-detail .detail-value { font-weight: 600; color: #323130; }
+
+        /* ── Monitor Table ── */
+        .monitor-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e1dfdd; border-radius: 2px; }
+        .monitor-table th {
+            text-align: left; padding: 10px 16px; font-size: 12px; font-weight: 600;
+            color: #605e5c; background: #faf9f8; border-bottom: 1px solid #e1dfdd;
+        }
+        .monitor-table td {
+            padding: 12px 16px; font-size: 13px; color: #323130; border-bottom: 1px solid #f3f2f1;
+        }
+        .monitor-table .clickable { cursor: pointer; }
+        .monitor-table .clickable:hover { background: #f3f2f1; }
+        .monitor-table .monitor-name { color: #0078d4; font-weight: 600; font-size: 14px; }
+        .monitor-table .chevron-cell { color: #0078d4; font-size: 18px; text-align: center; width: 30px; }
+
+        /* ── Summary Grid (read-only details) ── */
+        .summary-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px;
+        }
+        .summary-field { padding: 8px 0; }
+        .summary-label { font-size: 12px; color: #605e5c; font-weight: 600; margin-bottom: 2px; }
+        .summary-value { font-size: 14px; color: #323130; }
+        .change-link { color: #0078d4; font-size: 12px; cursor: pointer; margin-left: 6px; }
+        .change-link:hover { text-decoration: underline; }
+
+        /* ── ARM Path Header ── */
+        .arm-path-header {
+            font-size: 12px; color: #605e5c; font-family: 'Consolas', 'Courier New', monospace;
+            padding: 10px 16px; word-break: break-all; background: #f3f2f1;
+            border-radius: 2px; margin-bottom: 12px;
+        }
+        .edit-monitor-link { color: #0078d4; font-size: 13px; cursor: pointer; text-decoration: none; }
+        .edit-monitor-link:hover { text-decoration: underline; }
+
+        /* ── Performance Stats ── */
+        .perf-stats {
+            display: flex; gap: 24px; padding: 16px 0; border-bottom: 1px solid #e1dfdd; margin-bottom: 16px;
+        }
+        .perf-stat { flex: 1; }
+        .perf-stat-label { font-size: 12px; color: #605e5c; margin-bottom: 4px; }
+        .perf-stat-value { font-size: 28px; font-weight: 700; color: #323130; }
+        .perf-stat-value .perf-stat-sub { font-size: 14px; font-weight: 400; color: #605e5c; }
+
+        /* ── Results Table ── */
+        .results-table { width: 100%; border-collapse: collapse; }
+        .results-table th {
+            text-align: left; padding: 8px 10px; font-size: 11px; font-weight: 600;
+            color: #605e5c; background: #faf9f8; border-bottom: 1px solid #e1dfdd;
+            white-space: nowrap;
+        }
+        .results-table td {
+            padding: 8px 10px; font-size: 12px; color: #323130; border-bottom: 1px solid #f3f2f1;
+            white-space: nowrap;
+        }
+        .results-table .incident-link { color: #0078d4; text-decoration: none; font-weight: 600; }
+        .results-table .incident-link:hover { text-decoration: underline; }
+        .results-table .signal-link { color: #0078d4; text-decoration: none; }
+        .results-table .signal-link:hover { text-decoration: underline; }
+
+        /* ── Filter Bar ── */
+        .filter-bar {
+            display: flex; align-items: center; gap: 10px; padding: 12px 0; flex-wrap: nowrap;
+        }
+        .search-input {
+            padding: 6px 10px 6px 30px; border: 1px solid #c8c6c4; border-radius: 2px;
+            font-size: 13px; font-family: inherit; width: 200px;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") 8px center no-repeat;
+        }
+        .search-input:focus { border-color: #0078d4; outline: none; }
+        .filter-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 10px; border: 1px solid #c8c6c4; border-radius: 14px;
+            font-size: 12px; color: #323130; background: #fff; cursor: default;
+        }
+        .filter-pill .pill-close { cursor: pointer; color: #605e5c; font-weight: 600; }
+        .filter-pill .pill-close:hover { color: #d13438; }
+        .add-filter-btn {
+            background: none; border: none; color: #0078d4; font-size: 13px;
+            cursor: pointer; font-family: inherit; padding: 4px 8px;
+        }
+        .add-filter-btn:hover { text-decoration: underline; }
+
+        /* ── Feedback Actions ── */
+        .feedback-actions {
+            display: flex; gap: 4px; align-items: center;
+        }
+        .feedback-btn {
+            padding: 3px 8px; border: 1px solid #c8c6c4; border-radius: 2px;
+            background: #fff; cursor: pointer; font-size: 12px; font-family: inherit;
+            transition: all 0.15s; display: flex; align-items: center; gap: 4px;
+        }
+        .feedback-btn:hover { background: #f3f2f1; }
+        .feedback-btn.positive:hover { background: #dff6dd; border-color: #107c10; color: #107c10; }
+        .feedback-btn.negative:hover { background: #fde7e9; border-color: #d13438; color: #d13438; }
+        .feedback-btn.selected-positive { background: #dff6dd; border-color: #107c10; color: #107c10; }
+        .feedback-btn.selected-negative { background: #fde7e9; border-color: #d13438; color: #d13438; }
+
+        /* ── Incident Status ── */
+        .status-active { color: #107c10; font-weight: 600; }
+        .status-reviewed { color: #0078d4; font-weight: 600; }
+
+        /* ── Severity Badge ── */
+        .sev-badge {
+            display: inline-block; padding: 2px 8px; border-radius: 10px;
+            font-size: 11px; font-weight: 600;
+        }
+        .sev-badge.sev3 { background: #fff4ce; color: #664d03; }
+
+        /* ── Trust Meter ── */
+        .trust-meter {
+            background: #fff; border: 1px solid #e1dfdd; border-radius: 4px;
+            padding: 16px 20px; margin-bottom: 16px;
+        }
+        .trust-meter h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .trust-bar-container {
+            height: 8px; background: #e1dfdd; border-radius: 4px; overflow: hidden; margin: 8px 0 4px;
+        }
+        .trust-bar-fill {
+            height: 100%; border-radius: 4px; transition: width 0.6s ease;
+            background: linear-gradient(90deg, #ca5010 0%, #ffc107 50%, #107c10 100%);
+        }
+        .trust-stats {
+            display: flex; justify-content: space-between; font-size: 12px; color: #605e5c;
+        }
+
+        /* ── Upgrade Callout ── */
+        .upgrade-callout {
+            background: #deecf9; border: 1px solid #0078d4; border-radius: 4px;
+            padding: 16px 20px; margin-bottom: 16px;
+            display: flex; align-items: flex-start; gap: 12px;
+        }
+        .upgrade-callout .callout-icon { font-size: 20px; flex-shrink: 0; }
+        .upgrade-callout h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #004578; }
+        .upgrade-callout p { font-size: 13px; color: #004578; margin-bottom: 8px; }
+        .upgrade-callout .btn { font-size: 12px; padding: 4px 14px; }
+
+        /* ── Feedback Drawer ── */
+        .feedback-drawer-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3); z-index: 10000; display: none;
+        }
+        .feedback-drawer-overlay.show { display: block; }
+        .feedback-drawer {
+            position: fixed; top: 0; right: -480px; width: 460px; height: 100%;
+            background: #fff; z-index: 10001; box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+            display: flex; flex-direction: column; transition: right 0.3s ease;
+        }
+        .feedback-drawer.show { right: 0; }
+        .feedback-drawer-header {
+            padding: 20px 24px; border-bottom: 1px solid #e1dfdd; flex-shrink: 0;
+            display: flex; justify-content: space-between; align-items: flex-start;
+        }
+        .feedback-drawer-header h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+        .feedback-drawer-header p { font-size: 13px; color: #605e5c; }
+        .feedback-drawer-close {
+            background: none; border: none; font-size: 14px; color: #605e5c;
+            cursor: pointer; font-family: inherit; padding: 4px 8px;
+        }
+        .feedback-drawer-close:hover { color: #d13438; }
+        .feedback-drawer-body { flex: 1; padding: 20px 24px; overflow-y: auto; }
+        .feedback-drawer-body .form-group { margin-bottom: 20px; }
+        .feedback-drawer-body .label-options { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+        .label-option {
+            display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+            border: 1px solid #c8c6c4; border-radius: 4px; cursor: pointer;
+            transition: all 0.15s; font-size: 13px;
+        }
+        .label-option:hover { background: #f3f2f1; border-color: #0078d4; }
+        .label-option.selected { background: #deecf9; border-color: #0078d4; }
+        .label-option input[type="radio"] { accent-color: #0078d4; }
+        .label-option .label-title { font-weight: 600; }
+        .label-option .label-desc { font-size: 12px; color: #605e5c; }
+        .feedback-drawer-footer {
+            padding: 14px 24px; border-top: 1px solid #e1dfdd; flex-shrink: 0;
+            display: flex; gap: 10px; justify-content: flex-end; background: #faf9f8;
+        }
+
+        /* ── Spinner ── */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            display: inline-block; width: 16px; height: 16px; border: 2px solid #deecf9;
+            border-top-color: #0078d4; border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+
+        /* ── Collapsible Section ── */
+        .section-body.collapsed { display: none; }
+
+        /* ── Source Filter Tabs ── */
+        .source-filter-tabs {
+            display: flex; gap: 0; margin-bottom: 12px;
+        }
+        .source-filter-tab {
+            padding: 6px 16px; border: 1px solid #c8c6c4; cursor: pointer;
+            font-size: 12px; font-family: inherit; background: #fff;
+            transition: all 0.15s; font-weight: 500;
+        }
+        .source-filter-tab:first-child { border-radius: 4px 0 0 4px; }
+        .source-filter-tab:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+        .source-filter-tab.active { background: #0078d4; color: #fff; border-color: #0078d4; font-weight: 600; }
+        .source-filter-tab .tab-count {
+            display: inline-block; background: rgba(0,0,0,0.1); border-radius: 8px;
+            padding: 0 6px; font-size: 10px; margin-left: 4px;
+        }
+        .source-filter-tab.active .tab-count { background: rgba(255,255,255,0.3); }
+
+        /* ── Source Badge (in table rows) ── */
+        .source-badge {
+            display: inline-block; padding: 1px 8px; border-radius: 10px;
+            font-size: 10px; font-weight: 600;
+        }
+        .source-badge.brain { background: #e8f5e9; color: #2e7d32; }
+        .source-badge.geneva { background: #f3f2f1; color: #605e5c; }
+        .source-badge.both { background: #deecf9; color: #004578; }
+
+        /* ── Editable Review Link ── */
+        .review-edit-link {
+            cursor: pointer; text-decoration: none; border-bottom: 1px dashed currentColor;
+        }
+        .review-edit-link:hover { opacity: 0.8; }
+
+        /* ── Timeline ── */
+        .timeline-container {
+            position: relative; padding: 0; margin: 16px 0;
+        }
+        .timeline-row-header {
+            font-size: 12px; font-weight: 600; color: #605e5c; text-transform: uppercase;
+            padding: 8px 0 4px; letter-spacing: 0.5px;
+        }
+        /* Spine-style timeline track */
+        .timeline-track {
+            position: relative; height: 80px; margin-bottom: 0;
+        }
+        .timeline-spine {
+            position: absolute; top: 50%; left: 0; right: 0;
+            height: 3px; border-radius: 2px;
+        }
+        .timeline-spine.existing { background: #d13438; }
+        .timeline-spine.brain { background: #0078d4; }
+        /* Offshoot marker — thin vertical line + dot + label */
+        .tl-marker {
+            position: absolute; display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; z-index: 2;
+        }
+        /* Markers above the spine (default for existing outages) */
+        .tl-marker.above { bottom: 50%; }
+        .tl-marker.above .tl-stem {
+            width: 2px; height: 24px; order: 2;
+        }
+        .tl-marker.above .tl-dot {
+            order: 2;
+        }
+        .tl-marker.above .tl-label {
+            order: 1; margin-bottom: 2px;
+        }
+        /* Markers below the spine (for Brain row when needed) */
+        .tl-marker.below { top: 50%; }
+        .tl-marker.below .tl-stem {
+            width: 2px; height: 24px; order: 1;
+        }
+        .tl-marker.below .tl-dot {
+            order: 1;
+        }
+        .tl-marker.below .tl-label {
+            order: 2; margin-top: 2px;
+        }
+        .tl-stem {
+            width: 2px; height: 24px; border-radius: 1px;
+        }
+        .tl-dot {
+            width: 10px; height: 10px; border-radius: 50%; border: 2px solid #fff;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.15); flex-shrink: 0;
+        }
+        .tl-label {
+            font-size: 9px; font-weight: 600; white-space: nowrap;
+            padding: 1px 5px; border-radius: 3px; line-height: 1.3;
+        }
+        .tl-marker:hover .tl-label { text-decoration: underline; }
+        /* Color variants */
+        .tl-marker.outage .tl-stem { background: #d13438; }
+        .tl-marker.outage .tl-dot { background: #d13438; }
+        .tl-marker.outage .tl-label { color: #a4262c; background: #fde7e9; }
+        .tl-marker.caught .tl-stem { background: #107c10; }
+        .tl-marker.caught .tl-dot { background: #107c10; }
+        .tl-marker.caught .tl-label { color: #0b6a0b; background: #dff6dd; }
+        .tl-marker.extra .tl-stem { background: #ca5010; }
+        .tl-marker.extra .tl-dot { background: #ca5010; }
+        .tl-marker.extra .tl-label { color: #664d03; background: #fff4ce; }
+        .tl-marker.missed .tl-stem { background: #d13438; border-left: 1px dashed #d13438; width: 0; }
+        .tl-marker.missed .tl-dot { background: #fff; border: 2px dashed #d13438; box-shadow: none; }
+        .tl-marker.missed .tl-label { color: #d13438; background: #f3f2f1; }
+        /* Match connector — dashed line between rows */
+        .tl-connector {
+            position: absolute; width: 1px; border-left: 1px dashed #107c10;
+            z-index: 1; opacity: 0.5;
+        }
+        .timeline-date-axis {
+            display: flex; justify-content: space-between; padding: 6px 0 0;
+            font-size: 10px; color: #a19f9d; border-top: 1px solid #edebe9;
+            margin-top: 4px;
+        }
+        .timeline-legend {
+            display: flex; gap: 16px; margin-top: 14px; font-size: 11px; color: #605e5c;
+            flex-wrap: wrap;
+        }
+        .timeline-legend-item {
+            display: flex; align-items: center; gap: 5px;
+        }
+        .timeline-legend-swatch {
+            width: 10px; height: 10px; border-radius: 50%; border: 2px solid #fff;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+        }
+        .timeline-overlap-line.miss { background: #d13438; }
+
+        /* ── View Toggle ── */
+        .view-toggle {
+            display: flex; gap: 0; margin-left: 12px;
+        }
+        .view-toggle-btn {
+            padding: 4px 10px; border: 1px solid #c8c6c4; font-size: 12px;
+            font-family: inherit; cursor: pointer; background: #fff;
+        }
+        .view-toggle-btn:first-child { border-radius: 4px 0 0 4px; }
+        .view-toggle-btn:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+        .view-toggle-btn.active { background: #0078d4; color: #fff; border-color: #0078d4; }
+
+    </style>
+</head>
+<body>
+
+<!-- ══════════ SCENARIO BAR (prototype control) ══════════ -->
+<div class="scenario-bar">
+    <label>Prototype — Go-Live-First:</label>
+    <button class="active" onclick="setScenario('happy')">Happy Path</button>
+    <button onclick="setScenario('mixed')">Mixed SLI Quality</button>
+    <button onclick="setScenario('happyConfidence')">Happy Path + Confidence</button>
+    <span class="concept-note">💡 No What-if · Sev3 · No outage/comms · Trust built through feedback</span>
+    <div class="step-indicator">
+        Screen <span id="currentStep">1</span> / <span id="totalSteps">6</span>
+        &nbsp;|&nbsp;
+        <button class="btn-secondary" style="padding:2px 8px; font-size:11px;" onclick="prevScreen()">◄ Back</button>
+        <button class="btn-secondary" style="padding:2px 8px; font-size:11px;" onclick="nextScreen()">Next ►</button>
+    </div>
+</div>
+<div class="jarvis-shell">
+
+    <!-- ── Top Bar ── -->
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3L3 19h18L12 3z" fill="#4CAF50"/><path d="M12 9v5" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="16" r="0.8" fill="#fff"/></svg>
+            <span class="top-bar-title">Jarvis</span>
+        </div>
+        <div class="top-bar-right">
+            <a href="#">Docs</a>
+            <span class="top-bar-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#605e5c" stroke-width="1.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></span>
+            <span class="top-bar-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#605e5c" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            <span class="top-bar-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#605e5c" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+            <div class="top-bar-avatar">MH</div>
+        </div>
+    </div>
+
+    <!-- ── Main Layout ── -->
+    <div class="main-layout">
+
+        <!-- ── Left Nav ── -->
+        <nav class="left-nav">
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg></span> Service health</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="5" width="4" height="16" rx="1"/><rect x="17" y="8" width="4" height="13" rx="1"/></svg></span> Dashboards</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></span> Health</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span> Logs</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span> Trace</a>
+            <div class="left-nav-separator"></div>
+            <a class="left-nav-item active" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span> Service Hub</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Manage</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></span> Account</a>
+            <a class="left-nav-item" href="#"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> Diagnose</a>
+        </nav>
+
+        <!-- ── Inner Left Nav ── -->
+        <nav class="inner-left-nav">
+            <div class="inner-nav-search">
+                <input type="text" placeholder="Search configuration" />
+            </div>
+            <div class="inner-nav-item"><span class="inner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg></span> Geneva Monitoring</div>
+            <div class="inner-nav-item"><span class="inner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> SLOs and SLI</div>
+            <div class="inner-nav-item active"><span class="inner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Brain Monitors</div>
+            <div class="inner-nav-item"><span class="inner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span> Auto-Diagnosis</div>
+        </nav>
+
+        <!-- ══════════ CONTENT AREA ══════════ -->
+        <div class="content-area">
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 1: Brain Monitors — Empty State      -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen active" id="screen-1">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Brain Monitors</div>
+                <div class="content-body">
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#a19f9d" stroke-width="1"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+                        <h3>No Brain monitors configured</h3>
+                        <p>Create an Intelligent Monitor and Brain will start detecting issues immediately. It begins with low-risk defaults (Sev3, no outage declaration) so you can build confidence over time.</p>
+                        <button class="btn btn-primary" onclick="nextScreen()">Create Intelligent Monitor</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 2: Create Form (Go-Live-First defaults) -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen" id="screen-2">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Create Intelligent Monitor</div>
+                <div class="content-body">
+
+                    <!-- Safe defaults nudge -->
+                    <div style="background: #deecf9; border: 1px solid #0078d4; border-radius: 4px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
+                        <span style="font-size: 16px;">💡</span>
+                        <div style="font-size: 13px; color: #004578;">
+                            <strong>Start with safe defaults</strong> — Brain will create low-severity incidents (Sev3) without declaring outages. You can upgrade these settings anytime after you see how Brain performs.
+                        </div>
+                    </div>
+
+                    <!-- Monitor Details -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Monitor details <span class="info-icon">?</span></h3>
+                            <span class="chevron">▲</span>
+                        </div>
+                        <div class="section-body">
+                            <div class="form-group">
+                                <label class="form-label">Title <span class="required">*</span> <span class="info-icon" title="Name your intelligent monitor">?</span></label>
+                                <input class="form-input" type="text" value="Cosmos DB — Intelligent Monitor" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description <span class="info-icon" title="Optional description">?</span></label>
+                                <textarea class="form-textarea" placeholder="Describe what this monitor covers...">Service-level intelligent monitor for Cosmos DB. Monitors all onboarded SLIs and creates Sev3 incidents automatically.</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Signals -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Signals <span class="required">*</span> <span class="info-icon">?</span></h3>
+                            <span class="chevron">▲</span>
+                        </div>
+                        <div class="section-body">
+                            <p class="form-hint" style="margin-bottom: 12px;">Brain has pre-selected the signals it recommends for optimal detection performance and excluded signals that may degrade monitor accuracy.</p>
+
+                            <div class="signal-list" id="signalList">
+                                <!-- Populated by JS based on scenario -->
+                            </div>
+
+                            <div class="add-signal">+ Add signal</div>
+                        </div>
+                    </div>
+
+                    <!-- Actions and Enrichments -->
+                    <div class="section">
+                        <div class="section-header">
+                            <h3>Actions and Enrichments <span class="info-icon">?</span></h3>
+                            <span class="chevron">▲</span>
+                        </div>
+                        <div class="section-body">
+                            <p style="font-size: 14px; font-weight: 600; margin-bottom: 2px;">Actions</p>
+                            <p class="form-hint" style="margin-bottom: 16px;">Brain starts with safe defaults. You can increase severity and enable outage declaration as you build confidence.</p>
+
+                            <div class="form-group">
+                                <label class="form-label">IcM team <span class="required">*</span> <span class="info-icon">?</span></label>
+                                <select class="form-select">
+                                    <option>AZURECOSMOSDB\ControlPlaneD3...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Incident severity <span class="required">*</span> <span class="info-icon">?</span></label>
+                                <div class="radio-group">
+                                    <label class="radio-item"><input type="radio" name="severity" /> Sev 2</label>
+                                    <label class="radio-item"><input type="radio" name="severity" checked /> Sev 3</label>
+                                </div>
+                                <p class="form-hint" style="margin-top: 6px;">💡 Starting with Sev3 lets you evaluate Brain's detections without impacting your SLA. You can upgrade to Sev2 once you're confident.</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Outage declaration <span class="required">*</span> <span class="info-icon">?</span></label>
+                                <div class="radio-group">
+                                    <label class="radio-item"><input type="radio" name="outage" checked /> Don't declare outage</label>
+                                    <label class="radio-item"><input type="radio" name="outage" /> Brain decides</label>
+                                    <label class="radio-item"><input type="radio" name="outage" /> Let me tell Brain</label>
+                                </div>
+                                <p class="form-hint" style="margin-top: 6px;">💡 Outage declaration is off by default. Enable it after reviewing Brain's first incidents.</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" style="margin-bottom: 6px;">Auto communication</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="autoCommToggle" onchange="document.getElementById('commOptions').style.display = this.checked ? 'block' : 'none'" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <p class="form-hint" style="margin-top: 6px;">💡 Auto-comms are off. Enable after you trust Brain's incident quality.</p>
+                            </div>
+
+                            <div id="commOptions" style="display: none;">
+                                <div class="form-group">
+                                    <label class="form-label">Choose communication template <span class="info-icon">?</span></label>
+                                    <select class="form-select">
+                                        <option>Generic</option>
+                                        <option>DataPlane template</option>
+                                        <option>ControlPlane template</option>
+                                        <option>Custom template</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Enrichments -->
+                            <div style="border-top: 1px solid #e1dfdd; padding-top: 16px; margin-top: 8px;">
+                                <p style="font-size: 14px; font-weight: 600; margin-bottom: 2px;">Enrichments <span class="info-icon">?</span></p>
+                                <p class="form-hint" style="margin-bottom: 16px;">Add enrichments to Brain detected issues</p>
+
+                                <div class="form-group">
+                                    <label class="form-label">TSG name <span class="info-icon">?</span></label>
+                                    <input class="form-input" type="text" value="TSG-COSMOS-001: Database Performance" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="prevScreen()">Cancel</button>
+                        <button class="btn btn-success" onclick="showGoLiveModal()">Create & Go Live</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 3: Monitors Table (Training State)   -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen" id="screen-3">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Brain Monitors</div>
+                <div class="content-body" style="max-width: 960px;">
+
+                    <div class="notification-banner info" style="margin-bottom: 20px;">
+                        <span class="notif-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+                        <div>
+                            <h4>Training in progress — will activate automatically</h4>
+                            <p>Brain is analyzing your signals. Once training completes, the monitor will go live and start creating Sev3 incidents. No further action needed from you.</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="font-size: 16px; font-weight: 600;">Monitors</h3>
+                        <button class="btn btn-primary" onclick="showScreen(2)">+ Create Monitor</button>
+                    </div>
+
+                    <table class="monitor-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Signals</th>
+                                <th>ETA</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="clickable" onclick="showScreen(4)">
+                                <td class="monitor-name">Cosmos DB — Intelligent Monitor</td>
+                                <td><span class="status-badge" id="tableTrainingBadge">Training</span></td>
+                                <td id="tableTrainingSignals">5 signals</td>
+                                <td id="tableTrainingEta">~3 days</td>
+                                <td class="chevron-cell">›</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 4: Training Detail                    -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen" id="screen-4">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›&nbsp; <a href="#">Brain Monitors</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Intelligent Monitor</div>
+                <div class="content-body">
+
+                    <!-- Read-only Monitor Details (collapsible) -->
+                    <div class="section">
+                        <div class="section-header" onclick="this.querySelector('.chevron').textContent = this.nextElementSibling.classList.toggle('collapsed') ? '▼' : '▲'">
+                            <h3>Monitor details <span class="info-icon">?</span></h3>
+                            <span class="chevron">▲</span>
+                        </div>
+                        <div class="section-body">
+                            <div class="summary-grid">
+                                <div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Title</div>
+                                        <div class="summary-value">Cosmos DB — Intelligent Monitor</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Description</div>
+                                        <div class="summary-value">Service-level intelligent monitor for Cosmos DB</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Signals</div>
+                                        <div class="summary-value">5</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">IcM team</div>
+                                        <div class="summary-value">AZURECOSMOSDB\ControlPlane...</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Incident severity</div>
+                                        <div class="summary-value">3 (Sev3)</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Outage declaration</div>
+                                        <div class="summary-value">Off</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Auto communication</div>
+                                        <div class="summary-value">Off</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">TSG</div>
+                                        <div class="summary-value">TSG-COSMOS-001: Database Performance ↗</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Training Progress -->
+                    <div class="training-card">
+                        <h3 id="trainingTitle">Training in progress</h3>
+                        <p class="subtitle" id="trainingSubtitle">Brain is analyzing your signals over the last 90 days. The monitor will go live automatically once training completes.</p>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill blue" id="trainingProgressBar" style="width: 65%"></div>
+                        </div>
+                        <p style="font-size: 12px; color: #605e5c; margin-bottom: 16px;" id="trainingProgressLabel">Estimated time remaining: ~2 hours</p>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 5: Monitors Table (Active / Live)    -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen" id="screen-5">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Brain Monitors</div>
+                <div class="content-body" style="max-width: 960px;">
+
+                    <div class="notification-banner success" style="margin-bottom: 20px;">
+                        <span class="notif-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>
+                        <div>
+                            <h4>Your monitor is live and creating incidents</h4>
+                            <p>Brain has completed training and is now actively monitoring your service. It's creating Sev3 incidents when anomalies are detected. Review them to help Brain learn.</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="font-size: 16px; font-weight: 600;">Monitors</h3>
+                        <button class="btn btn-primary" onclick="showScreen(2)">+ Create Monitor</button>
+                    </div>
+
+                    <table class="monitor-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Signals</th>
+                                <th>Incidents (7d)</th>
+                                <th>Feedback</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="clickable" onclick="showScreen(6)">
+                                <td class="monitor-name">Cosmos DB — Intelligent Monitor</td>
+                                <td><span class="status-badge active">● Active</span></td>
+                                <td>5 signals</td>
+                                <td>5 incidents</td>
+                                <td>2/5 reviewed</td>
+                                <td class="chevron-cell">›</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!-- SCREEN 6: Live Monitor — Feedback View       -->
+            <!-- ════════════════════════════════════════════ -->
+            <div class="screen" id="screen-6">
+                <div class="content-breadcrumb">
+                    <a href="#">Service Hub</a> &nbsp;›&nbsp; <a href="#">Manage</a> &nbsp;›&nbsp; <a href="#">Brain Monitors</a> &nbsp;›
+                </div>
+                <div class="content-title">Cosmos DB — Intelligent Monitor</div>
+                <div class="content-body" style="max-width: 1100px;">
+
+                    <!-- ARM RP SLI Header -->
+                    <div class="arm-path-header">ARM RP SLI – /PROVIDERS/MICROSOFT.DOCUMENTDB/CASSANDRACLUSTERS GET</div>
+                    <div style="margin-bottom: 16px;">
+                        <a href="#" class="edit-monitor-link">✏ Edit monitor</a>
+                    </div>
+
+                    <!-- Monitor details (collapsible) -->
+                    <div class="section">
+                        <div class="section-header" onclick="this.querySelector('.chevron').textContent = this.nextElementSibling.classList.toggle('collapsed') ? '▼' : '▲'">
+                            <h3>Monitor details <span class="info-icon">?</span></h3>
+                            <span class="chevron">▲</span>
+                        </div>
+                        <div class="section-body">
+                            <div class="summary-grid">
+                                <div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Title</div>
+                                        <div class="summary-value">Cosmos DB — Intelligent Monitor</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Description</div>
+                                        <div class="summary-value">Service-level intelligent monitor for Cosmos DB</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Signals</div>
+                                        <div class="summary-value">5</div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">IcM team</div>
+                                        <div class="summary-value">AZURECOSMOSDB\ControlPlane... <span class="info-icon">?</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Incident severity</div>
+                                        <div class="summary-value">3 (Sev3) <span class="change-link">(upgrade)</span></div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Outage declaration</div>
+                                        <div class="summary-value">Off <span class="change-link">(enable)</span></div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">Auto communication</div>
+                                        <div class="summary-value">Off <span class="change-link">(enable)</span></div>
+                                    </div>
+                                    <div class="summary-field">
+                                        <div class="summary-label">TSG</div>
+                                        <div class="summary-value">TSG-COSMOS-001: Database Performance ↗ <span class="change-link">(change)</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trust & Confidence Meter (only shown in happyConfidence scenario) -->
+                    <div class="trust-meter" id="trustMeterSection">
+                        <h4>🧠 Brain confidence <span class="status-badge processing" style="font-size: 10px;">Learning</span></h4>
+                        <p style="font-size: 13px; color: #605e5c; margin-bottom: 8px;">Brain improves with your feedback. Review detections to help Brain learn what's an outage for your service.</p>
+                        <div class="trust-bar-container">
+                            <div class="trust-bar-fill" style="width: 40%;"></div>
+                        </div>
+                        <div class="trust-stats">
+                            <span>2 of 5 detections reviewed</span>
+                            <span>Brain is still learning · <a href="#" style="color: #0078d4; text-decoration: none;">View learning history</a></span>
+                        </div>
+                        <!-- DESIGN NOTE -->
+                        <div style="margin-top: 12px; background: #fff3cd; border: 1px dashed #ffc107; border-radius: 4px; padding: 10px 14px; font-size: 11px; color: #664d03;">
+                            <strong>⚠️ Design note:</strong> "Brain confidence" does not exist as a metric today. We need to define what this means and how to compute it. Options to explore:
+                            <ul style="margin: 6px 0 0 16px; line-height: 1.6;">
+                                <li><strong>Feedback-derived:</strong> % of reviewed detections confirmed as correct outages (simple but requires user engagement)</li>
+                                <li><strong>Model-derived:</strong> Brain's internal confidence score on its detections (requires Brain team to expose this)</li>
+                                <li><strong>Hybrid:</strong> Combine model confidence with user feedback agreement rate</li>
+                                <li><strong>Proxy:</strong> Could we just show review progress (2/5 reviewed) without calling it "confidence"?</li>
+                            </ul>
+                            <div style="margin-top: 6px;"><strong>Open question:</strong> Is this meter even the right UX, or is the real trust signal just "are you ready to upgrade to Sev2 / enable outage declaration"?</div>
+                        </div>
+                    </div>
+
+                    <!-- How Brain compares — summary + actions -->
+                    <div class="upgrade-callout">
+                        <span class="callout-icon">⬆️</span>
+                        <div style="flex: 1;">
+                            <h4>How Brain compares to your existing monitoring</h4>
+                            <p>Of your <strong>8 outages</strong> in the last 7 days, Brain would have caught 5 — with an average <strong>10-minute faster</strong> response time. Brain also found 2 extra issues your existing monitors missed. Review the timeline below to see the overlap.</p>
+
+                            <div style="display: flex; gap: 12px; margin: 12px 0;">
+                                <div style="flex: 1; background: #fff; border: 1px solid #e1dfdd; border-radius: 4px; padding: 12px 14px;">
+                                    <div style="font-size: 11px; color: #605e5c; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Existing outages</div>
+                                    <div style="font-size: 22px; font-weight: 700; color: #323130;">8</div>
+                                    <div style="font-size: 11px; color: #605e5c;">from Geneva monitors</div>
+                                </div>
+                                <div style="flex: 1; background: #fff; border: 1px solid #e1dfdd; border-radius: 4px; padding: 12px 14px;">
+                                    <div style="font-size: 11px; color: #605e5c; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Brain detected</div>
+                                    <div style="font-size: 22px; font-weight: 700; color: #107c10;">5</div>
+                                    <div style="font-size: 11px; color: #605e5c;">of those 8 (63% coverage)</div>
+                                </div>
+                                <div style="flex: 1; background: #fff; border: 1px solid #e1dfdd; border-radius: 4px; padding: 12px 14px;">
+                                    <div style="font-size: 11px; color: #605e5c; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Brain found extra</div>
+                                    <div style="font-size: 22px; font-weight: 700; color: #ca5010;">2</div>
+                                    <div style="font-size: 11px; color: #605e5c;">not caught by existing monitors</div>
+                                </div>
+                            </div>
+
+                            <p style="font-size: 12px; color: #004578; margin-bottom: 8px;">Brain is catching most of your existing outages <strong>plus</strong> finding issues your current monitors miss. If you're confident in the results, consider upgrading.</p>
+                            <div style="background: #fff4ce; border: 1px solid #ca5010; border-radius: 4px; padding: 8px 12px; font-size: 12px; color: #664d03; margin-bottom: 12px;">
+                                ⚡ <strong>Brain found 2 extra detections</strong> not caught by your existing monitors. We recommend <a href="#" style="color: #664d03; font-weight: 600;" onclick="startGuidedReview(); return false;">reviewing these</a> to confirm they're real issues — if so, Brain is already adding value.
+                            </div>
+                            <button class="btn btn-primary" style="margin-right: 8px;" onclick="startGuidedReview(); return false;">Review detections</button>
+                            <button class="btn btn-secondary">Enable outage declaration</button>
+                        </div>
+                    </div>
+
+                    <!-- Event Timeline -->
+                    <div class="section">
+                        <div class="section-header" style="cursor: default;">
+                            <h3>Event timeline <span class="info-icon">?</span></h3>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 12px; color: #605e5c;">Range:</span>
+                                <select style="font-size: 12px; padding: 3px 8px; border: 1px solid #c8c6c4; border-radius: 2px; font-family: inherit;">
+                                    <option selected>Last 7 days</option>
+                                    <option>Last 30 days</option>
+                                    <option>Last 90 days</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="section-body" style="padding: 20px 24px;">
+                            <!-- Timeline visualization — spine + offshoot style -->
+                            <div class="timeline-container">
+
+                                <!-- Row 1: Real outages -->
+                                <div class="timeline-row-header">What actually happened (existing monitors)</div>
+                                <div class="timeline-track">
+                                    <div class="timeline-spine existing"></div>
+                                    <!-- 8 real outages — just IcM IDs -->
+                                    <div class="tl-marker outage above" style="left: 3%;" title="Throughput degradation — Mar 7 02:30">
+                                        <span class="tl-label">#8802678</span><div class="tl-stem"></div><div class="tl-dot"></div>
+                                    </div>
+                                    <div class="tl-marker outage above" style="left: 13%;" title="Replication lag — Mar 7 14:55">
+                                        <span class="tl-label">#8802345</span><div class="tl-stem"></div><div class="tl-dot"></div>
+                                    </div>
+                                    <div class="tl-marker outage above" style="left: 24%;" title="Connection pool exhaustion — Mar 8 07:18">
+                                        <span class="tl-label">#8801890</span><div class="tl-stem"></div><div class="tl-dot"></div>
+                                    </div>
+                                    <div class="tl-marker outage above" style="left: 37%;" title="Memory pressure — Mar 9 03:42">
+                                        <span class="tl-label">#8801567</span><div class="tl-stem"></div><div class="tl-dot"></div>
+                                    </div>
+                                    <div class="tl-marker outage above" style="left: 52%;" title="Latency spike — Mar 10 09:23">
+                                        <span class="tl-label">#3562756</span><div class="tl-stem"></div><div class="tl-dot"></div>
+                                    </div>
+                                    <div class="tl-marker outage above" style="left: 59%;" title="Error rate elevated — Mar 10 14:45">
+                                        <span class="tl-label">#5425683</span><div class="tl-stem"></div><div class="tl-dot"></div>
+                                    </div>
+                                    <div class="tl-marker outage above" style="left: 72%;" title="CPU threshold exceeded — Mar 10 22:15">
+                                        <span class="tl-label">#8801234</span><div class="tl-stem"></div><div class="tl-dot"></div>
+                                    </div>
+                                    <div class="tl-marker outage above" style="left: 86%;" title="Availability degradation — Mar 11 09:23">
+                                        <span class="tl-label">#9003235</span><div class="tl-stem"></div><div class="tl-dot"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Connectors between matched events (dashed green lines bridging the gap) -->
+
+                                <!-- Row 2: Brain detections -->
+                                <div class="timeline-row-header" style="margin-top: 0;">What Brain detected</div>
+                                <div class="timeline-track">
+                                    <div class="timeline-spine brain"></div>
+                                    <!-- Caught: aligns with real outage above -->
+                                    <div class="tl-marker caught below" style="left: 3%;" title="✅ Caught: Request success rate drop — 10 min faster">
+                                        <div class="tl-dot"></div><div class="tl-stem"></div><span class="tl-label">✓ detected</span>
+                                    </div>
+                                    <!-- Extra: no match above -->
+                                    <div class="tl-marker extra below" style="left: 18%;" title="⚠️ Extra: Dependency timeout — Mar 8 11:30 — Not caught by existing monitors">
+                                        <div class="tl-dot"></div><div class="tl-stem"></div><span class="tl-label">⚡ extra</span>
+                                    </div>
+                                    <!-- Missed: aligns with #8801890 above -->
+                                    <div class="tl-marker missed below" style="left: 24%;" title="❌ Missed: Connection pool exhaustion — Mar 8">
+                                        <div class="tl-dot"></div><div class="tl-stem"></div><span class="tl-label">✗ missed</span>
+                                    </div>
+                                    <!-- Missed: aligns with #8801567 above -->
+                                    <div class="tl-marker missed below" style="left: 37%;" title="❌ Missed: Memory pressure — Mar 9">
+                                        <div class="tl-dot"></div><div class="tl-stem"></div><span class="tl-label">✗ missed</span>
+                                    </div>
+                                    <!-- Extra: no match above -->
+                                    <div class="tl-marker extra below" style="left: 43%;" title="⚠️ Extra: Availability degradation — Mar 9 16:12">
+                                        <div class="tl-dot"></div><div class="tl-stem"></div><span class="tl-label">⚡ extra</span>
+                                    </div>
+                                    <!-- Caught: aligns with #3562756 above -->
+                                    <div class="tl-marker caught below" style="left: 52%;" title="✅ Caught: Latency spike — 10 min faster than Geneva">
+                                        <div class="tl-dot"></div><div class="tl-stem"></div><span class="tl-label">✓ detected</span>
+                                    </div>
+                                    <!-- Caught: aligns with #5425683 above -->
+                                    <div class="tl-marker caught below" style="left: 59%;" title="✅ Caught: Error rate elevated — Mar 10">
+                                        <div class="tl-dot"></div><div class="tl-stem"></div><span class="tl-label">✓ detected</span>
+                                    </div>
+                                    <!-- Missed: aligns with #8801234 above -->
+                                    <div class="tl-marker missed below" style="left: 72%;" title="❌ Missed: CPU threshold — Mar 10">
+                                        <div class="tl-dot"></div><div class="tl-stem"></div><span class="tl-label">✗ missed</span>
+                                    </div>
+                                </div>
+
+                                <!-- Date axis -->
+                                <div class="timeline-date-axis">
+                                    <span>Mar 7</span>
+                                    <span>Mar 8</span>
+                                    <span>Mar 9</span>
+                                    <span>Mar 10</span>
+                                    <span>Mar 11</span>
+                                </div>
+                            </div>
+
+                            <!-- Legend -->
+                            <div class="timeline-legend">
+                                <div class="timeline-legend-item">
+                                    <div class="timeline-legend-swatch" style="background: #d13438;"></div>
+                                    <span>Real outage</span>
+                                </div>
+                                <div class="timeline-legend-item">
+                                    <div class="timeline-legend-swatch" style="background: #107c10;"></div>
+                                    <span>✓ Brain caught it</span>
+                                </div>
+                                <div class="timeline-legend-item">
+                                    <div class="timeline-legend-swatch" style="background: #ca5010;"></div>
+                                    <span>⚡ Brain found extra</span>
+                                </div>
+                                <div class="timeline-legend-item">
+                                    <div class="timeline-legend-swatch" style="background: #fff; border: 2px dashed #d13438; box-shadow: none;"></div>
+                                    <span>✗ Brain missed</span>
+                                </div>
+                            </div>
+
+                            <!-- Summary stats below timeline -->
+                            <div style="display: flex; gap: 16px; margin-top: 20px;">
+                                <div style="flex: 1; background: #dff6dd; border: 1px solid #107c10; border-radius: 4px; padding: 14px 16px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: 700; color: #0b6a0b;">5/8</div>
+                                    <div style="font-size: 12px; color: #0b6a0b; font-weight: 600;">outages caught</div>
+                                    <div style="font-size: 11px; color: #605e5c; margin-top: 4px;">63% coverage</div>
+                                </div>
+                                <div style="flex: 1; background: #fff4ce; border: 1px solid #ca5010; border-radius: 4px; padding: 14px 16px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: 700; color: #664d03;">2</div>
+                                    <div style="font-size: 12px; color: #664d03; font-weight: 600;">extras found</div>
+                                    <div style="font-size: 11px; color: #605e5c; margin-top: 4px;">not caught by Geneva</div>
+                                </div>
+                                <div style="flex: 1; background: #fde7e9; border: 1px solid #d13438; border-radius: 4px; padding: 14px 16px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: 700; color: #a4262c;">3</div>
+                                    <div style="font-size: 12px; color: #a4262c; font-weight: 600;">missed</div>
+                                    <div style="font-size: 11px; color: #605e5c; margin-top: 4px;">still need existing monitors</div>
+                                </div>
+                                <div style="flex: 1; background: #deecf9; border: 1px solid #0078d4; border-radius: 4px; padding: 14px 16px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: 700; color: #004578;">10 min</div>
+                                    <div style="font-size: 12px; color: #004578; font-weight: 600;">faster avg TTO</div>
+                                    <div style="font-size: 11px; color: #605e5c; margin-top: 4px;">vs existing monitors</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service Outages — collapsible detail table -->
+                    <div class="section">
+                        <div class="section-header" onclick="this.querySelector('.chevron').textContent = this.nextElementSibling.classList.toggle('collapsed') ? '▼' : '▲'">
+                            <h3>Service outages &amp; detections <span class="info-icon">?</span></h3>
+                            <span class="chevron">▼</span>
+                        </div>
+                        <div class="section-body collapsed">
+                            <!-- Source filter tabs -->
+                            <div class="source-filter-tabs" id="sourceFilterTabs">
+                                <div class="source-filter-tab active" onclick="setSourceFilter('all')">All outages <span class="tab-count">10</span></div>
+                                <div class="source-filter-tab" onclick="setSourceFilter('brain-only')">Brain only <span class="tab-count">5</span></div>
+                                <div class="source-filter-tab" onclick="setSourceFilter('existing-only')">Existing only <span class="tab-count">3</span></div>
+                                <div class="source-filter-tab" onclick="setSourceFilter('both')">Both detected <span class="tab-count">2</span></div>
+                            </div>
+
+                            <!-- Filter bar -->
+                            <div class="filter-bar">
+                                <input class="search-input" type="text" placeholder="Search incidents" />
+                                <span class="filter-pill">Last 7 days <span class="pill-close">✕</span></span>
+                                <button class="add-filter-btn">+ Add filter</button>
+                                <div style="flex: 1;"></div>
+                                <span style="font-size: 12px; color: #605e5c;" id="tableCount">Showing 10 events</span>
+                            </div>
+
+                            <!-- Unified results table -->
+                            <table class="results-table" id="outageTable">
+                                <thead>
+                                    <tr>
+                                        <th>IcM ↕</th>
+                                        <th>Title ↕</th>
+                                        <th>Created ↕</th>
+                                        <th>Detected by ↕</th>
+                                        <th>Brain's action ↕</th>
+                                        <th>Feedback</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Brain + Geneva (Both) — reviewed as outage -->
+                                    <tr data-source="brain both">
+                                        <td><a href="#" class="incident-link">3562756 ↗</a></td>
+                                        <td>Latency spike — West US 2 cluster</td>
+                                        <td>2026-03-11 09:23</td>
+                                        <td><span class="source-badge both">Both</span></td>
+                                        <td style="font-size: 12px;">Created SEV3 incident <span style="color: #107c10;">(10 min faster)</span></td>
+                                        <td><a class="review-edit-link" style="font-size: 12px; color: #107c10; font-weight: 600;" onclick="openFeedbackDrawer()" title="Click to edit review">✓ Yes, outage</a></td>
+                                    </tr>
+                                    <!-- Brain + Geneva (Both) — reviewed as not outage -->
+                                    <tr data-source="brain both">
+                                        <td><a href="#" class="incident-link">5425683 ↗</a></td>
+                                        <td>Error rate elevated — East US region</td>
+                                        <td>2026-03-10 14:45</td>
+                                        <td><span class="source-badge both">Both</span></td>
+                                        <td style="font-size: 12px;">Created SEV3 incident</td>
+                                        <td>
+                                            <a class="review-edit-link" style="font-size: 12px; color: #ca5010; font-weight: 600;" onclick="openFeedbackDrawer()" title="Click to edit review">✗ Not outage</a><br/>
+                                            <span style="font-size: 10px; color: #605e5c;">Impact not big enough</span>
+                                        </td>
+                                    </tr>
+                                    <!-- Brain only — awaiting review -->
+                                    <tr data-source="brain" data-needs-review="true" data-review-title="Availability degradation — North Europe" data-review-icm="9003235" data-review-date="2026-03-09 16:12" data-review-signal="Endpoint Availability">
+                                        <td><a href="#" class="incident-link">9003235 ↗</a></td>
+                                        <td>Availability degradation — North Europe</td>
+                                        <td>2026-03-09 16:12</td>
+                                        <td><span class="source-badge brain">Brain</span></td>
+                                        <td style="font-size: 12px;">Created SEV3 incident</td>
+                                        <td><button class="btn btn-secondary" style="font-size: 11px; padding: 3px 10px;" onclick="openFeedbackDrawer()">Review</button></td>
+                                    </tr>
+                                    <!-- Brain only — extra detection -->
+                                    <tr data-source="brain" data-needs-review="true" data-review-title="Dependency timeout — South Central US" data-review-icm="9232734" data-review-date="2026-03-08 11:30" data-review-signal="Dependency Health">
+                                        <td><a href="#" class="incident-link">9232734 ↗</a></td>
+                                        <td>Dependency timeout — South Central US</td>
+                                        <td>2026-03-08 11:30</td>
+                                        <td><span class="source-badge brain">Brain</span></td>
+                                        <td style="font-size: 12px;">Created SEV3 incident</td>
+                                        <td><button class="btn btn-secondary" style="font-size: 11px; padding: 3px 10px;" onclick="openFeedbackDrawer()">Review</button></td>
+                                    </tr>
+                                    <!-- Brain only — extra detection -->
+                                    <tr data-source="brain" data-needs-review="true" data-review-title="Request success rate drop — West Europe" data-review-icm="5227365" data-review-date="2026-03-07 08:15" data-review-signal="Request Success Rate">
+                                        <td><a href="#" class="incident-link">5227365 ↗</a></td>
+                                        <td>Request success rate drop — West Europe</td>
+                                        <td>2026-03-07 08:15</td>
+                                        <td><span class="source-badge brain">Brain</span></td>
+                                        <td style="font-size: 12px;">Created SEV3 incident</td>
+                                        <td><button class="btn btn-secondary" style="font-size: 11px; padding: 3px 10px;" onclick="openFeedbackDrawer()">Review</button></td>
+                                    </tr>
+                                    <!-- Geneva only — Brain missed -->
+                                    <tr data-source="existing" style="background: #fafafa;">
+                                        <td><a href="#" class="incident-link">8801234 ↗</a></td>
+                                        <td>CPU threshold exceeded — East US 2</td>
+                                        <td>2026-03-10 22:15</td>
+                                        <td><span class="source-badge geneva">Geneva</span></td>
+                                        <td style="font-size: 12px; color: #d13438;">—</td>
+                                        <td style="font-size: 11px; color: #d13438;">Brain missed</td>
+                                    </tr>
+                                    <tr data-source="existing" style="background: #fafafa;">
+                                        <td><a href="#" class="incident-link">8801567 ↗</a></td>
+                                        <td>Memory pressure — West US</td>
+                                        <td>2026-03-09 03:42</td>
+                                        <td><span class="source-badge geneva">Geneva</span></td>
+                                        <td style="font-size: 12px; color: #d13438;">—</td>
+                                        <td style="font-size: 11px; color: #d13438;">Brain missed</td>
+                                    </tr>
+                                    <tr data-source="existing" style="background: #fafafa;">
+                                        <td><a href="#" class="incident-link">8801890 ↗</a></td>
+                                        <td>Connection pool exhaustion — North Europe</td>
+                                        <td>2026-03-08 07:18</td>
+                                        <td><span class="source-badge geneva">Geneva</span></td>
+                                        <td style="font-size: 12px; color: #d13438;">—</td>
+                                        <td style="font-size: 11px; color: #d13438;">Brain missed</td>
+                                    </tr>
+                                    <!-- Geneva only — not missed (duplicate/noise) -->
+                                    <tr data-source="existing" style="background: #fafafa;">
+                                        <td><a href="#" class="incident-link">8802345 ↗</a></td>
+                                        <td>Replication lag — South Central US</td>
+                                        <td>2026-03-07 14:55</td>
+                                        <td><span class="source-badge geneva">Geneva</span></td>
+                                        <td style="font-size: 12px; color: #605e5c;">—</td>
+                                        <td style="font-size: 11px; color: #605e5c;">—</td>
+                                    </tr>
+                                    <tr data-source="existing" style="background: #fafafa;">
+                                        <td><a href="#" class="incident-link">8802678 ↗</a></td>
+                                        <td>Throughput degradation — Japan East</td>
+                                        <td>2026-03-07 02:30</td>
+                                        <td><span class="source-badge geneva">Geneva</span></td>
+                                        <td style="font-size: 12px; color: #605e5c;">—</td>
+                                        <td style="font-size: 11px; color: #605e5c;">—</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div><!-- /content-area -->
+    </div><!-- /main-layout -->
+</div><!-- /jarvis-shell -->
+
+<!-- ══════════ GO-LIVE MODAL ══════════ -->
+<div class="modal-overlay" id="goLiveModal">
+    <div class="modal-box">
+        <div class="modal-icon">🚀</div>
+        <h2>Your monitor will go live!</h2>
+        <p>Brain will train on your signals and <strong>automatically activate</strong> when ready. It will start creating incidents in IcM with these safe defaults:</p>
+        <div class="modal-detail">
+            <div><span class="detail-label">Incident severity</span><span class="detail-value">Sev 3</span></div>
+            <div><span class="detail-label">Outage declaration</span><span class="detail-value">Off</span></div>
+            <div><span class="detail-label">Auto communication</span><span class="detail-value">Off</span></div>
+        </div>
+        <p style="font-size: 13px; color: #605e5c; margin-bottom: 20px;">You can review and upgrade settings at any time as you build confidence in Brain's detections.</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button class="btn btn-secondary" onclick="dismissModal()">Cancel</button>
+            <button class="btn btn-success" onclick="dismissModal()">Go Live</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════ FEEDBACK DRAWER ══════════ -->
+<div class="feedback-drawer-overlay" id="feedbackOverlay" onclick="closeFeedbackDrawer()"></div>
+<div class="feedback-drawer" id="feedbackDrawer">
+    <div class="feedback-drawer-header">
+        <div>
+            <div id="reviewStepper" style="display: none; margin-bottom: 6px; display: none; align-items: center; gap: 8px;">
+                <button onclick="navigateReview(-1)" id="reviewPrevBtn" style="background: none; border: 1px solid #c8c6c4; border-radius: 4px; width: 28px; height: 28px; cursor: pointer; font-size: 14px; color: #605e5c; display: flex; align-items: center; justify-content: center;" title="Previous detection">‹</button>
+                <span style="font-size: 12px; font-weight: 600; color: #0078d4; background: #deecf9; padding: 2px 10px; border-radius: 10px;" id="reviewStepperLabel">Detection 1 / 2</span>
+                <button onclick="navigateReview(1)" id="reviewNextBtn" style="background: none; border: 1px solid #c8c6c4; border-radius: 4px; width: 28px; height: 28px; cursor: pointer; font-size: 14px; color: #605e5c; display: flex; align-items: center; justify-content: center;" title="Next detection">›</button>
+            </div>
+            <h2>Should this be an outage?</h2>
+            <p>Brain created this incident. Tell it whether this was the right call.</p>
+        </div>
+        <button class="feedback-drawer-close" onclick="closeFeedbackDrawer()">✕ Close</button>
+    </div>
+    <div class="feedback-drawer-body">
+        <div style="background: #f3f2f1; border-radius: 4px; padding: 14px 16px; margin-bottom: 20px;">
+            <div style="font-size: 13px; color: #605e5c; margin-bottom: 4px;">Detection</div>
+            <div style="font-size: 15px; font-weight: 600;" id="drawerDetectionTitle">Availability degradation — North Europe</div>
+            <div style="font-size: 12px; color: #605e5c; margin-top: 4px;" id="drawerDetectionMeta">IcM #9003235 · 2026-03-09 16:12 · Endpoint Availability · SEV3</div>
+        </div>
+
+        <!-- Step 1: Is this an outage? -->
+        <div class="form-group">
+            <label class="form-label" style="font-size: 14px;">Is this an outage?</label>
+            <p style="font-size: 12px; color: #605e5c; margin-bottom: 10px;">Would this detection have warranted an outage declaration if Brain had that power?</p>
+            <div class="label-options" id="outageOptions">
+                <label class="label-option" onclick="selectOutageOption(this, 'yes')">
+                    <input type="radio" name="outage-feedback" value="yes" />
+                    <div>
+                        <div class="label-title">✅ Yes, this is an outage</div>
+                        <div class="label-desc">Brain correctly identified a real service outage</div>
+                    </div>
+                </label>
+                <label class="label-option" onclick="selectOutageOption(this, 'no')">
+                    <input type="radio" name="outage-feedback" value="no" />
+                    <div>
+                        <div class="label-title">❌ No, this is not an outage</div>
+                        <div class="label-desc">Brain created an incident, but this shouldn't be an outage</div>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Step 2: Reason (shown only when "No" is selected) -->
+        <div class="form-group" id="reasonSection" style="display: none;">
+            <label class="form-label" style="font-size: 14px;">Why isn't this an outage?</label>
+            <p style="font-size: 12px; color: #605e5c; margin-bottom: 10px;">Pick the best reason — this helps Brain learn what matters for your service.</p>
+            <div class="label-options">
+                <label class="label-option" onclick="this.closest('.label-options').querySelectorAll('.label-option').forEach(l => l.classList.remove('selected')); this.classList.add('selected');">
+                    <input type="radio" name="reason" value="impact-not-big-enough" />
+                    <div>
+                        <div class="label-title">Impact was real but not big enough</div>
+                        <div class="label-desc">Brain detected a real issue, but it didn't hit the threshold for an outage</div>
+                    </div>
+                </label>
+                <label class="label-option" onclick="this.closest('.label-options').querySelectorAll('.label-option').forEach(l => l.classList.remove('selected')); this.classList.add('selected');">
+                    <input type="radio" name="reason" value="impact-not-correct" />
+                    <div>
+                        <div class="label-title">The impact was not correct</div>
+                        <div class="label-desc">Brain misread the signals — the actual impact was different than what was detected</div>
+                    </div>
+                </label>
+                <label class="label-option" onclick="this.closest('.label-options').querySelectorAll('.label-option').forEach(l => l.classList.remove('selected')); this.classList.add('selected');">
+                    <input type="radio" name="reason" value="duplicate" />
+                    <div>
+                        <div class="label-title">This was a duplicate</div>
+                        <div class="label-desc">Another incident or outage already covered this same issue</div>
+                    </div>
+                </label>
+                <label class="label-option" onclick="this.closest('.label-options').querySelectorAll('.label-option').forEach(l => l.classList.remove('selected')); this.classList.add('selected');">
+                    <input type="radio" name="reason" value="incident-not-outage" />
+                    <div>
+                        <div class="label-title">This should be an incident, not an outage</div>
+                        <div class="label-desc">Brain was right to create an incident, but it doesn't rise to outage-level</div>
+                    </div>
+                </label>
+                <label class="label-option" onclick="this.closest('.label-options').querySelectorAll('.label-option').forEach(l => l.classList.remove('selected')); this.classList.add('selected');">
+                    <input type="radio" name="reason" value="planned-maintenance" />
+                    <div>
+                        <div class="label-title">This was planned / expected</div>
+                        <div class="label-desc">Planned maintenance, deployment, or known change caused this</div>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Optional context (dropdown, not freeform) -->
+        <div class="form-group">
+            <label class="form-label">Additional context (optional)</label>
+            <select class="form-select" style="max-width: 100%;">
+                <option value="">— Select if applicable —</option>
+                <option value="single-tenant">Only affected a single tenant / customer</option>
+                <option value="single-region">Scoped to one region, not widespread</option>
+                <option value="planned-deploy">Related to a planned deployment / change</option>
+                <option value="maintenance-window">Occurred during a maintenance window</option>
+                <option value="duplicate-icm">Duplicate of another IcM incident</option>
+                <option value="short-duration">Very short duration (&lt;5 min), self-healed</option>
+                <option value="test-traffic">Caused by test / synthetic traffic, not real users</option>
+                <option value="known-issue">Known issue — already being tracked</option>
+            </select>
+            <p class="form-hint">Structured context helps Brain learn patterns faster than freeform text</p>
+        </div>
+
+        <!-- How Brain uses this -->
+        <div style="background: #deecf9; border-radius: 4px; padding: 12px 16px; font-size: 12px; color: #004578;">
+            <strong>How Brain uses this:</strong> Your answer teaches Brain which detections should become outages vs. stay as incidents. Over time, Brain will learn your service's outage threshold and make better decisions automatically.
+        </div>
+
+        <!-- Future versions note -->
+        <div style="margin-top: 12px; background: #fff3cd; border: 1px dashed #ffc107; border-radius: 4px; padding: 10px 14px; font-size: 11px; color: #664d03;">
+            <strong>⚠️ Design note — v1 vs v2 feedback:</strong>
+            <ul style="margin: 6px 0 0 16px; line-height: 1.6;">
+                <li><strong>v1 (this):</strong> "Is this an outage?" → if No, pick a reason. Simple, ships first.</li>
+                <li><strong>v2:</strong> If it's not an outage, follow up with "Did Brain create the incident at the right severity? If not, why?" — reasons could reuse the same taxonomy (impact not big enough, impact not correct, duplicate, etc.)</li>
+                <li><strong>v3+:</strong> Expand to cover the full set of Brain actions — was the comms template right? Was the scope correct? Did Brain link the right signals? Each action Brain takes becomes a feedback surface.</li>
+            </ul>
+        </div>
+    </div>
+    <div class="feedback-drawer-footer">
+        <button class="btn btn-secondary" onclick="closeFeedbackDrawer()">Cancel</button>
+        <button class="btn btn-primary" id="submitFeedbackBtn" onclick="submitGuidedFeedback()">Submit feedback</button>
+    </div>
+    <!-- All reviewed completion state -->
+    <div id="allReviewedState" style="display: none; text-align: center; padding: 40px 20px;">
+        <div style="font-size: 48px; margin-bottom: 12px;">✅</div>
+        <h2 style="color: #107c10; margin-bottom: 8px;">All detections reviewed!</h2>
+        <p style="color: #605e5c; font-size: 14px; margin-bottom: 20px;">You've reviewed all of Brain's extra detections. Your feedback helps Brain improve over time.</p>
+        <div style="margin-top: 16px; padding: 12px 16px; background: #f3f2f1; border-radius: 6px; font-size: 13px; color: #323130;">
+            📋 Want to see all incidents? <a href="#" style="color: #0078d4; font-weight: 600;" onclick="closeFeedbackDrawer(); expandOutageTable(); return false;">Open the full results table</a> for filtering, IcM links, and details.
+        </div>
+        <button class="btn btn-primary" style="margin-top: 16px;" onclick="closeFeedbackDrawer()">Done</button>
+    </div>
+</div>
+
+<script>
+    // ── State ──
+    let currentScreen = 1;
+    const totalScreens = 6;
+    let currentScenario = 'happy';
+
+    // ── SVG Icon helpers ──
+    const svgIcon = {
+        clock: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+        check: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>',
+        warning: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+        signal: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>',
+        info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    };
+
+    const scenarios = {
+        happy: {
+            signals: [
+                { name: 'Service Health Check', category: 'SLI – Latency', quality: 'high', checked: true },
+                { name: 'Endpoint Availability', category: 'SLI – Success Rate', quality: 'high', checked: true },
+                { name: 'Overall Error Rate', category: 'SLI – Availability', quality: 'high', checked: true },
+                { name: 'Dependency Health Score', category: 'SLI – Success Rate', quality: 'high', checked: true },
+                { name: 'Request Success Rate', category: 'SLI – Success Rate', quality: 'high', checked: true },
+            ],
+            trainingSignals: [
+                { name: 'Service Health Check', status: 'complete' },
+                { name: 'Endpoint Availability', status: 'complete' },
+                { name: 'Overall Error Rate', status: 'processing' },
+                { name: 'Dependency Health Score', status: 'waiting' },
+                { name: 'Request Success Rate', status: 'waiting' },
+            ],
+            trainingBanner: { type: 'info', icon: 'clock', title: 'Training in progress — will go live automatically', text: 'Brain is analyzing 90 days of historical data across 5 signals. Your monitor will activate and start creating Sev3 incidents once training completes.' },
+            qualityIssues: false,
+            tableTrainingBadge: { cls: 'processing', text: 'Training' },
+            tableTrainingSignals: '5 signals',
+            tableTrainingEta: '~3 days',
+        },
+        happyConfidence: {
+            signals: [
+                { name: 'Service Health Check', category: 'SLI – Latency', quality: 'high', checked: true },
+                { name: 'Endpoint Availability', category: 'SLI – Success Rate', quality: 'high', checked: true },
+                { name: 'Overall Error Rate', category: 'SLI – Availability', quality: 'high', checked: true },
+                { name: 'Dependency Health Score', category: 'SLI – Success Rate', quality: 'high', checked: true },
+                { name: 'Request Success Rate', category: 'SLI – Success Rate', quality: 'high', checked: true },
+            ],
+            trainingSignals: [
+                { name: 'Service Health Check', status: 'complete' },
+                { name: 'Endpoint Availability', status: 'complete' },
+                { name: 'Overall Error Rate', status: 'processing' },
+                { name: 'Dependency Health Score', status: 'waiting' },
+                { name: 'Request Success Rate', status: 'waiting' },
+            ],
+            trainingBanner: { type: 'info', icon: 'clock', title: 'Training in progress — will go live automatically', text: 'Brain is analyzing 90 days of historical data across 5 signals. Your monitor will activate and start creating Sev3 incidents once training completes.' },
+            qualityIssues: false,
+            tableTrainingBadge: { cls: 'processing', text: 'Training' },
+            tableTrainingSignals: '5 signals',
+            tableTrainingEta: '~3 days',
+            showConfidence: true,
+        },
+        mixed: {
+            signals: [
+                { name: 'Service Health Check', category: 'SLI – Latency', quality: 'high', checked: true },
+                { name: 'Endpoint Availability', category: 'SLI – Success Rate', quality: 'high', checked: true },
+                { name: 'Overall Error Rate', category: 'SLI – Availability', quality: 'medium', checked: true,
+                  warning: { type: 'info', text: 'Medium quality — included in training but detection accuracy may be reduced. Consider reviewing dimension configuration.' } },
+                { name: 'Dependency Health Score', category: 'SLI – Success Rate', quality: 'high', checked: true },
+                { name: 'Request Success Rate', category: 'SLI – Success Rate', quality: 'low', checked: false,
+                  warning: { type: 'blocking', text: 'Excluded — no transitions detected in the last 30 days. This signal may have incorrect dimensions or no traffic. Fix: verify LocationID and CustomerResourceId dimensions in SLI authoring.' } },
+            ],
+            trainingSignals: [
+                { name: 'Service Health Check', status: 'complete' },
+                { name: 'Endpoint Availability', status: 'complete' },
+                { name: 'Overall Error Rate', status: 'processing' },
+                { name: 'Dependency Health Score', status: 'waiting' },
+            ],
+            qualityIssues: true,
+            qualityList: [
+                { name: 'Request Success Rate', issue: 'No transitions detected in last 30 days', fix: 'Verify LocationID and CustomerResourceId dimensions in the SLI authoring wizard. Ensure the SLI is receiving traffic in production.', severity: 'blocking' }
+            ],
+            trainingBanner: { type: 'warning', icon: 'warning', title: 'Training in progress — 1 signal excluded', text: 'Brain is training on 4 of 5 signals. 1 signal was excluded due to quality issues. The monitor will still go live with 4 signals once training completes.' },
+            tableTrainingBadge: { cls: 'processing', text: 'Training' },
+            tableTrainingSignals: '4/5 signals',
+            tableTrainingEta: '~3 days',
+        }
+    };
+
+    // ── Render Functions ──
+
+    function renderSignals() {
+        const s = scenarios[currentScenario];
+        const container = document.getElementById('signalList');
+        container.innerHTML = s.signals.map((sig, i) => `
+            <div class="signal-item">
+                <input type="checkbox" class="signal-checkbox" ${sig.checked ? 'checked' : ''} ${sig.quality === 'low' ? 'disabled' : ''} />
+                <div class="signal-info">
+                    <div class="signal-name">${sig.name}</div>
+                    <div class="signal-meta">
+                        <strong>Category:</strong> ${sig.category}
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <strong>Quality:</strong>
+                        <span class="quality-dot ${sig.quality}"></span>
+                        <span class="quality-label ${sig.quality}">${sig.quality === 'none' ? 'No Data' : sig.quality.charAt(0).toUpperCase() + sig.quality.slice(1)}</span>
+                    </div>
+                    ${sig.warning ? `<div class="signal-warning ${sig.warning.type}">${sig.warning.text}</div>` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderTrainingTable() {
+        const s = scenarios[currentScenario];
+        const badge = document.getElementById('tableTrainingBadge');
+        badge.className = 'status-badge ' + s.tableTrainingBadge.cls;
+        badge.textContent = s.tableTrainingBadge.text;
+        document.getElementById('tableTrainingSignals').textContent = s.tableTrainingSignals;
+        document.getElementById('tableTrainingEta').textContent = s.tableTrainingEta;
+    }
+
+    function renderTrainingDetail() {
+        const s = scenarios[currentScenario];
+
+        // Progress
+        document.getElementById('trainingProgressBar').style.width = '65%';
+        document.getElementById('trainingProgressBar').className = 'progress-bar-fill blue';
+        document.getElementById('trainingProgressLabel').textContent = 'Estimated time remaining: ~2 hours';
+        document.getElementById('trainingSubtitle').textContent = 'Brain is analyzing your signals over the last 90 days. The monitor will go live automatically once training completes.';
+
+    }
+
+    // ── Navigation ──
+
+    function showScreen(n) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(`screen-${n}`).classList.add('active');
+        currentScreen = n;
+        document.getElementById('currentStep').textContent = n;
+
+        if (n === 2) renderSignals();
+        if (n === 3) renderTrainingTable();
+        if (n === 4) renderTrainingDetail();
+
+        // Toggle brain confidence meter visibility based on scenario
+        const trustMeter = document.getElementById('trustMeterSection');
+        if (trustMeter) {
+            const s = scenarios[currentScenario];
+            trustMeter.style.display = s.showConfidence ? '' : 'none';
+        }
+    }
+
+    function nextScreen() {
+        if (currentScreen < totalScreens) showScreen(currentScreen + 1);
+    }
+    function prevScreen() {
+        if (currentScreen > 1) showScreen(currentScreen - 1);
+    }
+
+    function setScenario(s) {
+        currentScenario = s;
+        document.querySelectorAll('.scenario-bar button').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+        showScreen(currentScreen);
+    }
+
+    // ── Go-Live Modal ──
+    function showGoLiveModal() {
+        document.getElementById('goLiveModal').classList.add('show');
+    }
+    function dismissModal() {
+        document.getElementById('goLiveModal').classList.remove('show');
+        showScreen(3);
+    }
+
+    // ── Feedback Drawer ──
+    // ── Guided Review State ──
+    let guidedReviewActive = false;
+    let guidedReviewIndex = 0;
+    let guidedReviewItems = [];
+
+    function openFeedbackDrawer(detection) {
+        // Reset form state
+        document.getElementById('reasonSection').style.display = 'none';
+        document.querySelectorAll('#outageOptions .label-option').forEach(l => l.classList.remove('selected'));
+        document.querySelectorAll('#reasonSection .label-option').forEach(l => l.classList.remove('selected'));
+        document.querySelectorAll('input[name="outage-feedback"]').forEach(r => r.checked = false);
+        document.querySelectorAll('input[name="reason"]').forEach(r => r.checked = false);
+
+        // Show form, hide completion state
+        document.querySelector('.feedback-drawer-body').style.display = '';
+        document.querySelector('.feedback-drawer-footer').style.display = '';
+        document.getElementById('allReviewedState').style.display = 'none';
+
+        // Populate detection details if provided
+        if (detection) {
+            document.getElementById('drawerDetectionTitle').textContent = detection.title;
+            document.getElementById('drawerDetectionMeta').textContent =
+                `IcM #${detection.icm} · ${detection.date} · ${detection.signal} · SEV3`;
+        }
+
+        // Show/hide stepper based on guided mode
+        const stepper = document.getElementById('reviewStepper');
+        stepper.style.display = guidedReviewActive ? 'flex' : 'none';
+
+        if (guidedReviewActive) {
+            document.getElementById('reviewStepperLabel').textContent =
+                `Detection ${guidedReviewIndex + 1} / ${guidedReviewItems.length}`;
+            // Enable/disable prev/next arrows
+            document.getElementById('reviewPrevBtn').disabled = guidedReviewIndex === 0;
+            document.getElementById('reviewPrevBtn').style.opacity = guidedReviewIndex === 0 ? '0.3' : '1';
+            document.getElementById('reviewNextBtn').disabled = guidedReviewIndex >= guidedReviewItems.length - 1;
+            document.getElementById('reviewNextBtn').style.opacity = guidedReviewIndex >= guidedReviewItems.length - 1 ? '0.3' : '1';
+        }
+
+        document.getElementById('feedbackOverlay').classList.add('show');
+        document.getElementById('feedbackDrawer').classList.add('show');
+    }
+
+    function startGuidedReview() {
+        // Build review items from table rows with data-needs-review (no table expansion)
+        guidedReviewItems = [];
+        document.querySelectorAll('#outageTable tbody tr[data-needs-review="true"]').forEach(row => {
+            guidedReviewItems.push({
+                title: row.dataset.reviewTitle,
+                icm: row.dataset.reviewIcm,
+                date: row.dataset.reviewDate,
+                signal: row.dataset.reviewSignal,
+                row: row
+            });
+        });
+
+        if (guidedReviewItems.length === 0) return;
+
+        // Start guided review — drawer only, table stays collapsed
+        guidedReviewActive = true;
+        guidedReviewIndex = 0;
+
+        // Open drawer with first item
+        openFeedbackDrawer(guidedReviewItems[0]);
+    }
+
+    function navigateReview(direction) {
+        const newIndex = guidedReviewIndex + direction;
+        if (newIndex < 0 || newIndex >= guidedReviewItems.length) return;
+        guidedReviewIndex = newIndex;
+        openFeedbackDrawer(guidedReviewItems[guidedReviewIndex]);
+    }
+
+    function submitGuidedFeedback() {
+        if (!guidedReviewActive) {
+            closeFeedbackDrawer();
+            return;
+        }
+
+        // Mark current row as reviewed (visual update)
+        const currentItem = guidedReviewItems[guidedReviewIndex];
+        if (currentItem && currentItem.row) {
+            const feedbackCell = currentItem.row.querySelector('td:last-child');
+            if (feedbackCell) {
+                feedbackCell.innerHTML = '<a class="review-edit-link" style="font-size: 12px; color: #107c10; font-weight: 600;" onclick="openFeedbackDrawer()" title="Click to edit review">✓ Reviewed</a>';
+            }
+            currentItem.row.removeAttribute('data-needs-review');
+        }
+
+        // Auto-advance to next, or show completion
+        if (guidedReviewIndex < guidedReviewItems.length - 1) {
+            guidedReviewIndex++;
+            openFeedbackDrawer(guidedReviewItems[guidedReviewIndex]);
+        } else {
+            // All done — show completion state
+            document.querySelector('.feedback-drawer-body').style.display = 'none';
+            document.querySelector('.feedback-drawer-footer').style.display = 'none';
+            document.getElementById('allReviewedState').style.display = '';
+            guidedReviewActive = false;
+        }
+    }
+
+    function expandOutageTable() {
+        const tableBody = document.querySelector('#outageTable')?.closest('.section-body');
+        if (tableBody && tableBody.classList.contains('collapsed')) {
+            tableBody.classList.remove('collapsed');
+            const chevron = tableBody.previousElementSibling?.querySelector('.chevron');
+            if (chevron) chevron.textContent = '▲';
+        }
+        // Scroll to table
+        if (tableBody) {
+            tableBody.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function closeFeedbackDrawer() {
+        document.getElementById('feedbackOverlay').classList.remove('show');
+        document.getElementById('feedbackDrawer').classList.remove('show');
+        if (guidedReviewActive) {
+            guidedReviewActive = false;
+        }
+    }
+    function selectOutageOption(el, value) {
+        el.closest('.label-options').querySelectorAll('.label-option').forEach(l => l.classList.remove('selected'));
+        el.classList.add('selected');
+        // Show reason section only if "No"
+        document.getElementById('reasonSection').style.display = value === 'no' ? 'block' : 'none';
+    }
+
+    // ── Source filter for unified outage table ──
+    function setSourceFilter(filter) {
+        // Update active tab
+        document.querySelectorAll('.source-filter-tab').forEach(tab => {
+            tab.classList.remove('active');
+            if ((filter === 'all' && tab.textContent.includes('All')) ||
+                (filter === 'brain-only' && tab.textContent.includes('Brain only')) ||
+                (filter === 'existing-only' && tab.textContent.includes('Existing only')) ||
+                (filter === 'both' && tab.textContent.includes('Both detected'))) {
+                tab.classList.add('active');
+            }
+        });
+        // Filter rows by data-source attribute (space-separated values)
+        document.querySelectorAll('#outageTable tbody tr[data-source]').forEach(row => {
+            const sources = row.dataset.source.split(' ');
+            if (filter === 'all') {
+                row.style.display = '';
+            } else if (filter === 'brain-only') {
+                row.style.display = sources.includes('brain') ? '' : 'none';
+            } else if (filter === 'existing-only') {
+                row.style.display = sources.includes('existing') ? '' : 'none';
+            } else if (filter === 'both') {
+                row.style.display = sources.includes('both') ? '' : 'none';
+            }
+        });
+    }
+
+    // ── Init ──
+    document.getElementById('totalSteps').textContent = totalScreens;
+    showScreen(1);
+</script>
+</body>
+</html>
