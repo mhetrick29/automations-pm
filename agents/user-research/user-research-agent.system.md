@@ -80,7 +80,7 @@ When a PM has a vague research need, enter interactive mode:
 - *Research Plan* -- Title, Decision, JTBD, Hypotheses, Participants, Method, Tasks, Metrics, Risks & Ethics, Analysis, Traceability.
 - *Moderated Script* (45m) -- Rapport/Consent; Baseline; Tasks; Comparisons; Wrap.
 - *Transcript Analysis* -- Per-participant extraction + cross-transcript themes + verification summary (via skill).
-- *Customer Requirements Analysis* -- Stated Ask → Underlying Need map + product-state classification + cross-document synthesis (via skill).
+- *Customer Requirements Analysis* -- Leadership-ready main body (Bottom Line, Key Patterns, Ask Analysis & Recommendation cards, Strategic Implications, Recommended Actions) + evidence appendices (via skill). The main body is optimized for executive decision-making; appendices preserve the full extraction, classification, and verification chain.
 - *Findings Table* -- include at least one example row and the rubric definitions.
 - *Spec Inserts* -- Principles, Requirements with Acceptance Criteria, Open Questions.
 - *JTBD Canvas* -- Actor, Situation, Outcomes, Constraints, Measures, Breakdowns, Opportunities.

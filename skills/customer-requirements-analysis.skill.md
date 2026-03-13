@@ -152,17 +152,48 @@ Location: [Customer ID, section/paragraph reference]
 
 ### Step 7: Present Results
 
-Final output includes:
+The output is structured in two tiers: a **leadership-ready main body** (Sections 1-5) that communicates signals, patterns, implications, and recommendations clearly enough for executive decision-making, and **appendices** (A-G) that preserve all the detailed evidence for anyone who wants to go deeper.
 
-1. **Executive Summary** — 3-5 bullets answering the business goal. Lead with the most important finding. Include the classification distribution.
-2. **Customer Overview Table** — who provided input, their profile, document context
-3. **Stated Ask → Underlying Need Map** — the core artifact, with root causes, classifications, severity, and confidence
-4. **Themes with Evidence** — grouped by root cause, not by stated ask. Each theme includes strength rating, customer count, key quotes, and classification
-5. **Classification Summary** — aggregate view of what kind of work the customer feedback implies (build vs. enable vs. program)
-6. **Product Alignment Assessment** — where customer needs align with current roadmap, where they diverge, and what that means for prioritization
-7. **Contradictions & Caveats** — what the data doesn't cleanly answer
-8. **Verification Summary** — quote accuracy and contradiction flags
-9. **Recommended Next Steps** — what to build, what to enable, what to investigate further, who to talk to
+**Main Body — optimized for leadership audiences:**
+
+1. **Bottom Line** — A narrative paragraph (not bullets) that frames the overall finding. Lead with what the customer is really telling us, not a feature summary. State the headline tension or gap. End with the single most important takeaway. Include the classification distribution as supporting evidence, not the lead.
+
+2. **Key Patterns** — Synthesize the cross-ask themes into 3-5 named patterns. Each pattern includes:
+   - Which asks it spans
+   - The signal: what the data shows (with verbatim quotes as evidence)
+   - The implication: what this means for the product, the team, or the strategy — stated directly, not hedged
+   
+   These are **not** summaries of individual asks. They are structural observations about where the product's strategy and the customer's production reality are misaligned. A good pattern reveals something you wouldn't see by reading any single ask in isolation.
+
+3. **Ask Analysis & Recommendations** — One card per ask, using this table format:
+
+   | Dimension | Assessment |
+   |---|---|
+   | **What they asked** | The stated ask in plain language |
+   | **The real need** | The excavated underlying need (from Step 3) |
+   | **Why this matters for [product]** | ROI framing: why investing in this is or isn't a good idea for the product. Connect to product mission, strategic goals, and downstream effects. Be specific about business consequences — blockers, trust erosion, competitive benchmarks, risk amplification. |
+   | **Roadmap alignment** | **Gap / Partial / Covered / Conflict.** Name the specific roadmap items that are adjacent or relevant, and honestly assess whether they actually address the need. |
+   | **Recommendation** | **Invest / Bundle with X / Low-cost win / Defer with rationale / Explicit decision needed.** State the recommended action clearly. If investing, describe the right product answer (which may differ from the customer's proposed solution). |
+
+4. **Strategic Implications** — The "so what" section for leadership. Includes:
+   - Where the roadmap is strong vs. where the customer is most urgent (are these the same?)
+   - How the asks cluster into investment themes (table: theme → asks → nature)
+   - Interaction effects between asks — which asks amplify each other and should not be solved independently
+   - Competitive or benchmark dynamics — what the customer is comparing you to and whether you're winning
+
+5. **Recommended Actions** — Prioritized list of 5-7 concrete actions. Each one is specific enough to assign an owner. Lead with the highest-leverage items. Include both build actions and decision actions ("make an explicit product decision on X").
+
+**Appendices — the evidence chain:**
+
+- **A. Customer Overview** — who provided input, their profile, document context (from Step 1)
+- **B. Detailed Per-Ask Analysis** — the full Step 2 extractions and Step 3 why-first analysis for each ask
+- **C. Stated Ask → Underlying Need Map** — the core reference table with root causes, classifications, severity, and confidence (from Step 5)
+- **D. Classification Summary** — aggregate view of what kind of work the feedback implies: product-state counts, alignment-to-roadmap counts, distribution interpretation (from Step 4)
+- **E. Product Alignment Detail** — the full roadmap alignment table with coverage ratings and honest assessments
+- **F. Contradictions & Caveats** — what the data doesn't cleanly answer, design tensions, single-document caveats
+- **G. Verification Summary** — quote accuracy checks (from Step 6)
+
+**Format rationale:** Leadership needs to see signals, patterns, and recommendations — not raw extraction tables. The main body should be readable in 10-15 minutes and support a decision conversation. The appendices let anyone drill into the evidence without cluttering the primary narrative. When the output will be used as input to another agent (e.g., an architecture evaluation agent), the Ask Analysis cards in Section 3 are the structured handoff — each card contains the context needed to evaluate feasibility independently.
 
 ---
 
