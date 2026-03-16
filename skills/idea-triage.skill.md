@@ -32,12 +32,20 @@ From the raw idea, identify:
 
 If the key assumption cannot be articulated clearly, flag the idea as **underspecified** and prompt for one more clarifying question before continuing.
 
-### Step 2 — Check Alignment with Product Priorities
+### Step 2 — Check Alignment and Strategic Leverage
 
 Load `team-knowledge/product-context/` and apply a fast check:
 - Is this solving a symptom or a root cause? (use `skills/product-why-first.skill.md` Layer 2–3)
 - Does this align with current product priorities?
 - Is there a simpler version that tests the same assumption?
+
+Then assess **strategic leverage** — what this idea unlocks beyond the feature itself:
+- Can we put this on the website? Use it in competitive positioning?
+- Does it unlock a new segment, vertical, or deal type?
+- Does it accelerate adoption, improve attach rate, or create GTM leverage?
+- Is this unique product thinking, or are we replicating what exists?
+
+If the idea has no clear leverage beyond "it's a nice feature," flag that — it doesn't kill the idea, but it changes the appetite conversation.
 
 If the idea is misaligned or too broad, say so directly. Propose a scoped-down version before generating validation approaches.
 
@@ -84,6 +92,9 @@ Output:
 - Root cause vs. symptom: [finding]
 - Alignment with priorities: [finding]
 - Minimum testable version: [scoped description]
+
+**Strategic leverage:**
+- Beyond the feature: [what this unlocks — GTM, competitive, segment, adoption]
 
 **Status:** untested
 ```

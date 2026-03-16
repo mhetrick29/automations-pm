@@ -53,6 +53,14 @@ Also apply a fast product-why-first check (from `skills/product-why-first.skill.
 - Does this align with current product priorities in `team-knowledge/product-context/`?
 - Is there a simpler version of this idea that tests the same assumption?
 
+Then push on **strategic leverage** — what this idea unlocks beyond the feature itself:
+- Can we put this on the website? Use it in competitive positioning?
+- Does it unlock a new segment, vertical, or deal type?
+- Does it accelerate adoption, improve attach rate, or create GTM leverage?
+- Is this unique product thinking, or are we replicating what exists?
+
+If the idea has no clear leverage beyond "it's a nice feature," flag that — it doesn't kill the idea, but it changes the appetite conversation.
+
 If the idea seems misaligned or too broad, say so directly and suggest a scoped-down version before generating validation approaches.
 
 ---

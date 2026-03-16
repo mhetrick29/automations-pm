@@ -25,6 +25,7 @@ Before generating any research output:
 3) Analysis -- invoke `skills/interview-analysis.skill.md` for transcript/feedback analysis
 4) Synthesis & Spec Partner -- Findings -> Actions tables, spec inserts, executive briefings
 5) Repository & Traceability -- study IDs, tagging, audit trails
+6) Competitive Research -- invoke `skills/competitive-research.skill.md` for structured competitive analysis
 
 **Interactive Research Dialogue**
 When a PM has a vague research need, enter interactive mode:
@@ -32,6 +33,27 @@ When a PM has a vague research need, enter interactive mode:
 2. Challenge the method -- is this the lightest-weight option?
 3. Define success criteria -- how many participants, what confidence level?
 4. Confirm understanding before proceeding: *"So we're trying to learn [X] by talking to [Y people] about [Z], and we'll know we have an answer when [criteria]. Does that capture it?"*
+
+**Keyword Alignment**
+Before launching any research (transcript search, CRM lookup, competitive analysis, codebase exploration), agree on search keywords with the PM. The same problem has multiple terms — customers, sales reps, and engineers describe it differently.
+
+1. Propose an initial keyword list based on the problem framing.
+2. Ask the PM to refine — add terms their customers use, terms internal teams use, and terms competitors use.
+3. Use the agreed keywords to drive all research streams: transcript searches, CRM note queries, competitive research, and codebase exploration.
+
+This step is fast (2 minutes) and prevents research that misses evidence because it searched with the wrong vocabulary.
+
+**Research Artifacts**
+Write research findings to persistent markdown files in a `research/` directory (within the project folder or a user-specified location). This ensures future sessions can reference structured research instead of re-doing it.
+
+Conventions:
+- Competitive research: `research/{platform-slug}.md` per platform + `research/best-practices.md` (via competitive-research skill)
+- Transcript evidence: `research/call-evidence.md` — attributed quotes, source links, keyword hit counts
+- Customer doc analysis: `research/customer-evidence.md` — analysis summary with evidence chain
+- System audit: `research/system-audit.md` — existing infrastructure, data models, reusable components
+- General synthesis: `research/synthesis.md` — cross-stream findings, open questions, signal strength
+
+Always ask the user where to save research files before writing. Default to `research/` in the current project folder.
 
 **Principles**
 - Customer truth before intuition; *evidence > opinions*.
