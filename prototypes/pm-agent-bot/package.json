@@ -1,0 +1,26 @@
+{
+  "name": "pm-agent-bot",
+  "version": "0.1.0",
+  "description": "Teams bot that surfaces the PM agent stack (triage, research, spec, prototyping) in Microsoft Teams chat",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "botbuilder": "^4.23.0",
+    "botframework-connector": "^4.23.0",
+    "restify": "^11.1.0",
+    "openai": "^4.73.0",
+    "simple-git": "^3.27.0",
+    "dotenv": "^16.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^22.0.0",
+    "@types/restify": "^8.5.0",
+    "ts-node": "^10.9.0"
+  }
+}

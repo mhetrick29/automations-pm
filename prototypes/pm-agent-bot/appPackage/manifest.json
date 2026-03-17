@@ -1,0 +1,58 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.17",
+  "version": "0.1.0",
+  "id": "{{BOT_ID}}",
+  "developer": {
+    "name": "PM Agent",
+    "websiteUrl": "https://github.com/azure-core/automations1",
+    "privacyUrl": "https://github.com/azure-core/automations1",
+    "termsOfUseUrl": "https://github.com/azure-core/automations1"
+  },
+  "name": {
+    "short": "PMAgent",
+    "full": "PM Agent — Product Management AI Assistant"
+  },
+  "description": {
+    "short": "AI PM assistant — triage ideas, write specs, query ADO, and more",
+    "full": "PM Agent surfaces the full PM agent stack (Idea Triage, Spec Writer, User Research, Prototyping) in Microsoft Teams chat. @mention the bot to triage ideas, brainstorm specs, query ADO work items, and get meeting recaps."
+  },
+  "icons": {
+    "outline": "outline.png",
+    "color": "color.png"
+  },
+  "accentColor": "#0078D4",
+  "bots": [
+    {
+      "botId": "{{BOT_ID}}",
+      "scopes": ["personal", "team", "groupChat"],
+      "supportsFiles": false,
+      "isNotificationOnly": false,
+      "commandLists": [
+        {
+          "scopes": ["personal", "team", "groupChat"],
+          "commands": [
+            {
+              "title": "triage",
+              "description": "Triage a product idea"
+            },
+            {
+              "title": "spec",
+              "description": "Brainstorm or write a spec"
+            },
+            {
+              "title": "status",
+              "description": "Check ADO work item status"
+            },
+            {
+              "title": "meeting",
+              "description": "Ask about a recent meeting"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": []
+}
