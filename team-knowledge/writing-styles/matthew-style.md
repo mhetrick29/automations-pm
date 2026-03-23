@@ -2,7 +2,7 @@
 
 Personal style patterns applied on top of the team writing style guide. These reflect Matthew's preferred formatting for specs and product documents.
 
-*Last updated: 2026-03-13 — auto-updated from conversation insights*
+*Last updated: 2026-03-23 — auto-updated from conversation insights*
 
 ## Voice & Tone
 
@@ -47,6 +47,24 @@ Personal style patterns applied on top of the team writing style guide. These re
 - **Typo tolerance**: Doesn't correct casual typos in chat (*"ting"* for *"thing"*) — prioritizes speed over polish in conversational context.
 - **Implicit tool shorthand**: References tools by informal names and assumes shared context — *"Use workiq to send myself an email"* not "Use the Work IQ tool to compose an email for me."
 - **Confirmation + delegation**: Combines a yes with the next action in one breath — *"yep and then you can plan out the conversion"*, *"Keep those out of the mcp, good catch."*
+
+## Email Voice: Peers
+
+Peer emails (to colleagues, skip-level peers, collaborators) are **conversational prose, not structured documents**. This is a distinct register from specs, leadership comms, or broad audience emails.
+
+- **Lead with genuine enthusiasm**: Opens with an authentic reaction, not a corporate preamble. *"it's super exciting to see this type of analysis being shared across the org!"* — never *"this served as a useful forcing function."*
+- **Flowing paragraph over bullets**: Chains multiple ideas together in a single paragraph using em-dashes, commas, & parentheticals. Bullets are for specs — peer emails read like you're talking to someone.
+- **Bold for vocal stress**: Uses bold mid-sentence to create spoken emphasis — *"orchestration **is** quality now"* — like verbally stressing the word.
+- **Inline analogies as parentheticals**: Drops illustrative comparisons right into the flow — *"(similar to the mental hurdle people seemed to face with the cloud when it first started)"* — not set apart as a formal analogy.
+- **Scare quotes for debatable framing**: Puts industry buzzwords or soft claims in quotes — *"solving"*, *"decisions"* — signals awareness that the term is loaded or approximate.
+- **"etc." over exhaustive lists**: Lists a few examples then trails off with etc. — *"sync vs async, agent selection, human-in-the-loop, etc."* — trusts the reader to fill in.
+- **Avoids corporate abstractions**: Would never say "forcing function", "leverage synergies", or "net-net." Prefers natural, direct language.
+- **Comma-spliced idea chains**: Runs related concepts together separated by commas — concept flows into concept flows into concept — before landing on a conclusion.
+- **Brief genuine close**: Ends with short, real appreciation — *"Appreciate you sharing the newsletter — it tied together a lot of threads for me."* — not a formal summary or restated ask.
+
+### Contrast: Leadership & Broad Audience Emails
+
+These use a different, more structured register. Patterns TBD — capture examples when observed.
 
 ## Table Formats
 
